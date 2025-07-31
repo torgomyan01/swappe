@@ -10,3 +10,14 @@ export const localStorageKeys = {
   languages: "languages",
   cookieComplete: "cookieComplete",
 };
+
+export const motionOptionText = {
+  init: {
+    opacity: 0,
+    y: "30px",
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+};
