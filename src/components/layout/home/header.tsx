@@ -38,17 +38,17 @@ function HomeHeader() {
               <img src="img/menu.png.webp" alt="" />
             </div>
           </div>
-          <a href="#" className="login-btn">
-            <img src="img/subtract.svg" alt="" />
+          <Link href={SITE_URL.LOGIN} className="login-btn">
+            <img src="/img/subtract.svg" alt="" />
             Войти в сервис
-          </a>
+          </Link>
 
           <div className="menu-wrap-main">
             <div className="close-menu">
-              <img src="img/close-menu.svg" alt="" />
+              <img src="/img/close-menu.svg" alt="" />
             </div>
             <a href="index.html" className="mob-logo">
-              <img src="img/footer-logo.svg" alt="" />
+              <img src="/img/footer-logo.svg" alt="" />
             </a>
             <ul className="main-menu-mobile2">
               <li>
