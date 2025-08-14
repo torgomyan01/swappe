@@ -12,7 +12,6 @@ function Page() {
   return (
     <>
       <HomeHeader />
-
       <WeHelpYour />
 
       <BussinesBlock />
