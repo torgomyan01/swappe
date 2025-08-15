@@ -5,13 +5,19 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import "./tailwind.css";
+
 import NextTopLoader from "nextjs-toploader";
 
 import { Providers } from "@/app/providers";
+import { UiProviders } from "@/components/common/UIProvider/ui-provider";
+import { SesProviders } from "@/components/common/session-provider/session-provider";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function generateMetadata() {
   return {
-    title: "Обменивайтесь услугами, а не деньгами",
+    title: "Swappe - Обменивайтесь услугами, а не деньгами",
     description:
       "Galamat — надёжная недвижимость в столице. Купить квартиру в Астане легко с нами: профессиональный отдел продаж, выгодные предложения и сопровождение сделки.",
     keywords: [],
@@ -31,11 +37,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="ru" suppressHydrationWarning={true}>
       <body>
-        <NextTopLoader />
-        <Providers>{children}</Providers>
+        <SesProviders session={session}>
+          <NextTopLoader />
+          <Providers>
+            <UiProviders>{children}</UiProviders>
+          </Providers>
+        </SesProviders>
       </body>
     </html>
   );

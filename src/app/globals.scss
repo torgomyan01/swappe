@@ -1,17 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Gotham';
+  font-family: 'Inter', serif;
   scroll-behavior: smooth;
 }
 $green: #1E4A2F;
 
 body,
 html {
-  font-family: "Inter", sans-serif;
   &.overflow {
     overflow: hidden !important;
     background: rgba(black, .5);
@@ -22,18 +18,9 @@ body {
   @include flex;
   @include dir-col;
   min-height: 100vh;
-  font-family: "Inter", sans-serif;
   &.bg-style{
     background: #FFFCF5;
   }
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Inter", sans-serif;
-  // font-family: "Geologica", sans-serif;
 }
 
 input,
@@ -54,11 +41,12 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+.font-geologica{
+  font-family: 'Geologica';
+}
+
 button {
-  cursor: pointer;
-  border: none;
   transition: 0.3s;
-  background: none;
   &:focus {
     outline: none;
     border: none;
@@ -2997,8 +2985,3 @@ select{
   }
 }
 
-// font-family: "Geologica", sans-serif;
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
