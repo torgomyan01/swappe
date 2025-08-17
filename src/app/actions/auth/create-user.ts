@@ -71,7 +71,6 @@ export async function ActionCreateUser(
   email: string,
 ) {
   try {
-    // 1) validate only input params
     const parsed = Schema.safeParse({ name, password, email });
     if (!parsed.success) {
       const msg = parsed.error.errors[0]?.message || "Неверные данные";
