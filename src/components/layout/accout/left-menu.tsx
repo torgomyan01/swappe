@@ -33,7 +33,7 @@ function LeftMenu() {
   const pathname = usePathname();
 
   return (
-    <div className="profile-menu-wrap">
+    <div className="profile-menu-wrap sticky top-4">
       <div className="top">
         <div className="img-wrap">
           <img src="/img/avatar.png" alt="profile-avatar" />

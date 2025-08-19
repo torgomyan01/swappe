@@ -6,8 +6,10 @@ import DefInput from "@/components/common/input/def-input";
 import { useRef, useState } from "react";
 import { addToast, Button } from "@heroui/react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Register() {
+  const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
 
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ function Register() {
     });
 
     if (res?.ok) {
-      console.log(res);
+      router.push(SITE_URL.ACCOUNT);
 
       setLoading(false);
     } else {

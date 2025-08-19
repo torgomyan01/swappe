@@ -78,37 +78,31 @@ function Profile() {
                   <span>Доставка продуктов питания</span>
                 </div>
                 <div className="item">
-                  <b>Оценочная стоимость</b>
-                  <span>₽ 1 000 000</span>
+                  <b>Индустрия</b>
+                  <div className="social">
+                    <div className="links">
+                      <a href="#">
+                        <img src="/img/soc-icon1.svg" alt="soc-icon" />
+                      </a>
+                      <a href="#">
+                        <img src="/img/soc-icon2.svg" alt="soc-icon" />
+                      </a>
+                      <a href="#">
+                        <img src="/img/soc-icon3.svg" alt="soc-icon" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
                 <div className="item">
                   <b>Интересующие категории</b>
-                  <div className="buttons">
-                    <a href="#" className="green-btn">
-                      Доставка
-                    </a>
-                    <a href="#" className="green-btn">
-                      Кейтеринг
-                    </a>
+                  <div className="buttons !gap-2 !flex-js-s">
+                    <button className="green-btn">Доставка</button>
+                    <button className="green-btn">Кейтеринг</button>
                   </div>
                 </div>
               </div>
-              <div className="social">
-                <span>Официальный сайт и соцсети</span>
-                <div className="links">
-                  <a href="#">
-                    <img src="img/soc-icon1.svg" alt="soc-icon" />
-                  </a>
-                  <a href="#">
-                    <img src="img/soc-icon2.svg" alt="soc-icon" />
-                  </a>
-                  <a href="#">
-                    <img src="img/soc-icon3.svg" alt="soc-icon" />
-                  </a>
-                </div>
-              </div>
-              <a href="#" className="green-btn read">
-                <img src="img/edit-menu.svg" alt="edit-menu." />
+              <a href="#" className="green-btn read mt-10">
+                <img src="/img/edit-menu.svg" alt="edit-menu." />
                 Редактировать
               </a>
             </div>

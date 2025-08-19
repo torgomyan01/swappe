@@ -35,7 +35,7 @@ function HomeHeader() {
               </li>
             </ul>
             <div className="drop-menu-main">
-              <img src="img/menu.png.webp" alt="" />
+              <img src="/img/menu.png.webp" alt="" />
             </div>
           </div>
           <Link href={SITE_URL.LOGIN} className="login-btn">

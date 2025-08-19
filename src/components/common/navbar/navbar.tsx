@@ -3,11 +3,11 @@
 import {useSession} from "next-auth/react";
 import {SITE_URL} from "@/utils/consts";
 import Link from "next/link";
+import {sliceText} from "@/utils/helpers";
+import { Tooltip } from "@heroui/react";
 
 function Navbar() {
   const { data: session } = useSession();
-
-  console.log(session, "datadatadata");
 
   return (
     <>
@@ -36,14 +36,31 @@ function Navbar() {
             <span className="icon cursor-pointer">
               <img src="/img/menu-icon4.svg" alt=""/>
             </span>
-            <span className="icon cursor-pointer">
+
+
+            <Tooltip content="Сообщения">
+              <span className="icon cursor-pointer">
               <span className="count">+9</span>
               <img src="/img/menu-icon5.svg" alt=""/>
             </span>
+            </Tooltip>
+
           </div>
-          <span className="user cursor-pointer">
-            <img src="/img/user-icon.svg" alt=""/>
-          </span>
+          {
+            session ? (
+              <Link href={SITE_URL.ACCOUNT} className="user-in">
+              <span>{sliceText(session.user?.name || '', 10, '.')}</span>
+                  <div className="avatar">
+                    <img src="/img/header-avatar.png" alt=""/>
+                  </div>
+              </Link>
+            ) : (
+              <Link href={SITE_URL.LOGIN} className="user cursor-pointer">
+                  <img src="/img/user-icon.svg" alt="user icon"/>
+              </Link>
+            )
+          }
+
         </div>
       </div>
 
