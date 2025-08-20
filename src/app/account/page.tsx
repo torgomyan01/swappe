@@ -1,16 +1,22 @@
+"use client";
+
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
+import { useSession } from "next-auth/react";
+import { SITE_URL } from "@/utils/consts";
+import Link from "next/link";
 
 function Profile() {
+  const { data: session } = useSession();
   return (
     <MainTemplate>
       <div className="profile-wrap">
         <div className="wrapper">
           <div className="breadcrumbs hide-mobile">
-            <a href="#index.html">
+            <Link href={SITE_URL.HOME}>
               Главная
-              <img src="img/arr-r.svg" alt="arrow" />
-            </a>
+              <img src="/img/arr-r.svg" alt="arrow" />
+            </Link>
             <span>Профиль</span>
           </div>
           <div className="top-mob-line">
@@ -30,14 +36,14 @@ function Profile() {
               <div className="items">
                 <div className="item">
                   <b>
-                    Почта <img src="img/check-Icon.svg" alt="check-Icon" />
+                    Почта <img src="/img/check-Icon.svg" alt="check-Icon" />
                   </b>
-                  <a href="mailto:placeholder@mail.com">placeholder@mail.com</a>
+                  <span>{session?.user?.email}</span>
                 </div>
                 <div className="item">
                   <b>
                     Контактный телефон{" "}
-                    <img src="img/check-Icon.svg" alt="check-Icon" />
+                    <img src="/img/check-Icon.svg" alt="check-Icon" />
                   </b>
                   <a href="tel:+79450000000">+7(945) 000-00-00</a>
                 </div>

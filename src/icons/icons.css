@@ -8,108 +8,12 @@
 }
 
 
-.fa-play:before {
-    content: "\f04b"
-}
-
-.fa-pause:before {
-    content: "\f04c"
-}
-
-.fa-bars-filter:before {
-    content: "\e0ad"
-}
-
 .fa-xmark:before {
     content: "\f00d"
 }
 
-.fa-house:before {
-    content: "\f015"
-}
-
-.fa-language:before {
-    content: "\f1ab"
-}
-
-.fa-plus:before {
-    content: "\2b"
-}
-
-.fa-trash:before {
-    content: "\f1f8"
-}
-
-.fa-check:before {
-    content: "\f00c"
-}
-
 .fa-user:before {
     content: "\f007"
-}
-
-.fa-ellipsis-vertical:before {
-    content: "\f142"
-}
-
-.fa-list-dropdown:before {
-    content: "\e1cf"
-}
-
-.fa-chevron-right:before {
-    content: "\f054"
-}
-
-.fa-whatsapp:before {
-    content: "\f232"
-}
-
-.fa-chevron-up:before {
-    content: "\f077"
-}
-
-.fa-rectangle-vertical-history:before {
-    content: "\e237"
-}
-
-.fa-eye-slash:before {
-    content: "\f070"
-}
-
-.fa-list:before {
-    content: "\f03a"
-}
-
-.fa-map:before {
-    content: "\f279"
-}
-
-.fa-arrow-right:before {
-    content: "\f061"
-}
-
-.fa-rotate-left:before {
-    content: "\f2ea"
-}
-
-.fa-arrow-left:before {
-    content: "\f060"
-}
-
-.fa-pen:before {
-    content: "\f304"
-}
-
-.fa-filter-list:before {
-    content: "\e17c"
-}
-
-.fa-dice:before {
-    content: "\f522"
-}
-
-.fa-chevron-down:before {
-    content: "\f078"
 }
 
 
