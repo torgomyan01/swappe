@@ -35,7 +35,7 @@ export const getPasswordStrength = (password: string) => {
 export const sliceText = (
   text: string,
   length: number = 30,
-  dots?: string = "...",
+  dots: string = "...",
 ) => {
   if (text.length > length) {
     return `${text.slice(0, length)}${dots}`;
