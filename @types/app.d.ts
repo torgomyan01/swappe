@@ -1,18 +1,3 @@
-declare interface IStateTranslate {
-  translateSite: {
-    words: any;
-    selectedLang: string;
-    languages: string[];
-  };
-}
-
-declare interface IModalState {
-  modals: {
-    modalSelectedHouse: IHouse | null;
-    objectInfo: IObjectData[] | null;
-  };
-}
-
 declare interface IParams {
   projectId: number;
   houseId: number;
@@ -24,449 +9,194 @@ declare interface IParams {
   "area[max]": number;
 }
 
-declare interface IFilterParamsState {
-  filterParams: {
-    params: IParams;
-  };
-}
-
-interface Description {
-  title: string | null;
-  body: string | null;
-}
-
-interface Location {
-  latitude: number | null;
-  longitude: number | null;
-  zoom: number | null;
-}
-
-declare interface IProjectStage {
-  id: number;
-  title: string;
-  type: string;
-  currency: string;
-  developer: string | null;
-  developer_brand: string | null;
-  description: Description;
-  agreementText: string | null;
-  archiveState: "ARCHIVED" | "NOT_ARCHIVED";
-  banks: string | null;
-  district: string | null;
-  locality: string | null;
-  region: string | null;
-  salesOffice: string | null;
-  externalId: string | null;
-  parking: string | null;
-  hasKindergarten: boolean;
-  hasPlayground: boolean;
-  hasSchool: boolean;
-  hasSecurity: boolean;
-  hasSportsGround: boolean;
-  images: IProjectImage[];
-  location: Location;
-  youtubeVideos: string[];
-}
-
-interface IProjectImage {
-  url: string;
-  mobile_url: string;
-  isPublished: boolean;
-}
-
-declare interface Location {
-  latitude: number | null;
-  longitude: number | null;
-  zoom: number | null;
-}
-
-declare interface ILanguage {
-  id: number;
-  name: string;
-  key: string | null;
-  parent_id: string | null;
-}
-
-interface Description {
-  title: string | null;
-  body: string | null;
-}
-
-declare interface ILangMerged {
-  id: number | undefined;
-  ruName: string;
-  name: string;
-  parent_id: number | null | undefined;
-}
-
-declare interface IUser {
-  id: number;
-  name: string;
-  login: string;
-  password: string;
-  status: "super-admin" | "def-user";
-}
-
-declare interface IUserNoPass {
-  id: number;
-  name: string;
-  login: string;
-  status: "super-admin" | "def-user" | string;
-}
-
-declare interface ISliderItem {
-  id: number;
-  slider_name: string;
-  image_path: string;
-  url: string;
-  parent_id: string;
-  sub_parent_id: number;
-  lang_key: string;
-  children?: ISliderItem[];
-}
-
-type IProjectDataPositions =
-  | "business"
-  | "business-plus"
-  | "comfort-plus"
-  | "comfort"
-  | "standard";
-
-declare interface IProjectData {
-  id: number;
-  project_id: number;
-  hide: boolean;
-  position: IProjectDataPositions;
-  page_url: string;
-  address: string;
-  min_price: number;
-  file_url: string;
-}
-
-declare interface IProjectMerged extends IProjectStage {
-  id: number;
-  project_id: number;
-  hide: boolean;
-  position: IProjectDataPositions;
-  page_url: string;
-  address: string;
-  min_price: number;
-}
-
-// FOR PLANS
-
-declare interface IPlanAddress {
-  full: string;
-  locality: string;
-  district: string | null;
-  region: string | null;
-  street: string;
-  number: string | null;
-}
-
-declare interface IPlanImageInfo {
-  source: string;
-  technical: boolean;
-  big: string;
-  preview: string;
-  small: string;
-  imageName: string;
-}
-
-declare interface IPlanPriceRange {
-  min: string;
-  max: string;
-}
-
-declare interface IPlanAreaRange {
-  min: string;
-  max: string;
-}
-
-declare interface IPlan {
-  id: number;
-  code: string;
-  projectId: number;
-  projectName: string;
-  houseName: string;
-  houseId: number;
-  isHouseArchive: boolean;
-  isWithoutLayout: boolean;
-  isStudio: boolean;
-  isEuroLayout: boolean;
-  isFreeLayout: boolean;
-  roomsAmount: number;
-  hidePrice: boolean;
-  priceRange: IPlanPriceRange;
-  areaRange: IPlanAreaRange;
-  attachments: any[]; // փոխիր կոնկրետ տիպով եթե կա
-  properties: string[];
-  propertyTypeAliases: string[];
-  address: IPlanAddress;
-  image: IPlanImageInfo;
-  planImages: IPlanImageInfo[];
-  lightSideAngle: number;
-  isLightSideVisible: boolean;
-  countFilteredProperty: number;
-}
-
-// FOR PROPERTY
-
-declare interface IPropertyArea {
-  area_total: number;
-  area_estimated: number | null;
-  area_living: number | null;
-  area_kitchen: number | null;
-  area_balcony: number | null;
-  area_without_balcony: number | null;
-}
-
-declare interface IPropertyPrice {
-  value: number;
-  prevValue: number | null;
-  pricePerMeter: number;
-  isActivePromo: boolean;
-}
-
-declare interface IProperty {
-  id: number;
-  house_id: number;
-  houseName: string;
-  isHouseArchive: boolean;
-  projectName: string;
-  number: string;
-  rooms_amount: number;
-  floor: number;
-  sectionName: string;
-  layout_type: string;
-  without_layout: boolean;
-  studio: boolean;
-  free_layout: boolean;
-  euro_layout: boolean;
-  propertyType: string;
-  typePurpose: "apartment" | "office" | "parking" | "residential";
-  has_related_preset_with_layout: boolean;
-  facing: string;
-  externalId: string | null;
-  area: IPropertyArea;
-  show_calculate_mortgage: boolean;
-  show_register: boolean;
-  disable_booking_button: boolean;
-  price: IPropertyPrice;
-  status: "AVAILABLE" | "SOLD" | "BOOKED" | "UNAVAILABLE";
-  customStatusId: number;
-  specialOffersIds: number[] | null;
-  specialOffers: any | null;
-  responsibleName: string | null;
-  responsibleId: number | null;
-  crmContactName: string | null;
-  crmContactId: number | null;
-  countHistoryRecord: number | null;
-  countDeals: number | null;
-  positionOnFloor: number;
-  layoutCode: string;
-  bookedUntilDate: string | null;
-  bookedUntilTime: string | null;
-}
-
-declare interface IMaxPlan {
-  id: number;
-  lightSideAngle: number;
-  isLightSideVisible: boolean;
-  areas: IMaxPlanArea[];
-  images: IMaxPlanImages;
-  originalLayoutHeight: number;
-  originalLayoutWidth: number;
-  number: number;
-  sectionNumber: number;
-}
-
-declare interface IMaxPlanArea {
-  coordinates: IMaxPlanCoordinate[];
-  propertyId: number;
-}
-
-declare interface IMaxPlanCoordinate {
-  x: number;
-  y: number;
-}
-
-declare interface IMaxPlanImages {
-  source: string;
-  large: string;
-  big: string;
-  preview: string;
-}
-
-// FOR HOUSES
-
-declare interface IHouse {
-  id: number;
-  projectId: number;
-  projectName: string;
-  title: string;
-  type: "RESIDENTIAL" | string;
-  isArchive: boolean;
-  street: string;
-  number: string;
-  facing: string;
-  material: string | null;
-  buildingState: "UNFINISHED" | "BUILT" | "HAND-OVER";
-  developmentStartQuarter: IHouseQuarter | null;
-  developmentEndQuarter: IHouseQuarter | null;
-  salesStart: IHouseMonthYear | null;
-  salesEnd: IHouseMonthYear | null;
-  image: string;
-  fullImage: string;
-  minFloor: number;
-  maxFloor: number;
-  currency: IHouseCurrency;
-  address: IHouseAddress;
-  minPrice: number;
-  minPriceArea: number;
-  propertyCount: string;
-  countFilteredProperty: string;
-  houseBadges: any[];
-  propertyTypes: number[];
-  roomsFilter: string[];
-  roomsWithEuroFilter: string[];
-  landNumber: string | null;
-  hasAvailableProperties: boolean;
-  hasBookedProperties: boolean;
-  contractAddress: string | null;
-  externalId: string;
-  showroom: boolean;
-  commissioningDate: string | null;
-}
-
-declare interface IHouseQuarter {
-  year: string;
-  quarter: number;
-}
-
-declare interface IHouseMonthYear {
-  month: string;
-  year: string;
-}
-
-declare interface IHouseCurrency {
-  id: number;
-  code: string;
-  class: string;
-  symbol: string;
-  title: string;
-  shortName: string;
-  unicodeSymbol: string;
-}
-
-declare interface IHouseAddress {
-  full: string;
-  locality: string | null;
-  district: string | null;
-  region: string | null;
-  street: string;
-  number: string;
-}
-
-declare interface IObjectData {
-  id: number;
-  project_house_id: number;
-  api_url: string;
-  coordinates: string;
-  image_path: string;
-  color: string;
-  parent_id: null | number;
-}
-
-declare interface IFloor {
-  id: number;
-  lightSideAngle: number;
-  isLightSideVisible: boolean;
-  images: {
-    source: string;
-    large: string;
-    big: string;
-    preview: string;
-  };
-  originalLayoutHeight: number;
-  originalLayoutWidth: number;
-  areas: [
-    {
-      propertyId: number;
-      coordinates: {
-        x: number;
-        y: number;
-      }[];
-    },
-  ];
-  number: number;
-  sectionNumber: number;
-}
-
-declare interface ICell {
-  propertyId: number | null;
-}
-
-declare interface ISection {
-  number: number;
-  name: string;
-  cells: ICell[];
-}
-
-declare interface IFloor {
-  number: number;
-  sections: ISection[];
-}
-
-declare interface ISectionName {
-  name: string;
-  number: number;
-}
-
-declare interface IBoard {
-  floors: IFloor[];
-  sectionNames: ISectionName[];
-}
-
-type playingStatus = "no-verified" | "verified" | "played" | "winnings-taken";
-
-declare interface IDataSendMessage {
-  status: "created-db" | "have-db" | "error";
+declare interface IOrgData {
+  value: string;
+  unrestricted_value: string;
   data: {
-    id: number;
-    phone: number;
-    name: string;
-    status: playingStatus;
-    winner: number;
-    verification_code: number;
-    timeout: string;
+    kpp: string | null;
+    kpp_largest: string | null;
+    capital: any | null;
+    invalid: boolean | null;
+    management: IManagement | null;
+    founders: any[] | null;
+    managers: any[] | null;
+    predecessors: any[] | null;
+    successors: any[] | null;
+    branch_type: string;
+    branch_count: number;
+    source: string | null;
+    qc: string | null;
+    hid: string;
+    type: "LEGAL" | "INDIVIDUAL";
+    state: IState;
+    opf: IOpf;
+    name: IName;
+    inn: string;
+    ogrn: string;
+    okpo: string | null;
+    okato: string | null;
+    oktmo: string | null;
+    okogu: string | null;
+    okfs: string | null;
+    okved: string | null;
+    okveds: any[] | null;
+    authorities: any | null;
+    documents: any | null;
+    licenses: any | null;
+    finance: IFinance | null;
+    address: IAddress | null;
+    phones: string[] | null;
+    emails: string[] | null;
+    ogrn_date: number | null;
+    okved_type: string | null;
+    employee_count: number | null;
   };
-  dataWhatsappContent: {
-    status: string;
-    requestId: string;
-  };
-  error: "";
 }
 
-declare interface IProbabilities {
-  id: number;
-  price: number;
-  probability: number;
-  rotate: number;
-}
-
-declare interface IPlayer {
-  id: number;
-  phone: string;
-  status: playingStatus;
-  timeout: string;
-  verification_code: number;
-  winner: number;
-}
-
-declare interface IDataOldProjects {
-  image_url: string;
+declare interface IManagement {
   name: string;
-  address: string;
-  date: string;
+  post: string;
+  start_date: number;
+  disqualified: boolean | null;
+}
+
+declare interface IState {
+  status: "ACTIVE" | "LIQUIDATED" | string;
+  code: string | null;
+  actuality_date: number;
+  registration_date: number;
+  liquidation_date: number | null;
+}
+
+declare interface IOpf {
+  type: string;
+  code: string;
+  full: string;
+  short: string;
+}
+
+declare interface IName {
+  full_with_opf: string;
+  short_with_opf: string;
+  latin: string | null;
+  full: string;
+  short: string;
+}
+
+declare interface IFinance {
+  tax_system: string | null;
+  income: number | null;
+  expense: number | null;
+  revenue: number | null;
+  debt: number | null;
+  penalty: number | null;
+  year: number | null;
+}
+
+declare interface IAddress {
+  value: string;
+  unrestricted_value: string;
+  invalidity: any | null;
+  data: IAddressData;
+}
+
+declare interface IAddressData {
+  postal_code: string | null;
+  country: string;
+  country_iso_code: string;
+  federal_district: string | null;
+  region_fias_id: string | null;
+  region_kladr_id: string | null;
+  region_iso_code: string | null;
+  region_with_type: string | null;
+  region_type: string | null;
+  region_type_full: string | null;
+  region: string | null;
+  area_fias_id: string | null;
+  area_kladr_id: string | null;
+  area_with_type: string | null;
+  area_type: string | null;
+  area_type_full: string | null;
+  area: string | null;
+  city_fias_id: string | null;
+  city_kladr_id: string | null;
+  city_with_type: string | null;
+  city_type: string | null;
+  city_type_full: string | null;
+  city: string | null;
+  city_area: string | null;
+  city_district_fias_id: string | null;
+  city_district_kladr_id: string | null;
+  city_district_with_type: string | null;
+  city_district_type: string | null;
+  city_district_type_full: string | null;
+  city_district: string | null;
+  settlement_fias_id: string | null;
+  settlement_kladr_id: string | null;
+  settlement_with_type: string | null;
+  settlement_type: string | null;
+  settlement_type_full: string | null;
+  settlement: string | null;
+  street_fias_id: string | null;
+  street_kladr_id: string | null;
+  street_with_type: string | null;
+  street_type: string | null;
+  street_type_full: string | null;
+  street: string | null;
+  stead_fias_id: string | null;
+  stead_cadnum: string | null;
+  stead_type: string | null;
+  stead_type_full: string | null;
+  stead: string | null;
+  house_fias_id: string | null;
+  house_kladr_id: string | null;
+  house_cadnum: string | null;
+  house_flat_count: string | null;
+  house_type: string | null;
+  house_type_full: string | null;
+  house: string | null;
+  block_type: string | null;
+  block_type_full: string | null;
+  block: string | null;
+  entrance: string | null;
+  floor: string | null;
+  flat_fias_id: string | null;
+  flat_cadnum: string | null;
+  flat_type: string | null;
+  flat_type_full: string | null;
+  flat: string | null;
+  flat_area: string | null;
+  square_meter_price: string | null;
+  flat_price: number | null;
+  room_fias_id: string | null;
+  room_cadnum: string | null;
+  room_type: string | null;
+  room_type_full: string | null;
+  room: string | null;
+  postal_box: string | null;
+  fias_id: string | null;
+  fias_code: string | null;
+  fias_level: string | null;
+  fias_actuality_state: string | null;
+  kladr_id: string | null;
+  geoname_id: string | null;
+  capital_marker: string | null;
+  okato: string | null;
+  oktmo: string | null;
+  tax_office: string | null;
+  tax_office_legal: string | null;
+  timezone: string | null;
+  geo_lat: string | null;
+  geo_lon: string | null;
+  beltway_hit: string | null;
+  beltway_distance: string | null;
+  metro: any[] | null;
+  divisions: any[] | null;
+  qc_geo: string | null;
+  qc_complete: string | null;
+  qc_house: string | null;
+  history_values: any | null;
+  unparsed_parts: any | null;
+  source: string | null;
+  qc: string | null;
 }

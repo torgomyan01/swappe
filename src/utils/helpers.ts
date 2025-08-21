@@ -19,7 +19,6 @@ export const getPasswordStrength = (password: string) => {
     score++;
   }
 
-  // Contains both lower & upper case
   if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
     score++;
   }
