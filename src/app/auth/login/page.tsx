@@ -38,18 +38,6 @@ function Register() {
 
       setLoading(false);
     }
-
-    // const newFormData = new FormData();
-    //
-    // newFormData.append("email", email);
-    // newFormData.append("password", password);
-    //
-    // setLoading(true);
-    // ActionUserLogin(newFormData)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .finally(() => setLoading(false));
   }
 
   return (

@@ -1725,6 +1725,7 @@ select{
       font-weight: bold;
       color: #252525;
       display: inline-block;
+      transition: 0.3s;
     }
   }
   .profile-menu{
@@ -3014,3 +3015,26 @@ select{
   }
 }
 
+.autocomplite{
+ input{
+   outline: unset !important;
+   outline-width: 0 !important;
+ }
+}
+
+.bg-default-100{
+  background-color: #f8f2ea;
+}
+
+.custom-autocomplete{
+  [data-slot="input-wrapper"]{
+    height: 46px;
+  }
+}
+
+.custom-select{
+  [data-slot="trigger"]{
+    height: 46px;
+    cursor: pointer;
+  }
+}

@@ -9,7 +9,6 @@ import { SITE_URL } from "@/utils/consts";
 
 const BCRYPT_ROUNDS = 12;
 
-// միայն պարամետրերի վալիդացիա
 const Schema = z.object({
   name: z
     .string({ required_error: "Укажите имя" })

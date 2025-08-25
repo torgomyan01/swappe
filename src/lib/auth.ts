@@ -43,13 +43,12 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // չ THROW անենք, որ չգնա error page; client-ում res.error="CredentialsSignin"
         if (user.status !== "verified") {
           return null;
         }
 
         return {
-          id: String(user.id),
+          id: user.id,
           email: user.email,
           name: user.name ?? user.email,
           status: user.status,

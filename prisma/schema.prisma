@@ -14,26 +14,21 @@ model users {
   password          String @db.VarChar(255)
   status            String @db.VarChar(250)
   verification_code Int
-
-  // հարաբերություն
-  companies user_company[]
 }
 
 model user_company {
   id                  Int    @id @default(autoincrement())
   user_id             Int
   name                String @db.VarChar(10000)
-  inn                 Int
-  city                String @db.VarChar(255)
-  Industry            Int
-  interest_categories String @db.VarChar(255)
+  inn                 String @db.VarChar(250)
+  city                Int
+  industry            Int
+  about_us            String @db.VarChar(250)
+  interest_categories Json
   sites               Json
   image_path          String @db.VarChar(1000)
   status              String @db.VarChar(255)
   plan                String @db.VarChar(255)
-
-  user    users             @relation(fields: [user_id], references: [id])
-  reviews company_reviews[]
 }
 
 model company_reviews {
@@ -41,6 +36,39 @@ model company_reviews {
   company_id Int
   count      Int
   review     String @db.Text
+}
 
-  company user_company @relation(fields: [company_id], references: [id])
+model countries_tb {
+  id             Int     @id @default(autoincrement())
+  name           String  @db.VarChar(250)
+  name_alt       String  @db.VarChar(255)
+  label          String  @db.VarChar(255)
+  type           String  @db.VarChar(255)
+  typeShort      String  @db.VarChar(255)
+  contentType    String  @db.VarChar(255)
+  okato          String  @db.VarChar(255)
+  oktmo          String  @db.VarChar(255)
+  isDualName     Boolean
+  isCapital      Boolean
+  zip            Int
+  population     Int
+  yearFounded    String  @db.VarChar(250)
+  yearCityStatus Int
+  name_en        String  @db.VarChar(200)
+  namecase       Json
+  coords         Json
+  timezone       Json
+  region         Json
+}
+
+model Industry {
+  id        Int     @id @default(autoincrement())
+  name      String? @db.VarChar(250)
+  parent_id Int?
+}
+
+model categories {
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(250)
+  parent_id Int?
 }

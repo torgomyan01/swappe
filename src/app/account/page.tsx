@@ -8,6 +8,7 @@ import Link from "next/link";
 
 function Profile() {
   const { data: session } = useSession();
+
   return (
     <MainTemplate>
       <div className="profile-wrap">
@@ -21,7 +22,7 @@ function Profile() {
           </div>
           <div className="top-mob-line">
             <a href="profile-mobila.html" className="back">
-              <img src="img/back-icon.svg" alt="" />
+              <img src="/img/back-icon.svg" alt="" />
             </a>
             <b>Профиль</b>
           </div>

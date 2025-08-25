@@ -22,7 +22,7 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "semi": ["error", "always"],
-    "indent": ["error", 2],
+    "indent": "off",
     "no-console": "warn",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off",

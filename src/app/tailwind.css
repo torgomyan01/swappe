@@ -7,7 +7,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --color-green: #1E4A2F; /* Example: a custom primary blue */
+    --color-green: #1E4A2F;
+    --color-cream: #F2E9DC;
 }
 
 @utility flex-jsb-c { display: flex; justify-content: space-between; align-items: center; }

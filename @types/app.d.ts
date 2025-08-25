@@ -200,3 +200,15 @@ declare interface IAddressData {
   source: string | null;
   qc: string | null;
 }
+
+declare interface IIndustry {
+  id: number;
+  name: string;
+  parent_id: number;
+}
+
+declare interface ICategory {
+  id: number;
+  name: string;
+  parent_id: number;
+}
