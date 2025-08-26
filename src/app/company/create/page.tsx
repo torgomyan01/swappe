@@ -21,6 +21,7 @@ function Register() {
   ];
 
   const [infoCompany, setInfoCompany] = useState<any>([]);
+
   const [activeContent, setActiveContent] = useState(0);
   const [loading, setLoading] = useState(false);
 
