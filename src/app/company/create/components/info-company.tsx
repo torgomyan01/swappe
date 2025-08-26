@@ -158,11 +158,13 @@ function InfoCompany({ onSubmit }: IThisProps) {
     }
 
     const inn = e.target.inn.value;
+    const phone_number = e.target.phone_number.value;
 
     const formData = {
       company: selectedCompany.value,
       city,
       inn,
+      phone_number,
       industry: industryName,
       socials,
       logo,
@@ -233,6 +235,17 @@ function InfoCompany({ onSubmit }: IThisProps) {
           />
         </motion.div>
       ) : null}
+
+      <div className="input-wrap">
+        <span>Номер телефона </span>
+        <InputMask
+          mask="+7 (___) ___-__-__"
+          replacement={{ _: /\d/ }}
+          required
+          placeholder="Номер телефона "
+          name="phone_number"
+        />
+      </div>
 
       <div className="mb-4 autocomplite">
         <span className="text-[14px] mb-1 block">Город</span>

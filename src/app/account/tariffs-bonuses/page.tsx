@@ -3,9 +3,6 @@
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { SITE_URL } from "@/utils/consts";
-import Link from "next/link";
-import { useState } from "react";
-import clsx from "clsx";
 
 function Profile() {
   return (

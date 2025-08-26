@@ -1,13 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import modals from "../redux/modals";
-import translateSite from "../redux/translate";
-import filterParams from "../redux/filter";
+import userInfo from "../redux/user";
 
 export const store = configureStore({
   reducer: {
-    modals,
-    translateSite,
-    filterParams,
+    userInfo,
   },
 });
 

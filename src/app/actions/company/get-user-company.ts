@@ -1,20 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { CompanyStatus } from "../../../../@types/enums";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
-export async function ActionCreateCompany(
-  name: string,
-  inn: string,
-  city: number,
-  industry: number,
-  about_us: string,
-  interest_categories: number,
-  sites: object,
-  image_path: string,
-) {
+export async function ActionCGetUserCompany() {
   try {
     const session: any = await getServerSession(authOptions);
 
@@ -23,36 +13,16 @@ export async function ActionCreateCompany(
     }
 
     const existingCompany = await prisma.user_company.findFirst({
-      where: { inn },
-    });
-
-    if (existingCompany) {
-      return {
-        status: "error",
-        data: [],
-        error: "Компания с таким ИНН уже зарегистрирована",
-      };
-    }
-
-    const CreateCompany = await prisma.user_company.create({
-      data: {
-        user_id: session.user.id,
-        name,
-        inn,
-        city,
-        industry,
-        about_us,
-        interest_categories,
-        status: CompanyStatus.verify,
-        sites,
-        image_path,
-        plan: "free",
+      where: { user_id: session.user.id },
+      include: {
+        city_data: true,
+        industry_data: true,
       },
     });
 
     return {
       status: "ok",
-      data: CreateCompany,
+      data: existingCompany,
       error: "",
     };
   } catch (error: any) {

@@ -5,9 +5,14 @@ import LeftMenu from "@/components/layout/accout/left-menu";
 import { useSession } from "next-auth/react";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 function Profile() {
   const { data: session } = useSession();
+
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
+  console.log(company, "companycompanycompany");
 
   return (
     <MainTemplate>
@@ -46,7 +51,9 @@ function Profile() {
                     Контактный телефон{" "}
                     <img src="/img/check-Icon.svg" alt="check-Icon" />
                   </b>
-                  <a href="tel:+79450000000">+7(945) 000-00-00</a>
+                  <a href={`tel:${company?.phone_number}`}>
+                    {company?.phone_number}
+                  </a>
                 </div>
                 <div className="item">
                   <b>Пароль</b>
@@ -58,60 +65,82 @@ function Profile() {
                 </div>
               </div>
               <div className="border"></div>
+
               <h3>Карточка компании</h3>
               <p>
                 Информация, которую вы предоставляете в этом разделе, является
                 общедоступной. Ее можно увидеть в отзывах и она доступна другим
                 пользователям Интернета.
               </p>
-              <div className="items">
-                <div className="item">
-                  <b>Название компании</b>
-                  <span>ООО Название компании</span>
-                </div>
-                <div className="item">
-                  <b>
-                    ИНН компании{" "}
-                    <img src="img/check-Icon.svg" alt="check-Icon" />
-                  </b>
-                  <span>12345 12345</span>
-                </div>
-                <div className="item">
-                  <b>Город</b>
-                  <span>Москва и МО</span>
-                </div>
-                <div className="item">
-                  <b>Индустрия</b>
-                  <span>Доставка продуктов питания</span>
-                </div>
-                <div className="item">
-                  <b>Индустрия</b>
-                  <div className="social">
-                    <div className="links">
-                      <a href="#">
-                        <img src="/img/soc-icon1.svg" alt="soc-icon" />
-                      </a>
-                      <a href="#">
-                        <img src="/img/soc-icon2.svg" alt="soc-icon" />
-                      </a>
-                      <a href="#">
-                        <img src="/img/soc-icon3.svg" alt="soc-icon" />
-                      </a>
+
+              {company ? (
+                <>
+                  <div className="items">
+                    <div className="item">
+                      <b>Название компании</b>
+                      <span>{company?.name}</span>
+                    </div>
+                    <div className="item">
+                      <b>
+                        ИНН компании{" "}
+                        <img src="/img/check-Icon.svg" alt="check-Icon" />
+                      </b>
+                      <span>{company?.inn}</span>
+                    </div>
+                    <div className="item">
+                      <b>Город</b>
+                      <span>{company?.city_data.name}</span>
+                    </div>
+                    <div className="item">
+                      <b>Индустрия</b>
+                      <span>{company?.industry_data.name}</span>
+                    </div>
+                    <div className="item">
+                      <b>Индустрия</b>
+                      <div className="social">
+                        <div className="links">
+                          <a href="#">
+                            <img src="/img/soc-icon1.svg" alt="soc-icon" />
+                          </a>
+                          <a href="#">
+                            <img src="/img/soc-icon2.svg" alt="soc-icon" />
+                          </a>
+                          <a href="#">
+                            <img src="/img/soc-icon3.svg" alt="soc-icon" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="item">
+                      <b>Интересующие категории</b>
+                      <div className="buttons !gap-2 !flex-js-s">
+                        {company?.interest_categories.map((item, index) => (
+                          <button
+                            key={`interest_categories-${index}`}
+                            className="green-btn"
+                          >
+                            {item.name}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <Link href="#" className="green-btn read mt-10">
+                    <img src="/img/edit-menu.svg" alt="edit-menu." />
+                    Редактировать
+                  </Link>
+                </>
+              ) : (
+                <div className="w-full">
+                  <Link
+                    href={SITE_URL.COMPANY_CREATE}
+                    className="green-btn read mt-10"
+                  >
+                    <i className="fa-solid fa-plus mr-2"></i>
+                    Создать компанию
+                  </Link>
                 </div>
-                <div className="item">
-                  <b>Интересующие категории</b>
-                  <div className="buttons !gap-2 !flex-js-s">
-                    <button className="green-btn">Доставка</button>
-                    <button className="green-btn">Кейтеринг</button>
-                  </div>
-                </div>
-              </div>
-              <a href="#" className="green-btn read mt-10">
-                <img src="/img/edit-menu.svg" alt="edit-menu." />
-                Редактировать
-              </a>
+              )}
             </div>
           </div>
         </div>

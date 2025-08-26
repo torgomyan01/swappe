@@ -26,7 +26,6 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
 
-  console.log(infoCompany);
   function ChangeContent(value: object | string, NextIndex: number) {
     if (NextIndex === 3) {
       setLoading(true);
@@ -45,6 +44,7 @@ function Register() {
             infoCompany[1],
             infoCompany[0].socials,
             data.url,
+            infoCompany[0].phone_number,
           ).then((res) => {
             if (res.status === "ok") {
               router.push(SITE_URL.COMPANY_THANKS);

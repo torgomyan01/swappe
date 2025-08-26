@@ -14,6 +14,7 @@ export async function ActionCreateCompany(
   interest_categories: number,
   sites: object,
   image_path: string,
+  phone_number: string,
 ) {
   try {
     const session: any = await getServerSession(authOptions);
@@ -38,6 +39,7 @@ export async function ActionCreateCompany(
       data: {
         user_id: session.user.id,
         name,
+        phone_number,
         inn,
         city,
         industry,

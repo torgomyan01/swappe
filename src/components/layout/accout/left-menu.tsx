@@ -1,9 +1,11 @@
 "use client";
 
-import { SITE_URL } from "@/utils/consts";
+import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { useSelector } from "react-redux";
+import Image from "next/image";
 
 const menuItems = [
   {
@@ -32,18 +34,32 @@ const menuItems = [
 function LeftMenu() {
   const pathname = usePathname();
 
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
   return (
     <div className="profile-menu-wrap sticky top-4">
       <div className="top">
         <div className="img-wrap">
-          <img src="/img/avatar.png" alt="profile-avatar" />
-          <div className="premium w-[110px]">
-            <img src="/img/premium-icon.svg" alt="premium-icon" />
-            <span>Премиум</span>
-          </div>
+          <Image
+            src={
+              company?.image_path
+                ? `${fileHost}${company?.image_path}`
+                : "/img/default-company.png"
+            }
+            alt="premium-icon"
+            width={300}
+            height={300}
+            className="bg-crem"
+          />
+          {company?.plan === "premium" ? (
+            <div className="premium w-[110px]">
+              <img src="/img/premium-icon.svg" alt="premium-icon" />
+              <span>Премиум</span>
+            </div>
+          ) : null}
         </div>
       </div>
-      <span className="name">Название Компании</span>
+      <span className="name">{company?.name}</span>
       <div className="stars">
         <div className="stars-images flex-js-c gap-1">
           <img src="/img/star.svg" alt="star" />
@@ -69,10 +85,10 @@ function LeftMenu() {
           </li>
         ))}
         <li>
-          <a href={SITE_URL.ACCOUNT_TARIFFS_BONUSES}>
+          <Link href={SITE_URL.ACCOUNT_TARIFFS_BONUSES}>
             <img src="/img/subscription.svg" alt="subscription" />
             <span className="green">Тариф и бонусы</span>
-          </a>
+          </Link>
         </li>
       </ul>
       <a href="#" className="close">

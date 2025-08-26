@@ -20,6 +20,7 @@ model user_company {
   id                  Int    @id @default(autoincrement())
   user_id             Int
   name                String @db.VarChar(10000)
+  phone_number        String @db.VarChar(250)
   inn                 String @db.VarChar(250)
   city                Int
   industry            Int
@@ -29,6 +30,9 @@ model user_company {
   image_path          String @db.VarChar(1000)
   status              String @db.VarChar(255)
   plan                String @db.VarChar(255)
+
+  city_data     countries_tb @relation(fields: [city], references: [id])
+  industry_data Industry     @relation(fields: [industry], references: [id])
 }
 
 model company_reviews {
@@ -39,32 +43,35 @@ model company_reviews {
 }
 
 model countries_tb {
-  id             Int     @id @default(autoincrement())
-  name           String  @db.VarChar(250)
-  name_alt       String  @db.VarChar(255)
-  label          String  @db.VarChar(255)
-  type           String  @db.VarChar(255)
-  typeShort      String  @db.VarChar(255)
-  contentType    String  @db.VarChar(255)
-  okato          String  @db.VarChar(255)
-  oktmo          String  @db.VarChar(255)
+  id             Int            @id @default(autoincrement())
+  name           String         @db.VarChar(250)
+  name_alt       String         @db.VarChar(255)
+  label          String         @db.VarChar(255)
+  type           String         @db.VarChar(255)
+  typeShort      String         @db.VarChar(255)
+  contentType    String         @db.VarChar(255)
+  okato          String         @db.VarChar(255)
+  oktmo          String         @db.VarChar(255)
   isDualName     Boolean
   isCapital      Boolean
   zip            Int
   population     Int
-  yearFounded    String  @db.VarChar(250)
+  yearFounded    String         @db.VarChar(250)
   yearCityStatus Int
-  name_en        String  @db.VarChar(200)
+  name_en        String         @db.VarChar(200)
   namecase       Json
   coords         Json
   timezone       Json
   region         Json
+  user_company   user_company[]
 }
 
 model Industry {
   id        Int     @id @default(autoincrement())
   name      String? @db.VarChar(250)
   parent_id Int?
+
+  user_company user_company[]
 }
 
 model categories {

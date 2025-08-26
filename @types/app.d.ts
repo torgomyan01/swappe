@@ -1,4 +1,4 @@
-declare interface IParams {
+declare interface IUserData {
   projectId: number;
   houseId: number;
   rooms: number[];
@@ -210,5 +210,105 @@ declare interface IIndustry {
 declare interface ICategory {
   id: number;
   name: string;
-  parent_id: number;
+  parent_id: number | null;
+}
+
+declare interface IUserCompany {
+  id: number;
+  user_id: number;
+  name: string;
+  phone_number: string;
+  inn: string;
+  city: number;
+  city_data: ICityResponse;
+  industry: number;
+  industry_data: IIndustry;
+  about_us: string;
+  interest_categories: IIndustry[];
+  sites: string[];
+  image_path: string;
+  status: "verify" | "no-verify";
+  plan: "premium" | "free";
+}
+
+declare interface IUserStore {
+  userInfo: {
+    company: IUserCompany | null;
+  };
+}
+
+declare interface ICityResponse {
+  id: number;
+  name: string;
+  name_alt: string;
+  label: string;
+  type: string;
+  typeShort: string;
+  contentType: string;
+  okato: string;
+  oktmo: string;
+  isDualName: boolean;
+  isCapital: boolean;
+  zip: number;
+  population: number;
+  yearFounded: string;
+  yearCityStatus: number;
+  name_en: string;
+  namecase: NameCase;
+  coords: Coords;
+  timezone: Timezone;
+  region: Region;
+}
+
+declare interface NameCase {
+  dative: string;
+  ablative: string;
+  genitive: string;
+  locative: string;
+  accusative: string;
+  nominative: string;
+  prepositional: string;
+}
+
+declare interface Coords {
+  lat: number;
+  lon: number;
+}
+
+declare interface Timezone {
+  tzid: string;
+  mskOffset: string;
+  utcOffset: string;
+  abbreviation: string;
+}
+
+declare interface Region {
+  id: string;
+  area: number;
+  code: number;
+  guid: string;
+  name: string;
+  type: string;
+  label: string;
+  okato: string;
+  oktmo: string;
+  capital: Capital;
+  name_en: string;
+  district: string;
+  fullname: string;
+  namecase: NameCase;
+  typeShort: string;
+  "iso_3166-2": string;
+  population: number;
+  contentType: string;
+  yearFounded: number;
+}
+
+declare interface Capital {
+  id: string;
+  name: string;
+  label: string;
+  okato: string;
+  oktmo: string;
+  contentType: string;
 }

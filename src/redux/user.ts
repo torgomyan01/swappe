@@ -1,33 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IInterface {
-  params: IParams;
+  company: IUserCompany | null;
 }
 
 const initialState: IInterface = {
-  params: {
-    projectId: 0,
-    houseId: 0,
-    rooms: [],
-    "price[min]": 0,
-    "price[max]": 50000000,
-    minFloor: 0,
-    "area[min]": 0,
-    "area[max]": 400,
-  },
+  company: null,
 };
 
 // Ստեղծել slice
-export const filterParams = createSlice({
+export const userInfo = createSlice({
   name: "filter-params",
   initialState,
   reducers: {
-    setChangeParams: (state, action: PayloadAction<IParams>) => {
-      state.params = action.payload;
+    setCompany: (state, action: PayloadAction<IUserCompany | null>) => {
+      state.company = action.payload;
     },
   },
 });
 
 // Export actions and reducer
-export const { setChangeParams } = filterParams.actions;
-export default filterParams.reducer;
+export const { setCompany } = userInfo.actions;
+export default userInfo.reducer;
