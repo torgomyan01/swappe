@@ -4,7 +4,6 @@ interface IInterface {
   params: IParams;
 }
 
-// Սկզբնական state
 const initialState: IInterface = {
   params: {
     projectId: 0,
