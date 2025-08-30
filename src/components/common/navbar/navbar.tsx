@@ -16,8 +16,8 @@ function Navbar() {
           <Link href={SITE_URL.HOME} className="logo">
             <img src="/img/black-logo.svg" alt="" />
           </Link>
-          <form className="search">
-            <input type="text" placeholder="Введи запрос" />
+          <form className="search" action={SITE_URL.SEARCH}>
+            <input type="text" placeholder="Введи запрос" name="value" />
             <button type="button">
               <img src="/img/search-icon.svg" alt="" />
             </button>

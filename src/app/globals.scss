@@ -229,10 +229,10 @@ select{
 }
 
 .tab-button.active {
-  background: $green;
+  background: #1E4A2FFF;
   color: #FFFCF5;
   &:hover{
-    background: lighten($green, 8%);
+    background: lighten(#1E4A2FFF, 8%);
   }
 }
 
@@ -257,7 +257,7 @@ select{
   padding: 12px 20px;
   border-radius: 16px;
   color: white;
-  background: $green;
+  background: #1E4A2FFF;
   font-size: 14px;
   font-weight: 600;
   img{
@@ -453,7 +453,7 @@ select{
 }
 
 .swiper-pagination-bullet-active{
-  background: $green;
+  background: #1E4A2FFF;
 }
 
 .businessSwiper{
@@ -563,7 +563,7 @@ select{
 
 .why-are{
   padding: 140px 0 120px;
-  background: $green;
+  background: #1E4A2FFF;
   @media(max-width: 767px){
     padding: 80px 0;
   }
@@ -1349,7 +1349,7 @@ select{
                 font-weight: 500;
                 color: #252525;
                 &.active{
-                  background: $green;
+                  background: #1E4A2FFF;
                   color: #F2E9DC;
                 }
               }
@@ -2114,7 +2114,7 @@ select{
         font-size: 14px;
         font-weight: 500;
         color: #FFFCF5;
-        background: $green;
+        background: #1E4A2FFF;
         padding: 4px 8px;
         @include flex;
         border-radius: 24px;
@@ -2157,7 +2157,7 @@ select{
       align-self: flex-start;
       margin-top: 12px;
       &:hover{
-        background: $green;
+        background: #1E4A2FFF;
       }
     }
   }
@@ -2362,7 +2362,7 @@ select{
         min-width: 48px;
         @include flex;
         border-radius: 50%;
-        background: $green;
+        background: #1E4A2FFF;
         margin-bottom: 10px;
         img{
           margin: auto;
@@ -3028,13 +3028,35 @@ select{
 
 .custom-autocomplete{
   [data-slot="input-wrapper"]{
-    height: 46px;
+    height: 46px ;
+  }
+  input:focus{
+    outline-width: 0 !important;
   }
 }
 
 .custom-select{
   [data-slot="trigger"]{
-    height: 46px;
+    height: 46px ;
     cursor: pointer;
+  }
+}
+
+
+.tags{
+  @include flex;
+  @include flex-wrap;
+  .tag{
+    padding: 8px 12px;
+    border-radius: 16px;
+    background: #F2E9DC;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    color: #252525;
+    font-size: 16px;
+    font-weight: 500;
+    &:hover{
+      background: darken(#F2E9DC, 8%);
+    }
   }
 }
