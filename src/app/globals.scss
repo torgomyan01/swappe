@@ -221,7 +221,7 @@ select{
   @include justify-center;
   font-size: 16px;
   font-weight: 500;
-  border-radius: 16px;
+  border-radius: 30px;
   color: #252525;
   @media(max-width: 767px){
     font-size: 15px;
@@ -1492,6 +1492,7 @@ select{
       margin-right: 12px;
       background: #F2E9DC;
       position: relative;
+      transition: 0.3s;
 
       &:after {
         content: none;
@@ -1508,6 +1509,7 @@ select{
         margin-top: -5px;
         margin-left: -4px;
         opacity: 0;
+        transition: 0.3s;
       }
     }
   }

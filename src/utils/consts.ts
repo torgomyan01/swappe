@@ -7,13 +7,15 @@ export const SITE_URL = {
   COMPANY_CREATE: "/company/create",
   COMPANY_THANKS: "/company/thanks",
   ACCOUNT: "/account",
+  OFFER: "/offer",
   SEARCH: "/search",
   PROPOSAL: "/proposal",
   PROPOSAL_: "/proposal/create",
   ACCOUNT_REVIEWS: "/account/reviews",
   ACCOUNT_FAVORITES: "/account/favorites",
   ACCOUNT_TRANSACTIONS: "/account/transactions",
-  ACCOUNT_SUGGESTIONS: "/account/suggestions",
+  ACCOUNT_SUGGESTIONS: "/account/offers",
+  ACCOUNT_OFFER_CREATE: "/account/offers/create",
   ACCOUNT_TARIFFS_BONUSES: "/account/tariffs-bonuses",
 };
 

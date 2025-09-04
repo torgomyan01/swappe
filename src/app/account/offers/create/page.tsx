@@ -1,0 +1,288 @@
+"use client";
+
+import "./_creating-proposal.scss";
+
+import MainTemplate from "@/components/common/main-template/main-template";
+import { useEffect, useState } from "react";
+import { ActionGetAllCategory } from "@/app/actions/category/get-category";
+import clsx from "clsx";
+import { Spinner } from "@heroui/react";
+import { InputMask } from "@react-input/mask";
+
+function Profile() {
+  const [categories, setCategories] = useState<ICategory[] | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
+
+  useEffect(() => {
+    ActionGetAllCategory().then(({ data }) => {
+      setCategories(data);
+    });
+  }, []);
+
+  function SelectCategory(id: number) {
+    const check = selectedCategories?.some((c) => c.id === id);
+
+    if (check) {
+      const findCat = selectedCategories?.filter((c) => c.id !== id);
+
+      setSelectedCategories(findCat);
+    } else {
+      const findCat = categories?.find((c) => c.id === id);
+
+      const newArr = [...selectedCategories, findCat];
+
+      setSelectedCategories(newArr as ICategory[]);
+    }
+  }
+
+  return (
+    <MainTemplate>
+      <div className="creating-proposal">
+        <div className="wrapper">
+          <div className="top-info">
+            <h4>Создание предложения</h4>
+            <div className="close">
+              <img src="/img/close-pop.svg" alt="" />
+            </div>
+          </div>
+          <div className="info-texts">
+            <div className="texts green">
+              <span className="num">1</span>
+              <span className="text">Информация о товаре/услуге</span>
+            </div>
+            <div className="texts">
+              <span className="num">2</span>
+              <span className="text">Предварительный просмотр</span>
+            </div>
+          </div>
+          <div className="general-information-form">
+            <div className="info">
+              <h4>Общая информация</h4>
+              <span className="creating-title">Тип</span>
+              <div className="radios">
+                <div className="radio-wrap">
+                  <input type="radio" id="radio1" name="type" />
+                  <label
+                    htmlFor="radio1"
+                    className="border transition border-transparent hover:border-green cursor-pointer"
+                  >
+                    <span></span>
+                    Товар
+                  </label>
+                </div>
+                <div className="radio-wrap">
+                  <input type="radio" id="radio2" name="type" />
+                  <label
+                    htmlFor="radio2"
+                    className="border transition border-transparent hover:border-green cursor-pointer"
+                  >
+                    <span></span>
+                    Услуга
+                  </label>
+                </div>
+              </div>
+              <span className="creating-title">Вид</span>
+              <div className="radios">
+                <div className="radio-wrap">
+                  <input type="radio" id="radio3" name="view" />
+                  <label
+                    htmlFor="radio3"
+                    className="border transition border-transparent hover:border-green cursor-pointer"
+                  >
+                    <span></span>
+                    Онлайн
+                  </label>
+                </div>
+                <div className="radio-wrap">
+                  <input type="radio" id="radio4" name="view" />
+                  <label
+                    htmlFor="radio4"
+                    className="border transition border-transparent hover:border-green cursor-pointer"
+                  >
+                    <span></span>
+                    Оффлайн
+                  </label>
+                </div>
+              </div>
+              <span className="creating-title">Название</span>
+              <input
+                type="text"
+                placeholder="Что вы предлагаете контрагентам?"
+              />
+              <span className="creating-title">Категория</span>
+              <span className="subtitle">Можешь выбрать несколько</span>
+              {categories ? (
+                <div className="tags">
+                  {categories.map((category: ICategory) => (
+                    <button
+                      key={`cat-${category.id}`}
+                      className={clsx("cursor-pointer", {
+                        "!bg-green !text-white": selectedCategories.some(
+                          (c) => c.id === category.id,
+                        ),
+                        "hover:!bg-cream/50": !selectedCategories.some(
+                          (c) => c.id === category.id,
+                        ),
+                      })}
+                      onClick={() => SelectCategory(category.id)}
+                    >
+                      {category.name}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="tags h-[134px] flex-jc-c">
+                  <Spinner color="secondary" />
+                </div>
+              )}
+              <span className="creating-title">
+                Оценочная стоимость бартера, ₽
+              </span>
+              <InputMask
+                mask="___,___,___,___"
+                replacement={{ _: /\d/ }}
+                required
+                placeholder="Стоимость, ₽"
+                className="price-input"
+                name="inn"
+              />
+              <span className="creating-title">Регион покрытия</span>
+              <div className="area">
+                <span className="icon">
+                  <img src="/img/creating-proposal/area-icon.svg" alt="" />
+                </span>
+                <span className="underline"> Выбери на карте</span>
+              </div>
+              <span className="creating-title">Описание</span>
+              <textarea placeholder="Расскажи подробнее о предоставляемой услуге"></textarea>
+              <h4>Медиа</h4>
+              <div className="title-nums">
+                <span className="text">Фото</span>
+                <span className="num">0/9</span>
+              </div>
+              <div className="info-block">
+                <div className="icon">
+                  <img src="/img/creating-proposal/err-green.svg" alt="" />
+                </div>
+                <div className="texts">
+                  <b>Управляй порядком</b>
+                  <span>
+                    Чтобы сделать фото обложкой карточки, перетащи его на первое
+                    место. Остальные фото расставь в том порядке, который хочешь
+                    видеть на сайте
+                  </span>
+                </div>
+                <div className="close">
+                  <img src="/img/close-pop.svg" alt="close" />
+                </div>
+              </div>
+              <div className="media-items">
+                <div className="item active">
+                  <span className="style">Обложка</span>
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    alt=""
+                    className="icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    alt="plus-icon"
+                    className="icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+              </div>
+              <div className="title-nums">
+                <span className="text">Видео</span>
+                <span className="num">0/4</span>
+              </div>
+              <div className="video-items">
+                <div className="item active">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    alt="plus-icon"
+                    className="icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+                <div className="item">
+                  <img
+                    src="/img/creating-proposal/plus-green2.svg"
+                    className="icon"
+                    alt="plus-icon"
+                  />
+                </div>
+              </div>
+            </div>
+            <button className="green-btn">Предварительный просмотр</button>
+          </div>
+        </div>
+      </div>
+    </MainTemplate>
+  );
+}
+
+export default Profile;
