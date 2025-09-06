@@ -8,6 +8,7 @@ import { ActionGetAllCategory } from "@/app/actions/category/get-category";
 import clsx from "clsx";
 import { Spinner } from "@heroui/react";
 import { InputMask } from "@react-input/mask";
+import SelectCordinatesForMapModal from "@/app/account/offers/create/components/select-cordinates-for-map-modal";
 
 function Profile() {
   const [categories, setCategories] = useState<ICategory[] | null>(null);
@@ -34,6 +35,21 @@ function Profile() {
       setSelectedCategories(newArr as ICategory[]);
     }
   }
+
+  const [amount, setAmount] = useState("");
+
+  const formatMoney = (value: string) => {
+    const numericValue = value.replace(/\D/g, "");
+
+    if (numericValue) {
+      const formattedValue = new Intl.NumberFormat("ru-RU").format(
+        Number(numericValue),
+      );
+      return `${formattedValue} ₽`;
+    }
+
+    return "";
+  };
 
   return (
     <MainTemplate>
@@ -139,20 +155,33 @@ function Profile() {
                 Оценочная стоимость бартера, ₽
               </span>
               <InputMask
-                mask="___,___,___,___"
+                mask="_____________"
                 replacement={{ _: /\d/ }}
-                required
+                value={amount}
+                onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))}
+                onBlur={(e) => {
+                  if (e.target.value) {
+                    setAmount(formatMoney(e.target.value));
+                  }
+                }}
+                onFocus={() => {
+                  setAmount(amount.replace(/\D/g, ""));
+                }}
                 placeholder="Стоимость, ₽"
                 className="price-input"
-                name="inn"
               />
-              <span className="creating-title">Регион покрытия</span>
-              <div className="area">
-                <span className="icon">
-                  <img src="/img/creating-proposal/area-icon.svg" alt="" />
-                </span>
-                <span className="underline"> Выбери на карте</span>
-              </div>
+
+              {/*<InputMask*/}
+              {/*  mask="___,___,___,___"*/}
+              {/*  replacement={{ _: /\d/ }}*/}
+              {/*  required*/}
+              {/*  placeholder="Стоимость, ₽"*/}
+              {/*  className="price-input"*/}
+              {/*  name="inn"*/}
+              {/*/>*/}
+
+              <SelectCordinatesForMapModal />
+
               <span className="creating-title">Описание</span>
               <textarea placeholder="Расскажи подробнее о предоставляемой услуге"></textarea>
               <h4>Медиа</h4>
