@@ -105,8 +105,7 @@ const SelectCardYandexMap = memo(function ({
   }, [onCoordinateSelect, addMarker]);
 
   useEffect(() => {
-    const yandexMapapiKey =
-      process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY || "YOUR_API_KEY";
+    const yandexMapapiKey = process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY;
 
     const loadYandexMap = () => {
       if (
@@ -202,6 +201,7 @@ const SelectCardYandexMap = memo(function ({
       <div
         ref={mapRef}
         style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+        className="overflow-hidden !cursor-pointer"
       />
     </div>
   );

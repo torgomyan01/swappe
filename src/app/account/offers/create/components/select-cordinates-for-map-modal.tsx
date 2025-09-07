@@ -15,26 +15,42 @@ function SelectCordinatesForMapModal() {
     null,
   );
 
-  console.log(selectedCords);
-
   // Use useCallback to memoize the function and prevent re-renders
   const selectCordinatesForMap = useCallback((cords: [number, number]) => {
     setSelectedCords(cords);
-  }, []); // Empty dependency array means this function never changes
+  }, []);
+
+  const getMapIframeUrl = (coords: [number, number]) => {
+    const [lat, lon] = coords;
+    return `https://yandex.ru/map-widget/v1/?ll=${lon},${lat}&z=16&pt=${lon},${lat},pm2rdl&whatshere[zoom]=16&z=16&l=map&controls=false`;
+  };
 
   return (
     <>
       <span className="creating-title">Регион покрытия</span>
 
       {selectedCords ? (
-        <div className="area overflow-hidden relative">
+        <div className="area overflow-hidden relative  !border-none">
           <iframe
-            src={`https://yandex.ru/map-widget/v1/?ll=${selectedCords[1].toFixed(6)}%2C${selectedCords[0].toFixed(6)}&z=12`}
+            src={getMapIframeUrl(selectedCords)}
             width="100%"
-            height="400"
-            frameBorder="1"
+            height="100%"
+            style={{
+              border: "none",
+              pointerEvents: "none",
+            }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Yandex Map"
           />
-          <div className="absolute top-0 left-0 w-full h-full z-[1000] cursor-default"></div>
+          <div className="absolute top-0 left-0 w-full h-full cursor-default bg-black/20 flex-jc-c group">
+            <button
+              className="w-10 h-10 bg-white rounded-full cursor-pointer opacity-0 transition group-hover:opacity-100"
+              onClick={() => setSelectedCords(null)}
+            >
+              <i className="fa-solid fa-xmark opacity-65"></i>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="area" onClick={() => setModal(true)}>
@@ -45,12 +61,12 @@ function SelectCordinatesForMapModal() {
         </div>
       )}
 
-      <Modal size="2xl" isOpen={modal} onClose={() => setModal(false)}>
+      <Modal size="4xl" isOpen={modal} onClose={() => setModal(false)}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
             Выбирайте регион покрытия
           </ModalHeader>
-          <ModalBody>
+          <ModalBody className="mb-6">
             <MemoizedSelectCardYandexMap
               onCoordinateSelect={selectCordinatesForMap}
             />
@@ -68,7 +84,7 @@ function SelectCordinatesForMapModal() {
                 Закрыть
               </Button>
               <Button
-                color="primary"
+                color="secondary"
                 onPress={() => {
                   console.log("Selected coordinates:", selectedCords);
                   setModal(false);

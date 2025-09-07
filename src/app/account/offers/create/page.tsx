@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { Spinner } from "@heroui/react";
 import { InputMask } from "@react-input/mask";
 import SelectCordinatesForMapModal from "@/app/account/offers/create/components/select-cordinates-for-map-modal";
+import UploadPhotos from "@/app/account/offers/create/components/upload-photos";
 
 function Profile() {
   const [categories, setCategories] = useState<ICategory[] | null>(null);
@@ -171,106 +172,14 @@ function Profile() {
                 className="price-input"
               />
 
-              {/*<InputMask*/}
-              {/*  mask="___,___,___,___"*/}
-              {/*  replacement={{ _: /\d/ }}*/}
-              {/*  required*/}
-              {/*  placeholder="Стоимость, ₽"*/}
-              {/*  className="price-input"*/}
-              {/*  name="inn"*/}
-              {/*/>*/}
-
               <SelectCordinatesForMapModal />
 
               <span className="creating-title">Описание</span>
               <textarea placeholder="Расскажи подробнее о предоставляемой услуге"></textarea>
               <h4>Медиа</h4>
-              <div className="title-nums">
-                <span className="text">Фото</span>
-                <span className="num">0/9</span>
-              </div>
-              <div className="info-block">
-                <div className="icon">
-                  <img src="/img/creating-proposal/err-green.svg" alt="" />
-                </div>
-                <div className="texts">
-                  <b>Управляй порядком</b>
-                  <span>
-                    Чтобы сделать фото обложкой карточки, перетащи его на первое
-                    место. Остальные фото расставь в том порядке, который хочешь
-                    видеть на сайте
-                  </span>
-                </div>
-                <div className="close">
-                  <img src="/img/close-pop.svg" alt="close" />
-                </div>
-              </div>
-              <div className="media-items">
-                <div className="item active">
-                  <span className="style">Обложка</span>
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    alt=""
-                    className="icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    alt="plus-icon"
-                    className="icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-              </div>
+
+              <UploadPhotos />
+
               <div className="title-nums">
                 <span className="text">Видео</span>
                 <span className="num">0/4</span>
