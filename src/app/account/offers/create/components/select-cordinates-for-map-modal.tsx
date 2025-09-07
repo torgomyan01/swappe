@@ -15,6 +15,8 @@ function SelectCordinatesForMapModal() {
     null,
   );
 
+  console.log(selectedCords);
+
   // Use useCallback to memoize the function and prevent re-renders
   const selectCordinatesForMap = useCallback((cords: [number, number]) => {
     setSelectedCords(cords);
@@ -23,20 +25,23 @@ function SelectCordinatesForMapModal() {
   return (
     <>
       <span className="creating-title">Регион покрытия</span>
-      <div className="area" onClick={() => setModal(true)}>
-        <span className="icon">
-          <img src="/img/creating-proposal/area-icon.svg" alt="" />
-        </span>
-        <span className="underline"> Выбери на карте</span>
-      </div>
 
-      {selectedCords && (
+      {selectedCords ? (
+        <div className="area overflow-hidden relative">
+          <iframe
+            src={`https://yandex.ru/map-widget/v1/?ll=${selectedCords[1].toFixed(6)}%2C${selectedCords[0].toFixed(6)}&z=12`}
+            width="100%"
+            height="400"
+            frameBorder="1"
+          />
+          <div className="absolute top-0 left-0 w-full h-full z-[1000] cursor-default"></div>
+        </div>
+      ) : (
         <div className="area" onClick={() => setModal(true)}>
-          <YMaps>
-            <Map defaultState={defaultState} width="100%" height="400px">
-              <Placemark geometry={[55.751574, 37.573856]} />
-            </Map>
-          </YMaps>
+          <span className="icon">
+            <img src="/img/creating-proposal/area-icon.svg" alt="" />
+          </span>
+          <span className="underline"> Выбери на карте</span>
         </div>
       )}
 

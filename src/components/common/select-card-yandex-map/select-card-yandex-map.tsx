@@ -168,7 +168,7 @@ const SelectCardYandexMap = memo(function ({
         >
           <Spinner />
           <div style={{ fontSize: "18px", color: "#333" }}>
-            Բեռնվում է քարտեզը...
+            Загрузка карты...
           </div>
         </div>
       )}
@@ -194,7 +194,7 @@ const SelectCardYandexMap = memo(function ({
         >
           <div>
             <div style={{ fontSize: "24px", marginBottom: "10px" }}>⛔</div>
-            <div>Սխալ: {error}</div>
+            <div>Error: {error}</div>
           </div>
         </div>
       )}
