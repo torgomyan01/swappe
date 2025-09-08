@@ -6,7 +6,7 @@ type Rule = RegExp | ((value: string) => boolean);
 type ValidatorPair = { rule: Rule; message: string };
 
 interface IThisProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string | React.ReactNode;
   required?: boolean;
 
   rules?: Rule[];
@@ -21,6 +21,9 @@ interface IThisProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
   /** Ծնող ֆորմի ref-ը՝ submit-ը ներսից բռնելու համար */
   formRef?: React.RefObject<HTMLFormElement | null>;
+
+  /** Callback ֆունկցիա, որը կանչվում է, երբ վալիդացիայի կարգավիճակը փոխվում է */
+  onValidationChange?: (isValid: boolean) => void;
 }
 
 function DefInput({
@@ -39,6 +42,7 @@ function DefInput({
   bottomElements,
   formRef,
   onBlur,
+  onValidationChange,
   ...rest
 }: IThisProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -99,6 +103,12 @@ function DefInput({
 
   const hasError = errors.length > 0;
   const shouldShowErrors = hasError && (touched || forceShowErrors);
+  const isValid = !hasError;
+
+  // Notify parent about validation status changes
+  useEffect(() => {
+    onValidationChange?.(isValid);
+  }, [isValid, onValidationChange]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const next = e.target.value;
@@ -120,22 +130,44 @@ function DefInput({
       return;
     }
 
+    // Store original form submit handler
+    let originalSubmitHandler: ((e: Event) => void) | null = null;
+
     const onFormSubmit = (e: Event) => {
       setForceShowErrors(true);
 
       if (errors.length > 0) {
         e.preventDefault();
+        e.stopImmediatePropagation();
+
         addToast({
-          title: `Пожалуйста, заполните <<${label}>> поля с соответствующими требованиями.`,
+          title: `Пожалуйста, заполните ${label && typeof label === "string" ? `<<${label}>>` : ""}  поля с соответствующими требованиями.`,
           color: "danger",
         });
         inputRef.current?.focus();
+
+        // Prevent other submit handlers from being called
+        return false;
       }
     };
 
-    form.addEventListener("submit", onFormSubmit);
-    return () => form.removeEventListener("submit", onFormSubmit);
-  }, [formRef, errors]);
+    // Add our submit handler as the first one
+    form.addEventListener("submit", onFormSubmit, { capture: true });
+
+    // Store the original submit handler if it exists
+    if (typeof (form as any).onsubmit === "function") {
+      originalSubmitHandler = (form as any).onsubmit;
+    }
+
+    return () => {
+      form.removeEventListener("submit", onFormSubmit, { capture: true });
+
+      // Restore original submit handler if it existed
+      if (originalSubmitHandler) {
+        (form as any).onsubmit = originalSubmitHandler;
+      }
+    };
+  }, [formRef, errors, label]);
 
   return (
     <div className="input-wrap">

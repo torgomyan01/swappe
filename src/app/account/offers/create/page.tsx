@@ -10,6 +10,7 @@ import { Spinner } from "@heroui/react";
 import { InputMask } from "@react-input/mask";
 import SelectCordinatesForMapModal from "@/app/account/offers/create/components/select-cordinates-for-map-modal";
 import UploadPhotos from "@/app/account/offers/create/components/upload-photos";
+import ModalAddVideo from "@/app/account/offers/create/components/modal-add-video";
 
 function Profile() {
   const [categories, setCategories] = useState<ICategory[] | null>(null);
@@ -180,40 +181,7 @@ function Profile() {
 
               <UploadPhotos />
 
-              <div className="title-nums">
-                <span className="text">Видео</span>
-                <span className="num">0/4</span>
-              </div>
-              <div className="video-items">
-                <div className="item active">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    alt="plus-icon"
-                    className="icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-                <div className="item">
-                  <img
-                    src="/img/creating-proposal/plus-green2.svg"
-                    className="icon"
-                    alt="plus-icon"
-                  />
-                </div>
-              </div>
+              <ModalAddVideo />
             </div>
             <button className="green-btn">Предварительный просмотр</button>
           </div>
