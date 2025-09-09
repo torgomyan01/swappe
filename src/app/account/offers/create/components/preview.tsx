@@ -1,12 +1,19 @@
 import { formatPrice, RandomKey } from "@/utils/helpers";
 import { useSelector } from "react-redux";
-import { Button } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
+import axios from "axios";
+import { fileHostUpload, SITE_URL } from "@/utils/consts";
+import { ActionCreateOffer } from "@/app/actions/offers/create";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface IThisProps {
   onGoBack: () => void;
 }
 
 function Preview({ onGoBack }: IThisProps) {
+  const router = useRouter();
+
   const offerData = useSelector(
     (state: IUserOfferStore) => state.userOffer.offer,
   );
@@ -17,6 +24,53 @@ function Preview({ onGoBack }: IThisProps) {
     const [lat, lon] = coords;
     return `https://yandex.ru/map-widget/v1/?ll=${lon},${lat}&z=16&pt=${lon},${lat},pm2rdl&whatshere[zoom]=16&z=16&l=map&controls=false`;
   };
+
+  const [loading, setLoading] = useState(false);
+
+  function StartCreating() {
+    setLoading(true);
+
+    const promise = offerData.images.map((image, i) => {
+      const formData = new FormData();
+      formData.append("image", image);
+
+      return axios.post(fileHostUpload, formData);
+    });
+
+    addToast({
+      description: "Подождите пожалуйста",
+      color: "default",
+    });
+
+    Promise.all(promise).then((res) => {
+      const urls: any = [];
+
+      res.forEach((item) => {
+        urls.push(item.data.url);
+      });
+
+      ActionCreateOffer({
+        name: offerData.name,
+        type: offerData.type,
+        vid: offerData.vid,
+        category: offerData.category,
+        price: offerData.price,
+        coordinates: offerData.coordinates,
+        description: offerData.description,
+        images: urls,
+        videos: offerData.videos,
+      })
+        .then(() => {
+          addToast({
+            description: "Готов ",
+            color: "success",
+          });
+
+          router.push(SITE_URL.ACCOUNT_SUGGESTIONS);
+        })
+        .finally(() => setLoading(false));
+    });
+  }
 
   return (
     <>
@@ -104,9 +158,13 @@ function Preview({ onGoBack }: IThisProps) {
         <Button className="grey-btn" onPress={onGoBack}>
           Вернуться к форме
         </Button>
-        <a href="#" className="green-btn">
+        <Button
+          className="green-btn"
+          onPress={StartCreating}
+          isLoading={loading}
+        >
           Опубликовать
-        </a>
+        </Button>
       </div>
     </>
   );

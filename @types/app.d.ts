@@ -243,6 +243,21 @@ declare interface IUserOffer {
   videos: string[];
 }
 
+declare interface IUserOfferFront {
+  id: number;
+  type: string;
+  vid: string;
+  name: string;
+  category: ICategory[];
+  price: string;
+  coordinates: [number, number] | null;
+  description: string;
+  images: any[];
+  videos: string[];
+  user_id: number;
+  state: "active";
+}
+
 declare interface IUserStore {
   userInfo: {
     company: IUserCompany | null;
