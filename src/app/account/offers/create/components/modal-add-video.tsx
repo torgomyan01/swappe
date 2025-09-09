@@ -1,6 +1,7 @@
 import { Button, Modal, ModalBody, ModalContent } from "@heroui/react";
 import { useRef, useState } from "react";
 import DefInput from "@/components/common/input/def-input";
+import UploadVideoImage from "@/app/account/offers/create/components/upload-video-image";
 
 function ModalAddVideo() {
   const form = useRef(null);
@@ -16,6 +17,8 @@ function ModalAddVideo() {
 
   const [videoUrls, setVideoUrls] = useState<string[]>([]);
 
+  const [input, setInput] = useState("");
+
   function FormSubmit(e: any) {
     e.preventDefault();
 
@@ -24,15 +27,23 @@ function ModalAddVideo() {
 
       setVideoUrls((old) => [...old, value]);
 
-      // form?.current?.querySelector("input").value = "";
+      setInput("");
     }
+  }
+
+  function RemoveUrl(index: number) {
+    const newUrls = videoUrls.filter(
+      (v: string, _index: number) => _index !== index,
+    );
+
+    setVideoUrls(newUrls);
   }
 
   return (
     <>
       <div className="title-nums">
         <span className="text">Видео</span>
-        <span className="num">0/4</span>
+        <span className="num">0/5</span>
       </div>
       <div className="video-items">
         <div className="item active" onClick={() => setModalState(true)}>
@@ -55,7 +66,7 @@ function ModalAddVideo() {
               <div className="load-form-wrap py-6">
                 <div className="top-line">
                   <b>Загрузка видео</b>
-                  <span>0/5</span>
+                  <span>{videoUrls.length + 1}/5</span>
                 </div>
                 <div className="url-wrap">
                   <form ref={form} className="relative" onSubmit={FormSubmit}>
@@ -72,33 +83,29 @@ function ModalAddVideo() {
                       rules={validators.map((e) => e.rule)}
                       messages={validators.map((e) => e.message)}
                       required
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
                     />
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="absolute right-2 top-8"
-                      color="danger"
-                    >
-                      Добавить
-                    </Button>
+                    {videoUrls.length < 5 && (
+                      <Button
+                        type="submit"
+                        size="sm"
+                        className="absolute right-2 top-8"
+                        color="danger"
+                      >
+                        Добавить
+                      </Button>
+                    )}
                   </form>
                 </div>
                 <div className="load-images">
                   {videoUrls.map((url, index) => (
-                    <div key={`url--${index}`} className="image">
-                      <span className="number">1</span>
-                      <span className="close-white">
-                        <img
-                          src="/img/creating-proposal/close-white.svg"
-                          alt=""
-                        />
-                      </span>
-                      <img
-                        src="/img/creating-proposal/slider-img2.png"
-                        alt=""
-                        className="img"
-                      />
-                    </div>
+                    <UploadVideoImage
+                      key={`url--${index}`}
+                      url={url}
+                      index={index + 1}
+                      onDelete={() => RemoveUrl(index)}
+                    />
                   ))}
                 </div>
                 {videoUrls.length > 0 && (

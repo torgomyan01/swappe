@@ -51,3 +51,37 @@ export const isValidUrl = (url: string) => {
     return false;
   }
 };
+
+export const getYouTubeThumbnailUrl = (videoUrl: string) => {
+  const regex =
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+
+  const match = videoUrl.match(regex);
+
+  if (!match || !match[1]) {
+    throw new Error("Invalid YouTube URL");
+  }
+
+  const videoId = match[1];
+
+  // Վերադարձնում է բարձր որակի thumbnail հասցե
+  return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+};
+
+export const getRuTubeThumbnail = (videoUrl: string) => {
+  const regex =
+    /(?:rutube\.ru\/video\/([a-zA-Z0-9]+)\/?)|(?:rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)\/?)|(?:rutube\.ru\/video\/embed\/([a-zA-Z0-9]+)\/?)/;
+  const match = videoUrl.match(regex);
+
+  let videoId: string | null = null;
+
+  if (match) {
+    videoId = match[1] || match[2] || match[3] || null;
+  }
+
+  if (!videoId) {
+    throw new Error("Invalid RuTube URL");
+  }
+
+  return `https://rutube.ru/api/video/${videoId}/thumbnail/?redirect=1`;
+};

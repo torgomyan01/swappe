@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE_URL } from "@/utils/consts";
+import moment from "moment";
 
 function Footer() {
   return (
@@ -32,7 +33,8 @@ function Footer() {
         <p className="copyright">
           Swappe - платформа для бартерного обмена и коллабораций. Условия
           пользования. Политика конфиденциальности. Оформляя подписку на Swappe,
-          вы принимаете оферту. &copy; 2024 Свопи. Все права защищены.
+          вы принимаете оферту. &copy; {moment().format("YYYY")} Свопи. Все
+          права защищены.
         </p>
       </div>
     </footer>
