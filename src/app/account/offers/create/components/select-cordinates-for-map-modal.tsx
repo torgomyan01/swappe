@@ -8,8 +8,11 @@ import {
 } from "@heroui/react";
 import { useState, useCallback, memo } from "react";
 import SelectCardYandexMap from "@/components/common/select-card-yandex-map/select-card-yandex-map";
+import { useDispatch } from "react-redux";
+import { setCompanyCoordinates } from "@/redux/offer-page";
 
 function SelectCordinatesForMapModal() {
+  const dispatch = useDispatch();
   const [modal, setModal] = useState<boolean>(false);
   const [selectedCords, setSelectedCords] = useState<[number, number] | null>(
     null,
@@ -86,7 +89,7 @@ function SelectCordinatesForMapModal() {
               <Button
                 color="secondary"
                 onPress={() => {
-                  console.log("Selected coordinates:", selectedCords);
+                  dispatch(setCompanyCoordinates(selectedCords));
                   setModal(false);
                 }}
               >

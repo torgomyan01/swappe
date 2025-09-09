@@ -231,9 +231,27 @@ declare interface IUserCompany {
   plan: "premium" | "free";
 }
 
+declare interface IUserOffer {
+  type: string;
+  vid: string;
+  name: string;
+  category: ICategory[];
+  price: string;
+  coordinates: [number, number] | null;
+  description: string;
+  images: any[];
+  videos: string[];
+}
+
 declare interface IUserStore {
   userInfo: {
     company: IUserCompany | null;
+  };
+}
+
+declare interface IUserOfferStore {
+  userOffer: {
+    offer: IUserOffer;
   };
 }
 

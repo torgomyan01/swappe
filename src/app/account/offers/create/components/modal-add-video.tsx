@@ -1,9 +1,20 @@
-import { Button, Modal, ModalBody, ModalContent } from "@heroui/react";
-import { useRef, useState } from "react";
+import {
+  addToast,
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+} from "@heroui/react";
+import { useEffect, useRef, useState } from "react";
 import DefInput from "@/components/common/input/def-input";
 import UploadVideoImage from "@/app/account/offers/create/components/upload-video-image";
+import SelectedVideoImage from "@/app/account/offers/create/components/selected-video-image";
+import { useDispatch } from "react-redux";
+import { setCompanyVideos } from "@/redux/offer-page";
 
 function ModalAddVideo() {
+  const dispatch = useDispatch();
+
   const form = useRef(null);
 
   const [modalState, setModalState] = useState<boolean>(false);
@@ -16,6 +27,19 @@ function ModalAddVideo() {
   ];
 
   const [videoUrls, setVideoUrls] = useState<string[]>([]);
+  const [SelectedVideoUrls, setSelectedVideoUrls] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (SelectedVideoUrls.length > 5) {
+      addToast({
+        title: "Предупреждение",
+        description: "Вы можете выбрать до 5 видео.",
+        color: "secondary",
+      });
+      const cropImages = SelectedVideoUrls.slice(0, 5);
+      setSelectedVideoUrls(cropImages);
+    }
+  }, [SelectedVideoUrls]);
 
   const [input, setInput] = useState("");
 
@@ -39,20 +63,40 @@ function ModalAddVideo() {
     setVideoUrls(newUrls);
   }
 
+  function AddSelectedUrl() {
+    const urls = [...SelectedVideoUrls, ...videoUrls];
+
+    setSelectedVideoUrls(urls);
+    setVideoUrls([]);
+    setModalState(false);
+    dispatch(setCompanyVideos(urls));
+  }
+
+  function CancelModal() {
+    setVideoUrls([]);
+    setModalState(false);
+  }
+
   return (
     <>
       <div className="title-nums">
         <span className="text">Видео</span>
-        <span className="num">0/5</span>
+        <span className="num">{SelectedVideoUrls.length}/5</span>
       </div>
       <div className="video-items">
-        <div className="item active" onClick={() => setModalState(true)}>
-          <img
-            src="/img/creating-proposal/plus-green2.svg"
-            alt="plus-icon"
-            className="icon"
-          />
-        </div>
+        {SelectedVideoUrls.map((url, index) => (
+          <SelectedVideoImage key={`url__${index}`} url={url} />
+        ))}
+
+        {SelectedVideoUrls.length < 5 && (
+          <div className="item active" onClick={() => setModalState(true)}>
+            <img
+              src="/img/creating-proposal/plus-green2.svg"
+              alt="plus-icon"
+              className="icon"
+            />
+          </div>
+        )}
       </div>
 
       <Modal
@@ -110,12 +154,12 @@ function ModalAddVideo() {
                 </div>
                 {videoUrls.length > 0 && (
                   <div className="buttons">
-                    <a href="#" className="cancel">
+                    <Button className="cancel" onPress={CancelModal}>
                       Отменить
-                    </a>
-                    <a href="#" className="add  green-btn">
+                    </Button>
+                    <Button className="add green-btn" onPress={AddSelectedUrl}>
                       Добавить
-                    </a>
+                    </Button>
                   </div>
                 )}
               </div>

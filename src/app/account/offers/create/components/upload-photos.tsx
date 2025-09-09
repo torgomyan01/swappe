@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { addToast } from "@heroui/react";
+import { useDispatch } from "react-redux";
+import { setCompanyImages } from "@/redux/offer-page";
 
 const ArrImagesEmpty = Array.from({ length: 9 });
 
@@ -9,6 +11,8 @@ function DynamicTag({ tag: Tag = "div", children, ...props }: any) {
 }
 
 function UploadPhotos() {
+  const dispatch = useDispatch();
+
   const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
@@ -24,7 +28,9 @@ function UploadPhotos() {
   }, [files]);
 
   function SelectImages(e: any) {
-    setFiles((old) => [...old, ...e.target.files]);
+    const old = [...files, ...e.target.files];
+    setFiles(old);
+    dispatch(setCompanyImages(old));
   }
 
   function RemoveImage(index: number) {
@@ -33,37 +39,41 @@ function UploadPhotos() {
     setFiles(NewFiles);
   }
 
+  const [infoBlock, setInfoBlock] = useState<boolean>(true);
+
   return (
     <>
       <div className="title-nums">
         <span className="text">Фото</span>
         <span className="num">{files.length}/9</span>
       </div>
+      {infoBlock && (
+        <div className="info-block">
+          <div className="icon">
+            <img
+              src="/img/creating-proposal/err-green.svg"
+              alt=""
+              className="min-w-[20px] relative top-1"
+            />
+          </div>
+          <div className="texts">
+            <b>Управляй порядком</b>
+            <span>
+              Чтобы сделать фото обложкой карточки, перетащи его на первое
+              место. Остальные фото расставь в том порядке, который хочешь
+              видеть на сайте
+            </span>
+          </div>
+          <div className="close" onClick={() => setInfoBlock(false)}>
+            <img
+              src="/img/close-pop.svg"
+              alt="close"
+              className="min-w-[20px] cursor-pointer opacity-65 hover:opacity-100"
+            />
+          </div>
+        </div>
+      )}
 
-      <div className="info-block">
-        <div className="icon">
-          <img
-            src="/img/creating-proposal/err-green.svg"
-            alt=""
-            className="min-w-[20px] relative top-1"
-          />
-        </div>
-        <div className="texts">
-          <b>Управляй порядком</b>
-          <span>
-            Чтобы сделать фото обложкой карточки, перетащи его на первое место.
-            Остальные фото расставь в том порядке, который хочешь видеть на
-            сайте
-          </span>
-        </div>
-        <div className="close">
-          <img
-            src="/img/close-pop.svg"
-            alt="close"
-            className="min-w-[20px] cursor-pointer opacity-65 hover:opacity-100"
-          />
-        </div>
-      </div>
       <div className="media-items grid grid-cols-6 gap-3">
         {ArrImagesEmpty.map((item: any, index: number) => (
           <DynamicTag

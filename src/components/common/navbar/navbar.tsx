@@ -62,19 +62,19 @@ function Navbar() {
       <div className="wrapper">
         <div className="mobile-icons">
           <a href="#" className="icon">
-            <img src="img/menu-icon1.svg" alt="" />
+            <img src="/img/menu-icon1.svg" alt="" />
           </a>
           <a href="#" className="icon">
-            <img src="img/menu-icon2.svg" alt="" />
+            <img src="/img/menu-icon2.svg" alt="" />
           </a>
           <a href="#" className="icon">
-            <img src="img/menu-icon3.svg" alt="" />
+            <img src="/img/menu-icon3.svg" alt="" />
           </a>
           <a href="#" className="icon">
-            <img src="img/menu-icon4.svg" alt="" />
+            <img src="/img/menu-icon4.svg" alt="" />
           </a>
           <a href="#" className="icon">
-            <img src="img/menu-icon5.svg" alt="" />
+            <img src="/img/menu-icon5.svg" alt="" />
           </a>
         </div>
       </div>

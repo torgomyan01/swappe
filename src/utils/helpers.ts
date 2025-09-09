@@ -85,3 +85,14 @@ export const getRuTubeThumbnail = (videoUrl: string) => {
 
   return `https://rutube.ru/api/video/${videoId}/thumbnail/?redirect=1`;
 };
+
+export const formatPrice = (
+  price: number,
+  locale = "ru-RU",
+  currency = "RUB",
+) => {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+  }).format(price);
+};

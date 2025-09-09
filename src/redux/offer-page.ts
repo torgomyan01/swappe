@@ -1,21 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IInterface {
-  company: {
-    type: string;
-    vid: string;
-    name: string;
-    category: [];
-    price: string;
-    coordinates: [number, number] | null;
-    description: string;
-    images: any[];
-    videos: string[];
-  };
+  offer: IUserOffer;
 }
 
 const initialState: IInterface = {
-  company: {
+  offer: {
     type: "",
     vid: "",
     name: "",
@@ -28,17 +18,53 @@ const initialState: IInterface = {
   },
 };
 
-// Ստեղծել slice
-export const userInfo = createSlice({
-  name: "filter-params",
+export const userOffer = createSlice({
+  name: "offer",
   initialState,
   reducers: {
-    setCompany: (state, action: PayloadAction<any>) => {
-      state.company = action.payload;
+    setCompanyType: (state, action: PayloadAction<string>) => {
+      state.offer.type = action.payload;
+    },
+    setCompanyVid: (state, action: PayloadAction<string>) => {
+      state.offer.vid = action.payload;
+    },
+    setCompanyName: (state, action: PayloadAction<string>) => {
+      state.offer.name = action.payload;
+    },
+    setCompanyCategory: (state, action: PayloadAction<ICategory[]>) => {
+      state.offer.category = action.payload;
+    },
+    setCompanyPrice: (state, action: PayloadAction<string>) => {
+      state.offer.price = action.payload;
+    },
+    setCompanyCoordinates: (
+      state,
+      action: PayloadAction<[number, number] | null>,
+    ) => {
+      state.offer.coordinates = action.payload;
+    },
+    setCompanyDescription: (state, action: PayloadAction<string>) => {
+      state.offer.description = action.payload;
+    },
+    setCompanyImages: (state, action: PayloadAction<any[]>) => {
+      state.offer.images = action.payload;
+    },
+    setCompanyVideos: (state, action: PayloadAction<string[]>) => {
+      state.offer.videos = action.payload;
     },
   },
 });
 
 // Export actions and reducer
-export const { setCompany } = userInfo.actions;
-export default userInfo.reducer;
+export const {
+  setCompanyType,
+  setCompanyVid,
+  setCompanyName,
+  setCompanyCategory,
+  setCompanyPrice,
+  setCompanyCoordinates,
+  setCompanyDescription,
+  setCompanyImages,
+  setCompanyVideos,
+} = userOffer.actions;
+export default userOffer.reducer;
