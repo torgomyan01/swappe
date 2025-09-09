@@ -30,7 +30,7 @@ function Preview({ onGoBack }: IThisProps) {
   function StartCreating() {
     setLoading(true);
 
-    const promise = offerData.images.map((image, i) => {
+    const promise = offerData.images.map((image) => {
       const formData = new FormData();
       formData.append("image", image);
 
