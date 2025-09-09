@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function ActionCreateOffer(offer: IUserOffer) {
+export async function ActionCreateOffer(offer: any) {
   try {
     const session: any = await getServerSession(authOptions);
 

@@ -13,7 +13,7 @@ function Profile() {
 
   useEffect(() => {
     ActionMyOffers().then(({ data }) => {
-      setOffers(data);
+      setOffers(data as any);
     });
   }, []);
 
