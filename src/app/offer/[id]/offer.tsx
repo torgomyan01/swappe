@@ -19,8 +19,6 @@ interface IThisProps {
 }
 
 function OfferPage({ offer }: IThisProps) {
-  console.log(offer, 55555);
-
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const prevRef = useRef<HTMLButtonElement>(null);

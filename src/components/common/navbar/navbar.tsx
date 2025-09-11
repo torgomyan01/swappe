@@ -1,13 +1,26 @@
 "use client";
 
+import { signOut } from "next-auth/react";
+
 import { useSession } from "next-auth/react";
-import { SITE_URL } from "@/utils/consts";
+import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { sliceText } from "@/utils/helpers";
-import { Tooltip } from "@heroui/react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Tooltip,
+} from "@heroui/react";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const { data: session } = useSession();
+
+  console.log(session);
+
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
 
   return (
     <>
@@ -45,12 +58,31 @@ function Navbar() {
             </Tooltip>
           </div>
           {session ? (
-            <Link href={SITE_URL.ACCOUNT} className="user-in">
-              <span>{sliceText(session.user?.name || "", 10, ".")}</span>
-              <div className="avatar">
-                <img src="/img/header-avatar.png" alt="" />
-              </div>
-            </Link>
+            <Dropdown>
+              <DropdownTrigger>
+                <div className="user-in cursor-pointer">
+                  <span>{sliceText(session.user?.name || "", 10, ".")}</span>
+                  {company && (
+                    <div className="avatar">
+                      <img src={`${fileHost}${company.image_path}`} alt="" />
+                    </div>
+                  )}
+                </div>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem href={SITE_URL.ACCOUNT} key="accout">
+                  Профиле
+                </DropdownItem>
+                <DropdownItem
+                  key="logout"
+                  className="text-danger"
+                  onPress={() => signOut()}
+                  color="danger"
+                >
+                  Выход
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           ) : (
             <Link href={SITE_URL.LOGIN} className="user cursor-pointer">
               <img src="/img/user-icon.svg" alt="user icon" />
