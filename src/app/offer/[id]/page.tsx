@@ -26,8 +26,6 @@ async function Offer({ params }: Props) {
 
   const offer = await getOffer(id ? +id : 0);
 
-  // Եթե IUserOfferFront-ը գլոբալ տիպ չէ, համոզվեք, որ այն ներմուծված է
-  // Օրինակ՝ import { IUserOfferFront } from "@/types/user-offer";
   return <OfferPage offer={offer as IUserOfferFront} />;
 }
 
