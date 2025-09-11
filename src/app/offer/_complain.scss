@@ -1,0 +1,174 @@
+.creating-proposal{
+     .info-text{
+        margin: 40px 0;
+        h5{
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #252525;
+        }
+         p{
+            max-width: 800px;
+            width: 100%;
+            font-size: 16px;
+            color: #68727D;
+        }
+     }
+     .links{
+        @media(max-width: 767px){
+            margin-bottom: 22px;
+          }
+     }
+     .info-btns{
+        @include flex;
+        padding-bottom: 30px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(99, 103, 104, 0.16);
+        @media(max-width: 767px){
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+          }
+        .heart-btn{
+            @include flex;
+            margin-left: 12px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 16px;
+            background: #F8F2EA;
+            img{
+                margin: auto;
+            }
+        }
+        .dots-wrap{
+            .dots{
+                cursor: pointer;
+                @include flex;
+                margin-left: 12px;
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                border-radius: 16px;
+                background: #F8F2EA;
+                img{
+                    margin: auto;
+                }
+            }
+        }
+     }
+     .title-wrap{
+        @include flex;
+        @include justify-between;
+        margin-bottom: 32px;
+        @media(max-width: 767px){
+            margin-bottom: 24px;
+          }
+        h3{
+            font-size: 24px;
+            font-weight: bold;
+            color: #252525;
+        }
+        .stars-info{
+            @include flex;
+            @include align-center;
+            .images{
+                @include flex;
+                img{
+                    margin-right: 8px;
+                    @media(max-width: 767px){
+                        margin-right: 5px;
+                      }
+                }
+            }
+            span{
+                font-size: 24px;
+                font-weight: bold;
+                color: #252525;
+                @media(max-width: 767px){
+                    font-size: 20px;
+                  }
+            }
+        }
+     }
+     .review-items{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+        @media(max-width: 1100px){
+            grid-template-columns: 1fr 1fr;
+          }
+        @media(max-width: 767px){
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+        .review-item{
+            .name-wrap{
+                padding-bottom: 0;
+                border: none;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.look-more{
+    text-align: center;
+    margin: 50px 0;
+    @media(max-width: 767px){
+        margin: 40px 0;
+      }
+    h3{
+        text-align: left;
+        margin-bottom: 32px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #252525;
+    }
+    .look-more-items{
+        margin-bottom: 32px;
+        text-align: left;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+        @media(max-width: 1100px){
+            grid-template-columns: 1fr 1fr;
+          }
+        @media(max-width: 767px){
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+        .offer-item{
+            .texts{
+                span{
+                    font-size: 13px;
+                    font-weight: 600;
+                    margin-bottom: 2px;
+                    display: block;
+                    color: #BBB8B0;
+                }
+                b{
+                    display: block;
+                    margin-top: 2px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #252525;
+                }
+            }
+            .text-wrap{
+                margin-bottom: 8px;
+                span{
+                    color: #BBB8B0;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+            .name{
+                display: block;
+                margin-bottom: 12px;
+                font-size: 18px;
+                font-weight: 600;
+                color: #252525;
+            }
+        }
+    }
+}
