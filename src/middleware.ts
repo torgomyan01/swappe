@@ -1,18 +1,24 @@
-import { NextResponse, NextRequest } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { SITE_URL } from "@/utils/consts";
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { SITE_URL } from "@/utils/consts"; // Համոզվեք, որ այս ուղին ճիշտ է
 
-export async function middleware(request: NextRequest) {
-  const session: any = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.redirect(new URL(SITE_URL.HOME, request.url));
-  } else {
+export default withAuth(
+  function middleware() {
     return NextResponse.next();
-  }
-}
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        return !!token;
+      },
+    },
+    pages: {
+      signIn: SITE_URL.HOME,
+    },
+  },
+);
 
+// `config` օբյեկտը մնում է նույնը
 export const config = {
   matcher: "/account/:path*",
 };
