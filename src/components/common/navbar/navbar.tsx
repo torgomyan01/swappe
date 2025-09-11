@@ -18,8 +18,6 @@ import { useSelector } from "react-redux";
 function Navbar() {
   const { data: session } = useSession();
 
-  console.log(session);
-
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
   return (
