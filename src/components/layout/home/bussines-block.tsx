@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 function BussinesBlock() {
   return (
-    <div className="business-size">
+    <div id="business-size" className="business-size">
       <div className="wrapper">
         <h2>Размер бизнеса не важен,</h2>
         <p>давайте расти вместе!</p>

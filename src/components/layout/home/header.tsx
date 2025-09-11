@@ -27,16 +27,16 @@ function HomeHeader() {
             </Link>
             <ul className="main-menu2">
               <li>
-                <Link href="#">О сервисе</Link>
+                <Link href="#service">О сервисе</Link>
               </li>
               <li>
-                <Link href="#">Отзывы</Link>
+                <Link href="#business-size">Отзывы</Link>
               </li>
               <li>
-                <Link href="#">Кто мы</Link>
+                <Link href="#why-are">Кто мы</Link>
               </li>
               <li>
-                <Link href="#">FAQ</Link>
+                <Link href="#faq">FAQ</Link>
               </li>
             </ul>
             <div className="drop-menu-main">

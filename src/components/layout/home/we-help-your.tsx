@@ -19,7 +19,7 @@ function WeHelpYour() {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <div className="level-block">
+    <div id="service" className="level-block">
       <div className="info">
         <h2>Мы помогаем бизнесам найти друг друга</h2>
         <div className="info-wrap">

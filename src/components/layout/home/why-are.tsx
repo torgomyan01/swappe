@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 function WhyAre() {
   return (
-    <div className="why-are">
+    <div id="why-are" className="why-are">
       <div className="wrapper">
         <img src="img/why-are-img1.png" alt="" className="left-img" />
         <img src="img/why-are-img2.png" alt="" className="right-img" />

@@ -16,7 +16,7 @@ function HomeFaq() {
   ];
 
   return (
-    <div className="faq">
+    <div id="faq" className="faq">
       <div className="wrapper">
         <h2>FAQ</h2>
         <div className="chat">
