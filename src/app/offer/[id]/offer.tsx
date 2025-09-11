@@ -1,12 +1,31 @@
 "use client";
 
 import MainTemplate from "@/components/common/main-template/main-template";
-import { useSession } from "next-auth/react";
-import { useSelector } from "react-redux";
-import { SITE_URL } from "@/utils/consts";
+import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
+import { formatPrice } from "@/utils/helpers";
+import { useRef, useState } from "react";
 
-function OfferPage() {
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import "swiper/css/free-mode";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import Image from "next/image";
+
+interface IThisProps {
+  offer: IUserOfferFront;
+}
+
+function OfferPage({ offer }: IThisProps) {
+  console.log(offer, 55555);
+
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+
   return (
     <MainTemplate>
       <div className="wrapper">
@@ -15,11 +34,11 @@ function OfferPage() {
             Главная
             <img src="/img/arr-r.svg" alt="arrow" />
           </Link>
-          <a href="#">
-            ВкусВилл Праздник
+          <Link href={`${SITE_URL.COMPANY}/${offer.user.company.id}`}>
+            {offer.user.company.name}
             <img src="/img/arr-r.svg" alt="arrow" />
-          </a>
-          <span>Кейтеринг для мероприятий</span>
+          </Link>
+          <span>{offer.name}</span>
         </div>
       </div>
 
@@ -27,64 +46,130 @@ function OfferPage() {
         <div className="wrapper">
           <div className="proposal-info">
             <div className="left-info">
-              <div className="swiper main-slider">
-                <div className="swiper-wrapper">
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img2.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img2.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
+              <div className="max-w-4xl mx-auto">
+                {/* Main Slider */}
+                <div className="relative mb-6">
+                  <Swiper
+                    modules={[Navigation, Thumbs]}
+                    spaceBetween={10}
+                    navigation={{
+                      prevEl: prevRef.current,
+                      nextEl: nextRef.current,
+                    }}
+                    thumbs={{
+                      swiper:
+                        thumbsSwiper && !thumbsSwiper.destroyed
+                          ? thumbsSwiper
+                          : null,
+                    }}
+                    className="main-swiper rounded-2xl overflow-hidden shadow-lg"
+                    onSlideChange={(swiper) =>
+                      setActiveIndex(swiper.activeIndex)
+                    }
+                    onBeforeInit={(swiper) => {
+                      if (typeof swiper.params.navigation !== "boolean") {
+                        const navigation = swiper.params.navigation;
+                        if (navigation) {
+                          navigation.prevEl = prevRef.current;
+                          navigation.nextEl = nextRef.current;
+                        }
+                      }
+                    }}
+                  >
+                    {offer.images.map((slide) => (
+                      <SwiperSlide key={`images-product-${slide.id}`}>
+                        <div className="aspect-[4/3] bg-gray-100">
+                          <Image
+                            src={`${fileHost}${slide}` || "./default-image.png"}
+                            alt={offer.name}
+                            className="w-full h-full object-cover"
+                            width={800}
+                            height={800}
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+
+                  {/* Navigation Buttons */}
+                  <button
+                    ref={prevRef}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 cursor-pointer"
+                    aria-label="Previous slide"
+                  >
+                    <i className="fa-regular fa-chevron-left text-gray-700"></i>
+                  </button>
+
+                  <button
+                    ref={nextRef}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 cursor-pointer"
+                    aria-label="Next slide"
+                  >
+                    <i className="fa-regular fa-chevron-right text-gray-700"></i>
+                  </button>
                 </div>
-                <div className="swiper-button-prev"></div>
-                <div className="swiper-button-next"></div>
-              </div>
-              <div className="swiper thumbs">
-                <div className="swiper-wrapper">
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img2.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img2.png" alt="" />
-                    <span className="icon">
-                      <img src="/img/creating-proposal/video-icon.svg" alt="" />
-                    </span>
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
-                  <div className="swiper-slide">
-                    <img src="/img/creating-proposal/slider-img.png" alt="" />
-                  </div>
-                </div>
+
+                <Swiper
+                  modules={[FreeMode, Thumbs]}
+                  onSwiper={setThumbsSwiper}
+                  spaceBetween={12}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  className="thumbs-swiper"
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 4,
+                      spaceBetween: 16,
+                    },
+                    768: {
+                      slidesPerView: 4,
+                      spaceBetween: 20,
+                    },
+                  }}
+                >
+                  {offer.images.map((slide, index) => (
+                    <SwiperSlide
+                      key={`thumb-offer__${slide.id}`}
+                      className="my-4 px-2"
+                    >
+                      <div
+                        className={`aspect-square bg-gray-100 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+                          activeIndex === index
+                            ? "ring-3 ring-green ring-offset-2 scale-105"
+                            : "hover:ring-2 hover:ring-green/80 hover:scale-102"
+                        }`}
+                      >
+                        <Image
+                          src={`${fileHost}${slide}` || "./default-image.png"}
+                          alt={offer.name}
+                          className="w-full h-full object-cover"
+                          width={200}
+                          height={200}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
             <div className="right-info">
-              <h1>Кейтеринг для мероприятий</h1>
+              <h1>{offer.name}</h1>
               <div className="rate">
-                <b>ВкусВилл Праздник</b>
+                <b>{offer.user.company.name}</b>
                 <div className="rate-text">
                   4.5
                   <img src="/img/star.svg" alt="" />
                 </div>
                 <span>(34)</span>
               </div>
-              <b className="price">₽20 000</b>
+              <b className="price">{formatPrice(+offer.price)}</b>
               <div className="links">
-                <a href="#">Доставка</a>
-                <a href="#">Кейтеринг</a>
+                {offer.category.map((item, i) => (
+                  <a key={`cat__${i}`} href="#">
+                    {item.name}
+                  </a>
+                ))}
               </div>
               <div className="info-btns">
                 <a href="#" className="green-btn">
@@ -95,56 +180,9 @@ function OfferPage() {
                   <img src="/img/heart.svg" alt="" />
                 </a>
               </div>
-              <ul className="list">
-                <li>
-                  <b>Организатор:</b>
-                  <span className="grey">ООО «ВкусВилл Праздник»</span>
-                </li>
-                <li>
-                  <b>Поставщик:</b>
-                  <span className="grey">ООО «Фермерский двор»</span>
-                </li>
-                <li>
-                  <b>Срочность исполнения:</b>
-                  <span className="grey">2 раб. дня до даты мероприятия</span>
-                </li>
-              </ul>
             </div>
           </div>
-          <div className="texts-wrap">
-            <div className="item">
-              <b>Интересующие товары и услуги</b>
-              <p>
-                Кухня. Здесь все время что-то кипит, печется, шкварчит, тушится,
-                жарится. Повара знают, как и что красиво оформить, куда и чего
-                побольше насыпать. Однако прежде чем подавать фирменное блюдо,
-                нужно позвать гостей за ваши столы. Жаль, но аппетитные запахи с
-                кухни не доходят до пользователей интернета. К счастью, здесь
-                вам на помощь приходят образы, визуализация и эксклюзив.
-              </p>
-            </div>
-            <div className="item">
-              <b>Внесение изменений</b>
-              <p>
-                Вы слышали выражение «Пойдем посидим». В нем заключается вся
-                суть хождения по кафе, ресторанам и барам. В первую очередь люди
-                ходят туда не вкусно и дешево поесть, а пообщаться – на других
-                посмотреть и себя показать. Но при этом кухня всегда должна быть
-                на уровне.
-              </p>
-            </div>
-            <div className="item">
-              <b>О контрагенте</b>
-              <p>
-                Условия доставки каждого интернет-магазина отличаются друг от
-                друга. Они зависят от политики компании, выбранной стратегии, а
-                также объемов продаж. Некоторые сайты включают услугу в
-                стоимость продукта, другие — варьируют её в зависимости от
-                региона получения покупки или стоимости заказа.
-              </p>
-            </div>
-          </div>
-          <div className="title-wrap">
+          <div className="title-wrap !mt-9">
             <h3>Отзывы</h3>
             <div className="stars-info">
               <div className="images">

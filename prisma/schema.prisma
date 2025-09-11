@@ -8,18 +8,19 @@ datasource db {
 }
 
 model users {
-  id                Int      @id @default(autoincrement())
-  email             String   @db.VarChar(250)
-  name              String   @db.VarChar(255)
-  password          String   @db.VarChar(255)
-  status            String   @db.VarChar(250)
+  id                Int           @id @default(autoincrement())
+  email             String        @db.VarChar(250)
+  name              String        @db.VarChar(255)
+  password          String        @db.VarChar(255)
+  status            String        @db.VarChar(250)
   verification_code Int
   offers            offers[]
+  company           user_company?
 }
 
 model user_company {
   id                  Int    @id @default(autoincrement())
-  user_id             Int
+  user_id             Int    @unique
   name                String @db.VarChar(10000)
   phone_number        String @db.VarChar(250)
   inn                 String @db.VarChar(250)
@@ -34,6 +35,7 @@ model user_company {
 
   city_data     countries_tb @relation(fields: [city], references: [id])
   industry_data Industry     @relation(fields: [industry], references: [id])
+  user          users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model company_reviews {
@@ -84,13 +86,13 @@ model categories {
 model offers {
   id          Int    @id @default(autoincrement())
   user_id     Int
-  name        String
+  name        String @db.VarChar(1000)
   type        String
   vid         String
   category    Json
   price       String
   coordinates Json
-  description String
+  description String @db.VarChar(5000)
   images      Json
   videos      Json
   status      String

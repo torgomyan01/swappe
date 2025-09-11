@@ -4,6 +4,7 @@ export const SITE_URL = {
   REGISTER: "/auth/register",
   FORGOT_PASSWORD: "/auth/forgot-password",
   VERIFY_USER: "/auth/verify-user",
+  COMPANY: "/company",
   COMPANY_CREATE: "/company/create",
   COMPANY_THANKS: "/company/thanks",
   ACCOUNT: "/account",

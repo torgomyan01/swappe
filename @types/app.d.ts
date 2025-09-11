@@ -231,6 +231,16 @@ declare interface IUserCompany {
   plan: "premium" | "free";
 }
 
+declare interface IUserProfile {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  status: string;
+  verification_code: number;
+  company: IUserCompany;
+}
+
 declare interface IUserOffer {
   type: string;
   vid: string;
@@ -249,6 +259,7 @@ declare interface IUserOfferFront {
   vid: string;
   name: string;
   category: ICategory[];
+  user: IUserProfile;
   price: string;
   coordinates: [number, number] | null;
   description: string;
