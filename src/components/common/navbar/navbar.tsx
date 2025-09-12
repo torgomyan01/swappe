@@ -14,11 +14,16 @@ import {
   Tooltip,
 } from "@heroui/react";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "next/navigation";
 
 function Navbar() {
   const { data: session } = useSession();
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
+
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("value");
 
   return (
     <>
@@ -28,7 +33,12 @@ function Navbar() {
             <img src="/img/black-logo.svg" alt="" />
           </Link>
           <form className="search" action={SITE_URL.SEARCH}>
-            <input type="text" placeholder="Введи запрос" name="value" />
+            <input
+              type="text"
+              placeholder="Введи запрос"
+              name="value"
+              defaultValue={search || ""}
+            />
             <button type="button">
               <img src="/img/search-icon.svg" alt="" />
             </button>

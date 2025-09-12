@@ -356,3 +356,6 @@ declare interface Capital {
   oktmo: string;
   contentType: string;
 }
+
+type OfferType = "product" | "service";
+type OfferVid = "online" | "offline";

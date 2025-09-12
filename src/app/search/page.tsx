@@ -6,10 +6,67 @@ import "./_search.scss";
 import MainTemplate from "@/components/common/main-template/main-template";
 
 import Filter from "@/app/search/components/filter";
-import { Select, SelectItem } from "@heroui/react";
+import { Button, Select, SelectItem } from "@heroui/react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ActionSearchOffer } from "@/app/actions/search/search";
+import OfferCard from "@/app/search/components/offer-card";
+import OfferCardLoading from "@/app/search/components/offer-card-loading";
+import { RandomKey } from "@/utils/helpers";
+
+const OFFERS_PER_PAGE = 9;
 
 function Search() {
-  // const { data: session } = useSession();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("value");
+  const type = searchParams.get("type") as OfferType | null;
+  const vid = searchParams.get("vid") as OfferVid | null;
+  const cat = searchParams.get("cat") as string | null;
+
+  const [result, setResult] = useState<IUserOfferFront[] | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalOffers, setTotalOffers] = useState(0);
+
+  const totalPages = Math.ceil(totalOffers / OFFERS_PER_PAGE);
+
+  useEffect(() => {
+    setResult(null);
+
+    let cats = null;
+
+    if (cat) {
+      cats = cat?.split(".").map((cat) => +cat);
+    }
+
+    console.log(cats, 5555555);
+
+    ActionSearchOffer(
+      search || "",
+      currentPage,
+      OFFERS_PER_PAGE,
+      type,
+      vid,
+      cats,
+    ).then(({ data, totalCount }) => {
+      setResult(data as IUserOfferFront[]);
+      setTotalOffers(totalCount);
+    });
+  }, [search, currentPage, type, vid, cat]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      setResult(null);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      setResult(null);
+    }
+  };
 
   return (
     <MainTemplate>
@@ -143,7 +200,7 @@ function Search() {
           <div className="search-info-block">
             <div className="info-top">
               <div className="texts">
-                <b>49</b>
+                <b>{result?.length}</b>
                 <span>найдено</span>
               </div>
               <Select
@@ -155,168 +212,32 @@ function Search() {
               </Select>
             </div>
             <div className="items">
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img1.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img2.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img3.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img1.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img2.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img3.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img1.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img2.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
-              <div className="offer-item">
-                <div className="img-wrap">
-                  <a href="#" className="img">
-                    <img src="/img/offer-img3.png" alt="" />
-                  </a>
-                  <div className="favorite open"></div>
-                </div>
-                <div className="text-wrap">
-                  <span>ВкусВилл Праздник</span>
-                  <b>
-                    4.5 <img src="/img/star-small.svg" alt="" />
-                  </b>
-                </div>
-                <p>Кейтеринг для детского праздника</p>
-                <span className="barter">Бартер</span>
-                <b className="price">₽15 000</b>
-              </div>
+              {result
+                ? result.map((item, i) => (
+                    <OfferCard key={`offer-card-${i}`} offer={item} />
+                  ))
+                : Array.from({ length: 6 }).map(() => (
+                    <OfferCardLoading key={RandomKey()} />
+                  ))}
             </div>
             <div className="pagination">
-              <button type="button">
+              <Button
+                type="button"
+                onPress={handlePrevPage}
+                disabled={currentPage === 1}
+              >
                 <img src="/img/right.svg" alt="" className="rotate" />
-              </button>
-              <span>Страница 1 из 8</span>
-              <button type="button">
+              </Button>
+              <span>
+                Страница {currentPage} из {totalPages}
+              </span>
+              <Button
+                type="button"
+                onPress={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
                 <img src="/img/right.svg" alt="" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

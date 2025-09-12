@@ -58,7 +58,7 @@ function Profile() {
                               alt=""
                               width={500}
                               height={500}
-                              className="w-full h-full rounded-[12px] object-cover"
+                              className="h-full w-auto rounded-[12px]"
                             />
                           </Link>
                           <div className="dots-wrap">

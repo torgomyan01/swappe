@@ -96,3 +96,15 @@ export const formatPrice = (
     currency,
   }).format(price);
 };
+
+export const getMapIframeUrl = (coords: [number, number]) => {
+  const [lat, lon] = coords;
+  return `https://yandex.ru/map-widget/v1/?ll=${lon},${lat}&z=16&pt=${lon},${lat},pm2rdl&whatshere[zoom]=16&z=16&l=map&controls=false`;
+};
+
+export const truncateString = (str: string) => {
+  if (str.length > 30) {
+    return `${str.slice(0, 30)}...`;
+  }
+  return str;
+};

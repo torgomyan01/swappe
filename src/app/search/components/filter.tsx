@@ -5,16 +5,51 @@ import { Autocomplete, AutocompleteItem, Slider } from "@heroui/react";
 import { ActionGetAllCategory } from "@/app/actions/category/get-category";
 import clsx from "clsx";
 import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countries";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SITE_URL } from "@/utils/consts";
 
 function Filter() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [valuePriceBanners, setValuePriceBanners] = useState<any>([100, 300]);
   const [valuePriceCompany, setValuePriceCompany] = useState<any>([100, 300]);
 
-  const [type, setType] = useState<"product" | "service">("product");
-  const [vid, setVid] = useState<"online" | "offline">("online");
+  const getType = searchParams.get("type") as OfferType | null;
+  const getVid = searchParams.get("v") as OfferVid | null;
+  const _cat = searchParams.get("cat") as OfferVid | null;
+
+  const [type, setType] = useState<OfferType>(getType || "product");
+  const [vid, setVid] = useState<OfferVid>(getVid || "online");
 
   const [category, setCategory] = useState<ICategory[] | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
+
+  useEffect(() => {
+    if (_cat) {
+      const findSelectedCat = _cat?.split(".").map((cat) => +cat);
+
+      const filter = category?.filter((cat) =>
+        findSelectedCat?.some((catId) => catId === cat.id),
+      );
+
+      setSelectedCategories(filter || []);
+    }
+  }, [_cat, category]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set("type", type);
+    urlParams.set("vid", vid);
+
+    if (selectedCategories.length) {
+      const cat = selectedCategories.map((cat) => cat.id);
+      urlParams.set("cat", cat.join("."));
+    }
+
+    router.push(`${SITE_URL.SEARCH}?${urlParams.toString()}`);
+  }, [type, vid, selectedCategories]);
 
   useEffect(() => {
     ActionGetAllCategory().then(({ data }) => {

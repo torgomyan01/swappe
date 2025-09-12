@@ -77,7 +77,7 @@ function HomeHeader() {
               </li>
             </ul>
             <a href="#" className="login-btn-mob">
-              <img src="img/subtract.svg" alt="" />
+              <img src="/img/subtract.svg" alt="" />
               Войти в сервис
             </a>
           </div>
