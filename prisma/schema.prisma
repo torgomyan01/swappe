@@ -90,7 +90,7 @@ model offers {
   type        String
   vid         String
   category    Json
-  price       String
+  price       Int
   coordinates Json
   description String @db.VarChar(5000)
   images      Json

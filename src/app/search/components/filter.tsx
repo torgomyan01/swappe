@@ -1,55 +1,44 @@
 import "../_left-menu.scss";
 
 import { useEffect, useState } from "react";
-import { Autocomplete, AutocompleteItem, Slider } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, Button, Slider } from "@heroui/react";
 import { ActionGetAllCategory } from "@/app/actions/category/get-category";
 import clsx from "clsx";
 import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countries";
-import { useRouter, useSearchParams } from "next/navigation";
-import { SITE_URL } from "@/utils/consts";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCategoryStore,
+  setCountryCompanyId,
+  setPrice,
+  setType,
+  setVid,
+} from "@/redux/search-filter";
 
-function Filter() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+interface IThisProps {
+  mobileShow: boolean;
+  onClose: () => void;
+}
 
-  const [valuePriceBanners, setValuePriceBanners] = useState<any>([100, 300]);
-  const [valuePriceCompany, setValuePriceCompany] = useState<any>([100, 300]);
+function Filter({ mobileShow, onClose }: IThisProps) {
+  const dispatch = useDispatch();
 
-  const getType = searchParams.get("type") as OfferType | null;
-  const getVid = searchParams.get("v") as OfferVid | null;
-  const _cat = searchParams.get("cat") as OfferVid | null;
+  const filterParams = useSelector(
+    (state: ISearchFilterStore) => state.searchFilter,
+  );
 
-  const [type, setType] = useState<OfferType>(getType || "product");
-  const [vid, setVid] = useState<OfferVid>(getVid || "online");
+  const [valuePriceBanners, setValuePriceBanners] = useState<any>([0, 1000000]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      dispatch(setPrice(valuePriceBanners));
+    }, 800);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [valuePriceBanners, dispatch]);
 
   const [category, setCategory] = useState<ICategory[] | null>(null);
-  const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
-
-  useEffect(() => {
-    if (_cat) {
-      const findSelectedCat = _cat?.split(".").map((cat) => +cat);
-
-      const filter = category?.filter((cat) =>
-        findSelectedCat?.some((catId) => catId === cat.id),
-      );
-
-      setSelectedCategories(filter || []);
-    }
-  }, [_cat, category]);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    urlParams.set("type", type);
-    urlParams.set("vid", vid);
-
-    if (selectedCategories.length) {
-      const cat = selectedCategories.map((cat) => cat.id);
-      urlParams.set("cat", cat.join("."));
-    }
-
-    router.push(`${SITE_URL.SEARCH}?${urlParams.toString()}`);
-  }, [type, vid, selectedCategories]);
 
   useEffect(() => {
     ActionGetAllCategory().then(({ data }) => {
@@ -58,18 +47,20 @@ function Filter() {
   }, []);
 
   function SelectCategory(id: number) {
-    const check = selectedCategories?.some((c) => c.id === id);
+    const check = filterParams.category?.some((c) => c.id === id);
 
     if (check) {
-      const findCat = selectedCategories?.filter((c) => c.id !== id);
+      const findCat = filterParams.category?.filter((c) => c.id !== id);
 
-      setSelectedCategories(findCat);
+      if (findCat) {
+        dispatch(setCategoryStore(findCat));
+      }
     } else {
       const findCat = category?.find((c) => c.id === id);
 
-      const newArr = [...selectedCategories, findCat];
+      const newArr = [...(filterParams.category || []), findCat];
 
-      setSelectedCategories(newArr as ICategory[]);
+      dispatch(setCategoryStore(newArr as ICategory[]));
     }
   }
 
@@ -84,10 +75,14 @@ function Filter() {
   }, []);
 
   return (
-    <div className="search-filter-wrap">
+    <div
+      className={clsx("search-filter-wrap", {
+        show: mobileShow,
+      })}
+    >
       <div className="top-mobile">
         <b>Фильтры</b>
-        <button className="close" type="button">
+        <button className="close" type="button" onClick={onClose}>
           <img src="/img/close-pop.svg" alt="" />
         </button>
       </div>
@@ -98,8 +93,8 @@ function Filter() {
             type="radio"
             id="radio1"
             name="checkbox"
-            checked={type === "product"}
-            onChange={() => setType("product")}
+            checked={filterParams.type === "product"}
+            onChange={() => dispatch(setType("product"))}
           />
           <label htmlFor="radio1">Товары</label>
         </div>
@@ -108,8 +103,8 @@ function Filter() {
             type="radio"
             id="radio2"
             name="checkbox"
-            checked={type === "service"}
-            onChange={() => setType("service")}
+            checked={filterParams.type === "service"}
+            onChange={() => dispatch(setType("service"))}
           />
           <label htmlFor="radio2">Услуги</label>
         </div>
@@ -121,8 +116,8 @@ function Filter() {
             type="radio"
             id="radio3"
             name="checkbox2"
-            checked={vid === "online"}
-            onChange={() => setVid("online")}
+            checked={filterParams.vid === "online"}
+            onChange={() => dispatch(setVid("online"))}
           />
           <label htmlFor="radio3">Онлайн</label>
         </div>
@@ -131,8 +126,8 @@ function Filter() {
             type="radio"
             id="radio4"
             name="checkbox2"
-            checked={vid === "offline"}
-            onChange={() => setVid("offline")}
+            checked={filterParams.vid === "offline"}
+            onChange={() => dispatch(setVid("offline"))}
           />
           <label htmlFor="radio4">Оффлайн</label>
         </div>
@@ -143,10 +138,10 @@ function Filter() {
           <button
             key={`cat__${category.id}`}
             className={clsx("tag cursor-pointer", {
-              "!bg-green !text-white": selectedCategories.some(
+              "!bg-green !text-white": filterParams.category?.some(
                 (c) => c.id === category.id,
               ),
-              "hover:!bg-cream/50": !selectedCategories.some(
+              "hover:!bg-cream/50": !filterParams.category?.some(
                 (c) => c.id === category.id,
               ),
             })}
@@ -160,9 +155,9 @@ function Filter() {
       <div className="slider-block">
         <Slider
           className="w-full"
-          formatOptions={{ style: "currency", currency: "USD" }}
+          // formatOptions={{ style: "currency", currency: "RUB" }}
           label="Цена бартера"
-          maxValue={1000}
+          maxValue={1000000}
           minValue={0}
           step={10}
           showTooltip={true}
@@ -171,30 +166,6 @@ function Filter() {
           value={valuePriceBanners}
           onChange={setValuePriceBanners}
         />
-        {/*<div className="range-values">*/}
-        {/*  <span id="barter-min">₽25000</span>*/}
-        {/*  <span id="barter-max">₽75000</span>*/}
-        {/*</div>*/}
-      </div>
-      <div className="slider-block !mt-4">
-        {/*<div className="title">Цена компании</div>*/}
-        <Slider
-          className="w-full"
-          formatOptions={{ style: "currency", currency: "USD" }}
-          label="Цена компании"
-          maxValue={1000}
-          minValue={0}
-          step={10}
-          showTooltip={true}
-          size="sm"
-          color="secondary"
-          value={valuePriceCompany}
-          onChange={setValuePriceCompany}
-        />
-        {/*<div className="range-values">*/}
-        {/*  <span id="company-min">₽25000</span>*/}
-        {/*  <span id="company-max">₽75000</span>*/}
-        {/*</div>*/}
       </div>
       <span className="title">Локация</span>
       <Autocomplete
@@ -203,6 +174,11 @@ function Filter() {
         variant="bordered"
         color="secondary"
         radius="lg"
+        onSelectionChange={(value: any) => {
+          const val = value ? +value.replace(/country-/g, "") : null;
+
+          dispatch(setCountryCompanyId(val));
+        }}
       >
         {countries.map((animal) => (
           <AutocompleteItem key={`country-${animal.id}`}>
@@ -210,9 +186,9 @@ function Filter() {
           </AutocompleteItem>
         ))}
       </Autocomplete>
-      <a href="#" className="green-btn">
+      <Button className="green-btn" onPress={onClose}>
         Применить фильтрацию
-      </a>
+      </Button>
     </div>
   );
 }

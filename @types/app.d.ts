@@ -281,6 +281,18 @@ declare interface IUserOfferStore {
   };
 }
 
+declare interface ISearchFilterStore {
+  searchFilter: IDataSearchFilter;
+}
+
+declare interface IDataSearchFilter {
+  type: OfferType;
+  vid: OfferVid;
+  category: ICategory[] | null;
+  price: [number, number] | null;
+  countryCompanyId: number | null;
+}
+
 declare interface ICityResponse {
   id: number;
   name: string;

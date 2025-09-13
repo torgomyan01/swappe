@@ -6,31 +6,79 @@ export async function ActionSearchOffer(
   value: string,
   page: number = 1,
   pageSize: number = 10,
-  type: OfferType | null = null,
-  vid: OfferVid | null = null,
-  categoriesId: number[] | null,
+  params: IDataSearchFilter,
 ) {
   try {
     const skip = (page - 1) * pageSize;
 
-    const [offers, totalOffers] = await prisma.$transaction([
-      prisma.offers.findMany({
-        where: {
-          ...(type && { type }),
-          ...(vid && { vid }),
-          OR: [
-            {
-              name: {
-                contains: value,
-              },
-            },
-            {
-              description: {
-                contains: value,
-              },
-            },
-          ],
+    const whereConditions: any = {
+      ...(params.type && { type: params.type }),
+      ...(params.vid && { vid: params.vid }),
+      OR: [
+        {
+          name: {
+            contains: value,
+          },
         },
+        {
+          description: {
+            contains: value,
+          },
+        },
+      ],
+    };
+
+    if (params.category && params.category.length > 0) {
+      whereConditions.AND = {
+        category: {
+          some: {
+            id: {
+              in: params.category.map((cat: any) => cat.id),
+            },
+          },
+        },
+      };
+    }
+
+    if (params.price && params.price.length === 2) {
+      if (!whereConditions.AND) {
+        whereConditions.AND = {};
+      }
+      whereConditions.AND.price = {
+        gte: params.price[0],
+        lte: params.price[1],
+      };
+    }
+
+    // --- NEW: Add filter for user's company city ---
+    if (params.countryCompanyId) {
+      // Create the `AND` object if it doesn't already exist
+      if (!whereConditions.AND) {
+        whereConditions.AND = {};
+      }
+      // Add the nested filter
+      whereConditions.AND.user = {
+        is: {
+          company: {
+            is: {
+              city: params.countryCompanyId,
+            },
+          },
+        },
+      };
+    }
+
+    const countWhereConditions = JSON.parse(JSON.stringify(whereConditions));
+    if (countWhereConditions.OR && countWhereConditions.OR[0]?.name) {
+      delete countWhereConditions.OR[0].name.mode;
+    }
+    if (countWhereConditions.OR && countWhereConditions.OR[1]?.description) {
+      delete countWhereConditions.OR[1].description.mode;
+    }
+
+    const [offers, totalCount] = await prisma.$transaction([
+      prisma.offers.findMany({
+        where: whereConditions,
         skip,
         take: pageSize,
         include: {
@@ -45,47 +93,23 @@ export async function ActionSearchOffer(
         },
       }),
       prisma.offers.count({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: value,
-              },
-            },
-            {
-              description: {
-                contains: value,
-              },
-            },
-          ],
-        },
+        where: countWhereConditions,
       }),
     ]);
-
-    if (categoriesId) {
-      const filterCats = categoriesId.some((catId) =>
-        offers
-          .flatMap((offer) =>
-            offer.category ? JSON.parse(offer.category) : [],
-          )
-          .some((cat) => cat.id === catId),
-      );
-
-      console.log(filterCats, 99999999999);
-    }
 
     return {
       status: "ok",
       data: offers,
-      totalCount: totalOffers,
+      totalCount,
       error: "",
     };
   } catch (error: any) {
+    console.error("Error in ActionSearchOffer:", error);
     return {
       status: "error",
       data: [],
       totalCount: 0,
-      error: error.message || String(error),
+      error: error.message || "An unknown error occurred",
     };
   }
 }

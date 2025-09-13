@@ -6,23 +6,29 @@ import "./_search.scss";
 import MainTemplate from "@/components/common/main-template/main-template";
 
 import Filter from "@/app/search/components/filter";
-import { Button, Select, SelectItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ActionSearchOffer } from "@/app/actions/search/search";
 import OfferCard from "@/app/search/components/offer-card";
 import OfferCardLoading from "@/app/search/components/offer-card-loading";
 import { RandomKey } from "@/utils/helpers";
+import { useSelector } from "react-redux";
+import { SITE_URL } from "@/utils/consts";
+import Link from "next/link";
 
 const OFFERS_PER_PAGE = 9;
 
 function Search() {
+  const filterParams = useSelector(
+    (state: ISearchFilterStore) => state.searchFilter,
+  );
+
   const searchParams = useSearchParams();
 
   const search = searchParams.get("value");
-  const type = searchParams.get("type") as OfferType | null;
-  const vid = searchParams.get("vid") as OfferVid | null;
-  const cat = searchParams.get("cat") as string | null;
+
+  const [mobileFilter, setMobileFilter] = useState(false);
 
   const [result, setResult] = useState<IUserOfferFront[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,26 +39,16 @@ function Search() {
   useEffect(() => {
     setResult(null);
 
-    let cats = null;
-
-    if (cat) {
-      cats = cat?.split(".").map((cat) => +cat);
-    }
-
-    console.log(cats, 5555555);
-
     ActionSearchOffer(
       search || "",
       currentPage,
       OFFERS_PER_PAGE,
-      type,
-      vid,
-      cats,
+      filterParams,
     ).then(({ data, totalCount }) => {
       setResult(data as IUserOfferFront[]);
       setTotalOffers(totalCount);
     });
-  }, [search, currentPage, type, vid, cat]);
+  }, [search, currentPage, filterParams]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -70,132 +66,35 @@ function Search() {
 
   return (
     <MainTemplate>
-      <div className="notifications-wrapper">
-        <div className="notifications">
-          <div className="top-mob">
-            <a href="#" className="back">
-              <img src="/img/back-left.svg" alt="" />
-            </a>
-            <b>Уведомления</b>
-          </div>
-          <div className="top-line">
-            <b>Уведомления</b>
-            <div className="new">
-              <span>Только новые</span>
-              <div className="switch" id="mySwitch">
-                <div className="slider"></div>
-              </div>
-            </div>
-          </div>
-          <div className="view-all">Пометить все просмотренными (2)</div>
-          <a href="#" className="notifications-item">
-            <div className="icon">
-              <img src="/img/search/notifications-icon1.svg" alt="" />
-            </div>
-            <div className="texts">
-              <b>Новое предложение</b>
-              <span>Diamond кейтеринг предлагает сделку</span>
-            </div>
-            <div className="circle"></div>
-          </a>
-          <a href="#" className="notifications-item">
-            <div className="icon">
-              <img src="/img/search/notifications-icon2.svg" alt="" />
-            </div>
-            <div className="texts">
-              <b>Cтатус сделки</b>
-              <span>Diamond кейтеринг принял предложение</span>
-            </div>
-            <div className="circle"></div>
-          </a>
-          <div className="border"></div>
-          <div className="notifications-items">
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon3.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Cтатус сделки</b>
-                <span>Diamond кейтеринг принял предложение</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon4.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Предложение прошло модерацию</b>
-                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon5.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Предложение не прошло модерацию</b>
-                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-          </div>
-          <div className="border"></div>
-          <div className="not-info">
-            <div className="head">
-              <b>Как все прошло?</b>
-              <button className="close" type="button">
-                <img src="/img/close-pop.svg" alt="" />
-              </button>
-            </div>
-            <p>
-              Ваша сделка с Dостаевский завершена. Поделись отзывом и помоги
-              другим найти ту самую коллаборацию!
-            </p>
-            <div className="info">
-              <div className="text-wrap">
-                <div className="texts">
-                  <b>Кейтеринг для мероприятия</b>
-                  <span>Dостаевский</span>
-                </div>
-                <span>26 Nov 2021</span>
-              </div>
-              <div className="img-wrap">
-                <img src="/img/search/not-info-icon.png" alt="" />
-              </div>
-            </div>
-          </div>
-          <a href="#" className="leave-feedback">
-            <img src="/img/search/rew-icon.svg" alt="" />
-            <b>Оставить отзыв</b>
-          </a>
-        </div>
-      </div>
       <div className="search-wrapper">
         <div className="wrapper">
           <div className="mobile-filter-btns">
-            <form>
+            <form action={SITE_URL.SEARCH}>
               <button type="button">
                 <img src="/img/search-icon.svg" alt="" />
               </button>
-              <input type="text" placeholder="Введи запрос" />
+              <input
+                type="text"
+                placeholder="Введи запрос"
+                name="value"
+                defaultValue={search || ""}
+              />
             </form>
-            <a href="#" className="favorite-btn">
+            <Link href={SITE_URL.ACCOUNT_FAVORITES} className="favorite-btn">
               <img src="/img/heart.svg" alt="" />
-            </a>
-            <a href="#" className="filter-btn">
+            </Link>
+            <Button
+              className="filter-btn p-0"
+              onPress={() => setMobileFilter(true)}
+            >
               <img src="/img/filter-icon.svg" alt="" />
-            </a>
+            </Button>
           </div>
 
-          <Filter />
+          <Filter
+            mobileShow={mobileFilter}
+            onClose={() => setMobileFilter(false)}
+          />
 
           <div className="search-info-block">
             <div className="info-top">
@@ -203,42 +102,54 @@ function Search() {
                 <b>{result?.length}</b>
                 <span>найдено</span>
               </div>
-              <Select
-                className="w-[200px] custom-select"
-                placeholder="Сортировка"
-              >
-                <SelectItem key="По Цене Бартера">По Цене Бартера</SelectItem>
-                <SelectItem key="По Цене компании">По Цене Компании</SelectItem>
-              </Select>
+              {/*<Select*/}
+              {/*  className="w-[200px] custom-select"*/}
+              {/*  placeholder="Сортировка"*/}
+              {/*>*/}
+              {/*  <SelectItem key="По Цене Бартера">По Цене Бартера</SelectItem>*/}
+              {/*  <SelectItem key="По Цене компании">По Цене Компании</SelectItem>*/}
+              {/*</Select>*/}
             </div>
             <div className="items">
-              {result
-                ? result.map((item, i) => (
-                    <OfferCard key={`offer-card-${i}`} offer={item} />
-                  ))
-                : Array.from({ length: 6 }).map(() => (
-                    <OfferCardLoading key={RandomKey()} />
-                  ))}
+              {result ? (
+                <>
+                  {result.length > 0 ? (
+                    result.map((item, i) => (
+                      <OfferCard key={`offer-card-${i}`} offer={item} />
+                    ))
+                  ) : (
+                    <div className="col-span-3 flex-jc-c h-[150px]">
+                      <h3 className="text-green">Ничего не найдено (</h3>
+                    </div>
+                  )}
+                </>
+              ) : (
+                Array.from({ length: 6 }).map(() => (
+                  <OfferCardLoading key={RandomKey()} />
+                ))
+              )}
             </div>
-            <div className="pagination">
-              <Button
-                type="button"
-                onPress={handlePrevPage}
-                disabled={currentPage === 1}
-              >
-                <img src="/img/right.svg" alt="" className="rotate" />
-              </Button>
-              <span>
-                Страница {currentPage} из {totalPages}
-              </span>
-              <Button
-                type="button"
-                onPress={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <img src="/img/right.svg" alt="" />
-              </Button>
-            </div>
+            {result && result?.length > 0 && (
+              <div className="pagination">
+                <Button
+                  type="button"
+                  onPress={handlePrevPage}
+                  disabled={currentPage === 1}
+                >
+                  <img src="/img/right.svg" alt="" className="rotate" />
+                </Button>
+                <span>
+                  Страница {currentPage} из {totalPages}
+                </span>
+                <Button
+                  type="button"
+                  onPress={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <img src="/img/right.svg" alt="" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
