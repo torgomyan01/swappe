@@ -231,6 +231,14 @@ declare interface IUserCompany {
   plan: "premium" | "free";
 }
 
+declare interface IUserFavorite {
+  id: number;
+  user_id: number;
+  offer_id: number;
+  offers?: IUserOfferFront;
+  users: IUserProfile;
+}
+
 declare interface IUserProfile {
   id: number;
   email: string;
@@ -272,6 +280,7 @@ declare interface IUserOfferFront {
 declare interface IUserStore {
   userInfo: {
     company: IUserCompany | null;
+    favorites: IUserFavorite[] | null;
   };
 }
 

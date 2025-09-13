@@ -14,8 +14,7 @@ export async function getOffer(id: number) {
 
     cache.set(CACHE_KEY, getOffer.data);
     return getOffer.data;
-  } catch (e) {
-    console.error("Error fetching houses:", e);
+  } catch {
     return [];
   }
 }

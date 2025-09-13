@@ -51,12 +51,18 @@ function Navbar() {
               <span className="circle"></span>
               <img src="/img/menu-icon2.svg" alt="" />
             </span>
-            <span className="icon cursor-pointer">
+            <Link
+              href={SITE_URL.ACCOUNT_FAVORITES}
+              className="icon cursor-pointer"
+            >
               <img src="/img/menu-icon3.svg" alt="" />
-            </span>
-            <span className="icon cursor-pointer">
+            </Link>
+            <Link
+              href={SITE_URL.ACCOUNT_TRANSACTIONS}
+              className="icon cursor-pointer"
+            >
               <img src="/img/menu-icon4.svg" alt="" />
-            </span>
+            </Link>
 
             <Tooltip content="Сообщения">
               <span className="icon cursor-pointer">

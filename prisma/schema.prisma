@@ -16,6 +16,8 @@ model users {
   verification_code Int
   offers            offers[]
   company           user_company?
+
+  favorites user_favorites[]
 }
 
 model user_company {
@@ -36,6 +38,14 @@ model user_company {
   city_data     countries_tb @relation(fields: [city], references: [id])
   industry_data Industry     @relation(fields: [industry], references: [id])
   user          users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model user_favorites {
+  id       Int    @id @default(autoincrement())
+  user_id  Int
+  offer_id Int
+  users    users? @relation(fields: [user_id], references: [id])
+  offers   offers @relation(fields: [offer_id], references: [id], onDelete: Cascade)
 }
 
 model company_reviews {
@@ -97,5 +107,6 @@ model offers {
   videos      Json
   status      String
 
-  user users @relation(fields: [user_id], references: [id])
+  user           users            @relation(fields: [user_id], references: [id])
+  user_favorites user_favorites[]
 }
