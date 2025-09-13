@@ -44,7 +44,7 @@ function OfferPage({ offer }: IThisProps) {
         <div className="wrapper">
           <div className="proposal-info">
             <div className="left-info">
-              <div className="max-w-4xl mx-auto">
+              <div className="max-w-4xl mx-auto sticky top-5">
                 {/* Main Slider */}
                 <div className="relative mb-6">
                   <Swiper
