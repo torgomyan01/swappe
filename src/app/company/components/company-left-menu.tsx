@@ -6,39 +6,32 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { Button, Skeleton } from "@heroui/react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Skeleton,
+} from "@heroui/react";
 import { useEffect, useState } from "react";
-import { signOut } from "next-auth/react";
 
 const menuItems = [
   {
-    name: "Профиль",
-    url: "/account",
+    name: "Информация о компании",
+    url: SITE_URL.ACCOUNT(),
   },
   {
-    name: "Мои предложения",
+    name: "Активные предложения",
     url: SITE_URL.ACCOUNT_SUGGESTIONS,
-  },
-  {
-    name: "Cделки",
-    url: SITE_URL.ACCOUNT_TRANSACTIONS,
-  },
-  {
-    name: "Избранное",
-    url: SITE_URL.ACCOUNT_FAVORITES,
   },
   {
     name: "Отзывы",
     url: SITE_URL.ACCOUNT_REVIEWS,
-    rightContent: <span className="style">+9</span>,
   },
 ];
 
-interface IThisProps {
-  isMobile?: boolean;
-}
-
-function LeftMenu({ isMobile = false }: IThisProps) {
+function CompanyLeftMenu() {
   const pathname = usePathname();
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
@@ -50,11 +43,7 @@ function LeftMenu({ isMobile = false }: IThisProps) {
   }, [company]);
 
   return (
-    <div
-      className={clsx("profile-menu-wrap sticky top-4", {
-        "!block !w-full !min-w-full": isMobile,
-      })}
-    >
+    <div className="profile-menu-wrap sticky top-4">
       {loadingCompany ? (
         <>
           {company ? (
@@ -91,6 +80,36 @@ function LeftMenu({ isMobile = false }: IThisProps) {
                 </div>
                 <span className="num">4.5</span>
               </div>
+
+              <div className="flex-jc-c gap-2 mb-2">
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      color="secondary"
+                      className="rounded-[16px] bg-white px-0 min-w-[40px]"
+                    >
+                      <img src="/img/icons/dots-menu.svg" alt="" />
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions">
+                    <DropdownItem key="new">New file</DropdownItem>
+                    <DropdownItem key="copy">Copy link</DropdownItem>
+                    <DropdownItem key="edit">Edit file</DropdownItem>
+                    <DropdownItem
+                      key="delete"
+                      className="text-danger"
+                      color="danger"
+                    >
+                      Delete file
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+
+                <Button color="secondary" className="rounded-[16px]">
+                  <img src="/img/icons/start-sale.svg" alt="" />
+                  Написать
+                </Button>
+              </div>
             </>
           ) : (
             <div>
@@ -110,7 +129,7 @@ function LeftMenu({ isMobile = false }: IThisProps) {
         </div>
       )}
 
-      <ul className="profile-menu">
+      <ul className="profile-menu !border-b-0 !pb-0 !mb-0">
         {menuItems.map((item, index) => (
           <li
             key={`profile-left-menu-item-${index}`}
@@ -124,23 +143,9 @@ function LeftMenu({ isMobile = false }: IThisProps) {
             </Link>
           </li>
         ))}
-        <li>
-          <Link href={SITE_URL.ACCOUNT_TARIFFS_BONUSES}>
-            <img src="/img/subscription.svg" alt="subscription" />
-            <span className="green">Тариф и бонусы</span>
-          </Link>
-        </li>
       </ul>
-      <span className="close cursor-pointer" onClick={() => signOut()}>
-        <img src="/img/close-Icon.svg" alt="close-Icon" />
-        Выйти
-      </span>
-      <a href="#" className="delete">
-        <img src="/img/delete-Icon.svg" alt="delete-Icon" />
-        Удалить профиль
-      </a>
     </div>
   );
 }
 
-export default LeftMenu;
+export default CompanyLeftMenu;

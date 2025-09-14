@@ -10,8 +10,11 @@ import {
 } from "@heroui/react";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function Profile() {
+  const router = useRouter();
+
   return (
     <MainTemplate>
       <div className="profile-wrap">
@@ -24,7 +27,10 @@ function Profile() {
             <span>Отзывы</span>
           </div>
           <div className="top-mob-line">
-            <span className="back">
+            <span
+              className="back"
+              onClick={() => router.push(SITE_URL.ACCOUNT())}
+            >
               <img src="/img/back-icon.svg" alt="" />
             </span>
             <b>Отзывы</b>

@@ -1,6 +1,5 @@
 "use client";
 
-import "./_notifications.scss";
 import "./_search.scss";
 
 import MainTemplate from "@/components/common/main-template/main-template";

@@ -6,8 +6,11 @@ import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { useState } from "react";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 function Profile() {
+  const router = useRouter();
+
   const activeTab = ["Активные сделки", "Архив"];
   const [active, setActive] = useState(0);
 
@@ -23,9 +26,12 @@ function Profile() {
             <span>Сделки</span>
           </div>
           <div className="top-mob-line">
-            <a href="profile-mobila.html" className="back">
+            <span
+              className="back"
+              onClick={() => router.push(SITE_URL.ACCOUNT())}
+            >
               <img src="/img/back-icon.svg" alt="" />
-            </a>
+            </span>
             <b>Сделки</b>
           </div>
           <div className="info">

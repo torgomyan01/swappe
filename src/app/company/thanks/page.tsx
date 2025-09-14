@@ -15,7 +15,7 @@ function Page() {
             Профиль компании был успешно сформирован и отправлен на модерацию.
             Отследить статус модерации ты можешь в личном кабинете.
           </p>
-          <Link href={SITE_URL.ACCOUNT} className="green-btn">
+          <Link href={SITE_URL.ACCOUNT()} className="green-btn">
             Перейти в профиль
           </Link>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-
 import { useSession } from "next-auth/react";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
@@ -15,15 +14,36 @@ import {
 } from "@heroui/react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import clsx from "clsx";
 
 function Navbar() {
   const { data: session } = useSession();
-
   const company = useSelector((state: IUserStore) => state.userInfo.company);
-
   const searchParams = useSearchParams();
-
   const search = searchParams.get("value");
+  const [notifications, setNotifications] = useState<boolean>(false);
+
+  const [showMobileIcons, setShowMobileIcons] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      if (window.scrollY < lastScrollY) {
+        setShowMobileIcons(true);
+      } else {
+        setShowMobileIcons(false);
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -47,7 +67,10 @@ function Navbar() {
             <span className="icon cursor-pointer">
               <img src="/img/menu-icon1.svg" alt="" />
             </span>
-            <span className="icon cursor-pointer">
+            <span
+              className="icon cursor-pointer"
+              onClick={() => setNotifications(!notifications)}
+            >
               <span className="circle"></span>
               <img src="/img/menu-icon2.svg" alt="" />
             </span>
@@ -63,7 +86,6 @@ function Navbar() {
             >
               <img src="/img/menu-icon4.svg" alt="" />
             </Link>
-
             <Tooltip content="Сообщения">
               <span className="icon cursor-pointer">
                 <span className="count">+9</span>
@@ -84,7 +106,7 @@ function Navbar() {
                 </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-                <DropdownItem href={SITE_URL.ACCOUNT} key="accout">
+                <DropdownItem href={SITE_URL.ACCOUNT()} key="accout">
                   Профиле
                 </DropdownItem>
                 <DropdownItem
@@ -106,21 +128,147 @@ function Navbar() {
       </div>
 
       <div className="wrapper">
-        <div className="mobile-icons">
+        <div
+          className={clsx("mobile-icons", {
+            "hide-on-scroll": !showMobileIcons,
+          })}
+        >
           <a href="#" className="icon">
             <img src="/img/menu-icon1.svg" alt="" />
           </a>
-          <a href="#" className="icon">
+          <span
+            className="icon"
+            onClick={() => setNotifications(!notifications)}
+          >
             <img src="/img/menu-icon2.svg" alt="" />
-          </a>
-          <a href="#" className="icon">
+          </span>
+          <Link href={SITE_URL.ACCOUNT_FAVORITES} className="icon">
             <img src="/img/menu-icon3.svg" alt="" />
-          </a>
-          <a href="#" className="icon">
+          </Link>
+          <Link href={SITE_URL.ACCOUNT_TRANSACTIONS} className="icon">
             <img src="/img/menu-icon4.svg" alt="" />
-          </a>
+          </Link>
           <a href="#" className="icon">
             <img src="/img/menu-icon5.svg" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <div className="notifications-wrapper">
+        {notifications && (
+          <div
+            className="fixed top-0 left-0 w-full h-full z-1"
+            onClick={() => setNotifications(false)}
+          />
+        )}
+        <div
+          className={clsx("notifications", {
+            show: notifications,
+          })}
+        >
+          <div className="top-mob">
+            <span className="back" onClick={() => setNotifications(false)}>
+              <img src="/img/back-left.svg" alt="" />
+            </span>
+            <b>Уведомления</b>
+          </div>
+          <div className="top-line">
+            <b>Уведомления</b>
+            <div className="new">
+              <span>Только новые</span>
+              <div className="switch" id="mySwitch">
+                <div className="slider"></div>
+              </div>
+            </div>
+          </div>
+          <div className="view-all">Пометить все просмотренными (2)</div>
+          <a href="#" className="notifications-item">
+            <div className="icon">
+              <img src="/img/search/notifications-icon1.svg" alt="" />
+            </div>
+            <div className="texts">
+              <b>Новое предложение</b>
+              <span>Diamond кейтеринг предлагает сделку</span>
+            </div>
+            <div className="circle"></div>
+          </a>
+          <a href="#" className="notifications-item">
+            <div className="icon">
+              <img src="/img/search/notifications-icon2.svg" alt="" />
+            </div>
+            <div className="texts">
+              <b>Cтатус сделки</b>
+              <span>Diamond кейтеринг принял предложение</span>
+            </div>
+            <div className="circle"></div>
+          </a>
+          <div className="border"></div>
+          <div className="notifications-items">
+            <a href="#" className="notifications-item">
+              <div className="icon">
+                <img src="/img/search/notifications-icon3.svg" alt="" />
+              </div>
+              <div className="texts">
+                <b>Cтатус сделки</b>
+                <span>Diamond кейтеринг принял предложение</span>
+              </div>
+              <div className="arrow">
+                <img src="/img/arr-r.svg" alt="" />
+              </div>
+            </a>
+            <a href="#" className="notifications-item">
+              <div className="icon">
+                <img src="/img/search/notifications-icon4.svg" alt="" />
+              </div>
+              <div className="texts">
+                <b>Предложение прошло модерацию</b>
+                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
+              </div>
+              <div className="arrow">
+                <img src="/img/arr-r.svg" alt="" />
+              </div>
+            </a>
+            <a href="#" className="notifications-item">
+              <div className="icon">
+                <img src="/img/search/notifications-icon5.svg" alt="" />
+              </div>
+              <div className="texts">
+                <b>Предложение не прошло модерацию</b>
+                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
+              </div>
+              <div className="arrow">
+                <img src="/img/arr-r.svg" alt="" />
+              </div>
+            </a>
+          </div>
+          <div className="border"></div>
+          <div className="not-info">
+            <div className="head">
+              <b>Как все прошло?</b>
+              <button className="close" type="button">
+                <img src="/img/close-pop.svg" alt="" />
+              </button>
+            </div>
+            <p>
+              Ваша сделка с Dостаевский завершена. Поделись отзывом и помоги
+              другим найти ту самую коллаборацию!
+            </p>
+            <div className="info">
+              <div className="text-wrap">
+                <div className="texts">
+                  <b>Кейтеринг для мероприятия</b>
+                  <span>Dостаевский</span>
+                </div>
+                <span>26 Nov 2021</span>
+              </div>
+              <div className="img-wrap">
+                <img src="/img/search/not-info-icon.png" alt="" />
+              </div>
+            </div>
+          </div>
+          <a href="#" className="leave-feedback">
+            <img src="/img/search/rew-icon.svg" alt="" />
+            <b>Оставить отзыв</b>
           </a>
         </div>
       </div>

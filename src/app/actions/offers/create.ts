@@ -12,13 +12,15 @@ export async function ActionCreateOffer(offer: any) {
       return { status: "error", data: [], error: "logout" };
     }
 
+    console.log(offer);
+
     const createOffer = await prisma.offers.create({
       data: {
         name: offer.name,
         type: offer.type,
         vid: offer.vid,
         category: offer.category,
-        price: offer.price,
+        price: +offer.price,
         coordinates: offer.coordinates,
         description: offer.description,
         images: offer.images,

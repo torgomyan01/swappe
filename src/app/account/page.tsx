@@ -6,9 +6,11 @@ import { useSession } from "next-auth/react";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 function Profile() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
@@ -24,9 +26,9 @@ function Profile() {
             <span>Профиль</span>
           </div>
           <div className="top-mob-line">
-            <a href="profile-mobila.html" className="back">
+            <span className="back" onClick={() => router.back()}>
               <img src="/img/back-icon.svg" alt="" />
-            </a>
+            </span>
             <b>Профиль</b>
           </div>
           <div className="info">

@@ -3,8 +3,11 @@
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { SITE_URL } from "@/utils/consts";
+import { useRouter } from "next/navigation";
 
 function Profile() {
+  const router = useRouter();
+
   return (
     <MainTemplate>
       <div className="profile-wrap">
@@ -17,7 +20,10 @@ function Profile() {
             <span>Тариф и бонусы</span>
           </div>
           <div className="top-mob-line">
-            <span className="back">
+            <span
+              className="back"
+              onClick={() => router.push(SITE_URL.ACCOUNT())}
+            >
               <img src="/img/back-icon.svg" alt="" />
             </span>
             <b>Тариф и бонусы</b>

@@ -8,6 +8,7 @@ import { useState } from "react";
 import FavoriteCompany from "@/app/account/favorites/components/favorite-company";
 import FavoriteOffer from "@/app/account/favorites/components/favorite-offer";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 const itemsFavorite = [
   {
@@ -21,6 +22,7 @@ const itemsFavorite = [
 ];
 
 function Profile() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
 
   return (
@@ -35,7 +37,10 @@ function Profile() {
             <span>Избранное</span>
           </div>
           <div className="top-mob-line">
-            <span className="back">
+            <span
+              className="back"
+              onClick={() => router.push(SITE_URL.ACCOUNT())}
+            >
               <img src="/img/back-icon.svg" alt="" />
             </span>
             <b>Избранное</b>

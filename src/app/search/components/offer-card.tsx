@@ -60,7 +60,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
 
   return (
     <div className="offer-item group !flex-js-s">
-      <div className="img-wrap">
+      <div className="img-wrap !p-0">
         <Link
           href={`${SITE_URL.OFFER}/${offer.id}`}
           className="img p-4"

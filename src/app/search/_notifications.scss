@@ -11,8 +11,8 @@
     background: #FFFCF5;
     box-shadow: 0 0 37.3px -13px rgba(37, 37, 37, 0.30);
     position: absolute;
-    top: 0px;
-    right: 100px;
+    top: 0;
+    right: 210px;
     max-width: 480px;
     width: 100%;
     z-index: 100;
@@ -282,4 +282,18 @@
             }
         }
     }
+}
+
+
+.mobile-icons {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 100;
+}
+
+.hide-on-scroll {
+    transform: translateY(100%) translateX(-50%);
 }

@@ -1742,6 +1742,11 @@ select{
         @include flex;
         width: 100%;
         @include align-center;
+
+        @media (max-width: 576px){
+          padding: 12px;
+        }
+
         img{
           margin-right: 12px;
         }
@@ -1793,27 +1798,27 @@ select{
       }
       &:nth-child(1){
         .icon{
-          background-image: url(../../public/img/profile-icon1.png);
+          background-image: url(../../public/img/icons/user.svg);
         }
       }
       &:nth-child(2){
         .icon{
-          background-image: url(../../public/img/profile-icon2.png);
+          background-image: url(../../public/img/icons/shop.svg );
         }
       }
       &:nth-child(3){
         .icon{
-          background-image: url(../../public/img/profile-icon3.png);
+          background-image: url(../../public/img/icons/HandsClapping.svg );
         }
       }
       &:nth-child(4){
         .icon{
-          background-image: url(../../public/img/profile-icon4.png);
+          background-image: url(../../public/img/icons/icon-heard.svg);
         }
       }
       &:nth-child(5){
         .icon{
-          background-image: url(../../public/img/profile-icon5.png);
+          background-image: url(../../public/img/icons/star.svg);
         }
       }
     }
@@ -1826,6 +1831,11 @@ select{
     color: #68727D;
     margin: 10px 0 50px;
     padding: 0 25px;
+
+    @media (max-width: 576px){
+      padding: 0 12px;
+    }
+
     img{
       margin-right: 10px;
     }
@@ -1838,6 +1848,11 @@ select{
     color: #C8594B;
     margin-top: auto;
     padding: 0 25px 20px;
+
+
+    @media (max-width: 576px){
+      padding: 0 12px 20px;
+    }
     img{
       margin-right: 10px;
     }
@@ -3428,3 +3443,6 @@ select{
     }
   }
 }
+
+
+@import "search/notifications";
