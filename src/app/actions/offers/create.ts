@@ -12,8 +12,6 @@ export async function ActionCreateOffer(offer: any) {
       return { status: "error", data: [], error: "logout" };
     }
 
-    console.log(offer);
-
     const createOffer = await prisma.offers.create({
       data: {
         name: offer.name,

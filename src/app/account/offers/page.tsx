@@ -33,7 +33,7 @@ function Profile() {
           <div className="top-mob-line">
             <span
               className="back"
-              onClick={() => router.push(SITE_URL.ACCOUNT())}
+              onClick={() => router.push(SITE_URL.ACCOUNT)}
             >
               <img src="/img/back-icon.svg" alt="" />
             </span>

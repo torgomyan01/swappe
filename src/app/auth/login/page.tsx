@@ -30,7 +30,7 @@ function Register() {
     });
 
     if (res?.ok) {
-      router.push(SITE_URL.ACCOUNT());
+      router.push(SITE_URL.ACCOUNT);
 
       setLoading(false);
     } else {

@@ -19,6 +19,8 @@ interface IThisProps {
 function OfferCard({ offer, onlyTitle = false }: IThisProps) {
   const { data: session } = useSession();
 
+  console.log(offer);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -99,7 +101,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
       ) : (
         <>
           <div className="text-wrap flex-jsb-c w-full">
-            <span>{offer.user.company.name}</span>
+            {offer.user.company && <span>{offer.user.company.name}</span>}
             <b>
               4.5 <img src="/img/star-small.svg" alt="" />
             </b>

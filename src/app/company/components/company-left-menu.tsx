@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 const menuItems = [
   {
     name: "Информация о компании",
-    url: SITE_URL.ACCOUNT(),
+    url: SITE_URL.ACCOUNT,
   },
   {
     name: "Активные предложения",

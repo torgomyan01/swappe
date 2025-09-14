@@ -7,13 +7,7 @@ export const SITE_URL = {
   COMPANY: "/company",
   COMPANY_CREATE: "/company/create",
   COMPANY_THANKS: "/company/thanks",
-  ACCOUNT: () => {
-    if (window.innerWidth <= 1024) {
-      return "/account-menu";
-    } else {
-      return "/account";
-    }
-  },
+  ACCOUNT: "/account",
   OFFER: "/offer",
   SEARCH: "/search",
   PROPOSAL: "/proposal",

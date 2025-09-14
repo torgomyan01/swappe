@@ -44,7 +44,7 @@ function HomeHeader() {
             </div>
           </div>
           {session ? (
-            <Link href={SITE_URL.ACCOUNT()} className="login-btn">
+            <Link href={SITE_URL.ACCOUNT} className="login-btn">
               <i className="fa-solid fa-user mr-2"></i>
               {session.user?.name}
             </Link>
