@@ -19,8 +19,6 @@ interface IThisProps {
 function OfferCard({ offer, onlyTitle = false }: IThisProps) {
   const { data: session } = useSession();
 
-  console.log(offer);
-
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -60,12 +58,14 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
     }
   }
 
+  console.log(offer.images[0]);
+
   return (
     <div className="offer-item group !flex-js-s">
       <div className="img-wrap !p-0">
         <Link
           href={`${SITE_URL.OFFER}/${offer.id}`}
-          className="img p-4"
+          className="img p-2 sm:p-4"
           target="_blank"
         >
           <Image

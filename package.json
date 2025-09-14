@@ -76,7 +76,8 @@
     "sass": "^1.90.0",
     "scss": "^0.2.4",
     "tailwindcss": "^4.1.11",
-    "typescript": "^5"
+    "typescript": "^5",
+    "ua-parser-js": "^2.0.5"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
