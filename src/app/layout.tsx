@@ -18,8 +18,7 @@ import { authOptions } from "@/lib/auth";
 export async function generateMetadata() {
   return {
     title: "Swappe - Обменивайтесь услугами, а не деньгами",
-    description:
-      "Galamat — надёжная недвижимость в столице. Купить квартиру в Астане легко с нами: профессиональный отдел продаж, выгодные предложения и сопровождение сделки.",
+    description: "",
     keywords: [],
     // alternates: {
     //   canonical: "https://galamat.kz",
