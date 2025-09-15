@@ -24,6 +24,8 @@ function OfferPage({ offer }: IThisProps) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
+  console.log(offer);
+
   return (
     <MainTemplate>
       <div className="wrapper">
@@ -32,7 +34,7 @@ function OfferPage({ offer }: IThisProps) {
             Главная
             <img src="/img/arr-r.svg" alt="arrow" />
           </Link>
-          <Link href={`${SITE_URL.COMPANY}/${offer.user.company.id}`}>
+          <Link href={`${SITE_URL.COMPANY("")}/${offer.user.company.id}`}>
             {offer.user.company.name}
             <img src="/img/arr-r.svg" alt="arrow" />
           </Link>

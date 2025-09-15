@@ -4,7 +4,6 @@ import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { useSelector } from "react-redux";
 import Image from "next/image";
 import {
   Button,
@@ -16,27 +15,29 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 
-const menuItems = [
-  {
-    name: "Информация о компании",
-    url: SITE_URL.ACCOUNT,
-  },
-  {
-    name: "Активные предложения",
-    url: SITE_URL.ACCOUNT_SUGGESTIONS,
-  },
-  {
-    name: "Отзывы",
-    url: SITE_URL.ACCOUNT_REVIEWS,
-  },
-];
+interface IThisProps {
+  company: IUserCompany;
+}
 
-function CompanyLeftMenu() {
+function CompanyLeftMenu({ company }: IThisProps) {
   const pathname = usePathname();
 
-  const company = useSelector((state: IUserStore) => state.userInfo.company);
-
   const [loadingCompany, setLoadingCompany] = useState(false);
+
+  const menuItems = [
+    {
+      name: "Информация о компании",
+      url: SITE_URL.COMPANY(company.id),
+    },
+    {
+      name: "Активные предложения",
+      url: SITE_URL.COMPANY_OFFERS(company.id),
+    },
+    {
+      name: "Отзывы",
+      url: SITE_URL.COMPANY_REVIEWS(company.id),
+    },
+  ];
 
   useEffect(() => {
     setLoadingCompany(!!company);
@@ -81,7 +82,7 @@ function CompanyLeftMenu() {
                 <span className="num">4.5</span>
               </div>
 
-              <div className="flex-jc-c gap-2 mb-2">
+              <div className="flex-jc-c gap-2 mb-4">
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
@@ -92,15 +93,16 @@ function CompanyLeftMenu() {
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
+                    {/*<DropdownItem key="edit">Edit file</DropdownItem>*/}
                     <DropdownItem
                       key="delete"
                       className="text-danger"
                       color="danger"
                     >
-                      Delete file
+                      <div className="flex-js-c gap-1">
+                        <i className="fa-light fa-flag mr-2"></i>
+                        Пожаловаться
+                      </div>
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>

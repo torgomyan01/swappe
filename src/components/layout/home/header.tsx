@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motionOptionText, SITE_URL } from "@/utils/consts";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
+import clsx from "clsx";
 
 const images = [
   "img/banner-img1.png",
@@ -15,6 +17,8 @@ const images = [
 
 function HomeHeader() {
   const { data: session } = useSession();
+
+  const [menuMobile, setMenuMobile] = useState<boolean>(false);
 
   return (
     <>
@@ -40,7 +44,11 @@ function HomeHeader() {
               </li>
             </ul>
             <div className="drop-menu-main">
-              <img src="/img/menu.png.webp" alt="" />
+              <img
+                src="/img/menu.png.webp"
+                alt="icon burger menu"
+                onClick={() => setMenuMobile(true)}
+              />
             </div>
           </div>
           {session ? (
@@ -55,31 +63,47 @@ function HomeHeader() {
             </Link>
           )}
 
-          <div className="menu-wrap-main">
+          <div
+            className={clsx("menu-wrap-main", {
+              open: menuMobile,
+            })}
+          >
             <div className="close-menu">
-              <img src="/img/close-menu.svg" alt="" />
+              <img
+                src="/img/close-menu.svg"
+                alt="icon close"
+                onClick={() => setMenuMobile(false)}
+              />
             </div>
-            <a href="index.html" className="mob-logo">
+            <Link href={SITE_URL.HOME} className="mob-logo">
               <img src="/img/footer-logo.svg" alt="" />
-            </a>
+            </Link>
             <ul className="main-menu-mobile2">
               <li>
-                <a href="#">О сервисе</a>
+                <a href="#service">О сервисе</a>
               </li>
               <li>
-                <a href="#">Отзывы</a>
+                <a href="#business-size">Отзывы</a>
               </li>
               <li>
-                <a href="#">Кто мы</a>
+                <a href="#why-are">Кто мы</a>
               </li>
               <li>
-                <a href="#">FAQ</a>
+                <a href="#faq">FAQ</a>
               </li>
             </ul>
-            <a href="#" className="login-btn-mob">
-              <img src="/img/subtract.svg" alt="" />
-              Войти в сервис
-            </a>
+
+            {session ? (
+              <Link href={SITE_URL.ACCOUNT} className="login-btn-mob">
+                <i className="fa-solid fa-user mr-2"></i>
+                {session.user?.name}
+              </Link>
+            ) : (
+              <Link href={SITE_URL.LOGIN} className="login-btn-mob">
+                <img src="/img/subtract.svg" alt="" />
+                Войти в сервис
+              </Link>
+            )}
           </div>
         </div>
       </div>

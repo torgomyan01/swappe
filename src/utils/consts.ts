@@ -4,9 +4,6 @@ export const SITE_URL = {
   REGISTER: "/auth/register",
   FORGOT_PASSWORD: "/auth/forgot-password",
   VERIFY_USER: "/auth/verify-user",
-  COMPANY: "/company",
-  COMPANY_CREATE: "/company/create",
-  COMPANY_THANKS: "/company/thanks",
   ACCOUNT: "/account",
   OFFER: "/offer",
   SEARCH: "/search",
@@ -18,6 +15,12 @@ export const SITE_URL = {
   ACCOUNT_SUGGESTIONS: "/account/offers",
   ACCOUNT_OFFER_CREATE: "/account/offers/create",
   ACCOUNT_TARIFFS_BONUSES: "/account/tariffs-bonuses",
+
+  COMPANY_CREATE: "/company/create",
+  COMPANY_THANKS: "/company/thanks",
+  COMPANY: (id: number | string) => `/company/${id}`,
+  COMPANY_OFFERS: (id: number | string) => `/company/${id}/offers`,
+  COMPANY_REVIEWS: (id: number | string) => `/company/${id}/reviews`,
 };
 
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";

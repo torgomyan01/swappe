@@ -1,0 +1,103 @@
+"use client";
+
+import MainTemplate from "@/components/common/main-template/main-template";
+import { SITE_URL } from "@/utils/consts";
+import Link from "next/link";
+import CompanyLeftMenu from "@/app/company/components/company-left-menu";
+import { useEffect, useState } from "react";
+import { ActionCompanyOffers } from "@/app/actions/offers/get-company-offers";
+import OfferCard from "@/app/search/components/offer-card";
+
+interface IThisProps {
+  company: IUserCompany;
+}
+
+function CompanyPageOffers({ company }: IThisProps) {
+  const [offers, setOffers] = useState<IUserOffer[]>([]);
+
+  useEffect(() => {
+    ActionCompanyOffers(+company.user_id).then(({ data }) => {
+      setOffers(data as any);
+    });
+  }, []);
+
+  return (
+    <MainTemplate>
+      <div className="profile-wrap">
+        <div className="wrapper">
+          <div className="breadcrumbs hide-mobile">
+            <Link href={SITE_URL.HOME}>
+              Главная
+              <img src="/img/arr-r.svg" alt="arrow" />
+            </Link>
+            <span>{company.name}</span>
+          </div>
+          <div className="top-mob-line">
+            <Link href={SITE_URL.HOME} className="back">
+              <img src="/img/back-icon.svg" alt="" />
+            </Link>
+            <b>{company.name}</b>
+          </div>
+          <div className="info">
+            <CompanyLeftMenu company={company} />
+            <div className="profile favorite-account">
+              <div className="tabs">
+                <button className="tab-button active">
+                  Активные предложения
+                </button>
+                <button className="tab-button">Архив</button>
+              </div>
+              <div className="tab-content-wrap">
+                <div className="tab-content active">
+                  <div className="offers-items">
+                    {offers.map((offer: IUserOfferFront, index) => (
+                      <OfferCard
+                        key={`my-offers-${index}`}
+                        offer={offer}
+                        onlyTitle
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="tab-content">
+                  <div className="offers-items">
+                    <div className="offer-item">
+                      <div className="img-wrap">
+                        <a href="#" className="img">
+                          <img src="/img/offers-img2.png" alt="" />
+                        </a>
+                        <div className="favorite open"></div>
+                      </div>
+                      <div className="text-wrap">
+                        <span>Кейтеринг для мероприятия</span>
+                        <b>
+                          4.5 <img src="/img/star-small.svg" alt="" />
+                        </b>
+                      </div>
+                    </div>
+                    <div className="offer-item">
+                      <div className="img-wrap">
+                        <a href="#" className="img">
+                          <img src="/img/offers-img1.png" alt="" />
+                        </a>
+                        <div className="favorite open"></div>
+                      </div>
+                      <div className="text-wrap">
+                        <span>Кейтеринг для мероприятия</span>
+                        <b>
+                          4.3 <img src="/img/star-small.svg" alt="" />
+                        </b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainTemplate>
+  );
+}
+
+export default CompanyPageOffers;

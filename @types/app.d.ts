@@ -229,6 +229,7 @@ declare interface IUserCompany {
   image_path: string;
   status: "verify" | "no-verify";
   plan: "premium" | "free";
+  user: IUserProfile;
 }
 
 declare interface IUserFavorite {

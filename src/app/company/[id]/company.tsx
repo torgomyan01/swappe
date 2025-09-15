@@ -1,17 +1,15 @@
 "use client";
 
 import MainTemplate from "@/components/common/main-template/main-template";
-import { useSession } from "next-auth/react";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 import CompanyLeftMenu from "@/app/company/components/company-left-menu";
 
-function Profile() {
-  const { data: session } = useSession();
+interface IThisProps {
+  company: IUserCompany;
+}
 
-  const company = useSelector((state: IUserStore) => state.userInfo.company);
-
+function CompanyPage({ company }: IThisProps) {
   return (
     <MainTemplate>
       <div className="profile-wrap">
@@ -21,16 +19,16 @@ function Profile() {
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </Link>
-            <span>Профиль</span>
+            <span>{company.name}</span>
           </div>
           <div className="top-mob-line">
-            <a href="profile-mobila.html" className="back">
+            <Link href={SITE_URL.HOME} className="back">
               <img src="/img/back-icon.svg" alt="" />
-            </a>
-            <b>Профиль</b>
+            </Link>
+            <b>{company.name}</b>
           </div>
           <div className="info">
-            <CompanyLeftMenu />
+            <CompanyLeftMenu company={company} />
             <div className="profile profile-account">
               <h3>Аккаунт</h3>
               <p>
@@ -42,7 +40,7 @@ function Profile() {
                   <b>
                     Почта <img src="/img/check-Icon.svg" alt="check-Icon" />
                   </b>
-                  <span>{session?.user?.email}</span>
+                  <span>{company.user.email}</span>
                 </div>
                 <div className="item">
                   <b>
@@ -52,14 +50,6 @@ function Profile() {
                   <a href={`tel:${company?.phone_number}`}>
                     {company?.phone_number}
                   </a>
-                </div>
-                <div className="item">
-                  <b>Пароль</b>
-                  <span>Был изменен 1 год назад</span>
-                </div>
-                <div className="item">
-                  <b>Пользователи</b>
-                  <img src="/img/avatars.png" alt="avatars" />
                 </div>
               </div>
               <div className="border"></div>
@@ -109,11 +99,11 @@ function Profile() {
                 </div>
                 <div className="item">
                   <b>Интересующие категории</b>
-                  <div className="buttons !gap-2 !flex-js-s">
+                  <div className="buttons !gap-2 !flex-js-s flex-wrap">
                     {company?.interest_categories.map((item, index) => (
                       <button
                         key={`interest_categories-${index}`}
-                        className="green-btn"
+                        className="green-btn !bg-transparent !text-green !border border-green !my-0 hover:!bg-green hover:!text-white"
                       >
                         {item.name}
                       </button>
@@ -129,4 +119,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default CompanyPage;
