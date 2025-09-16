@@ -3,6 +3,7 @@ export const SITE_URL = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   FORGOT_PASSWORD: "/auth/forgot-password",
+  FORGOT_PASSWORD_CHECK: "/auth/forgot-password/check",
   VERIFY_USER: "/auth/verify-user",
   ACCOUNT: "/account",
   OFFER: "/offer",

@@ -8,14 +8,17 @@ datasource db {
 }
 
 model users {
-  id                Int           @id @default(autoincrement())
-  email             String        @db.VarChar(250)
-  name              String        @db.VarChar(255)
-  password          String        @db.VarChar(255)
-  status            String        @db.VarChar(250)
-  verification_code Int
-  offers            offers[]
-  company           user_company?
+  id                     Int    @id @default(autoincrement())
+  email                  String @db.VarChar(250)
+  name                   String @db.VarChar(255)
+  password               String @db.VarChar(255)
+  status                 String @db.VarChar(250)
+  verification_code      Int
+  password_reset_token   String @db.VarChar(500)
+  password_reset_expires String
+
+  offers  offers[]
+  company user_company?
 
   favorites user_favorites[]
 }
