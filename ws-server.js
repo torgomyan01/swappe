@@ -14,7 +14,6 @@ wss.on("connection", (ws) => {
   ws.on("message", async (message) => {
     try {
       const data = JSON.parse(message);
-
       if (data.type === "NEW_MESSAGE") {
         const newMessage = await prisma.messages.create({
           data: {
