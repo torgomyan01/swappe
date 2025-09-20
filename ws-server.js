@@ -28,7 +28,6 @@ wss.on("connection", (ws) => {
           },
         });
 
-        // // Ուղարկել նոր հաղորդագրությունը բոլոր client-ներին
         wss.clients.forEach((client) => {
           // eslint-disable-next-line no-undef
           if (client.readyState === WebSocket.OPEN) {
