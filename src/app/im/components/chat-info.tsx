@@ -14,7 +14,6 @@ import { useSession } from "next-auth/react";
 function ChatInfo() {
   const { id } = useParams();
   const { data: session }: any = useSession<any>();
-
   const [chatInfo, setChatInfo] = useState<IChatItems | null>(null);
 
   useEffect(() => {
