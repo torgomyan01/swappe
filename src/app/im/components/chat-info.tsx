@@ -41,7 +41,7 @@ function ChatInfo() {
 
     const wsUrl =
       process.env.NODE_ENV === "production"
-        ? `wss://${window.location.host}`
+        ? `wss://${window.location.host}/ws` // Ավելացրեք /ws ճանապարհը
         : "ws://localhost:3004";
 
     console.log(wsUrl);
