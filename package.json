@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "socket": "node ws-server.ts",
+    "socket": "node ws-server.js",
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint"

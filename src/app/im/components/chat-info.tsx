@@ -44,6 +44,8 @@ function ChatInfo() {
         ? `wss://${window.location.host}`
         : "ws://localhost:3004";
 
+    console.log(wsUrl);
+
     const wsClient: any = new WebSocket(wsUrl);
 
     wsClient.onopen = () => console.log("Connected to WebSocket server");

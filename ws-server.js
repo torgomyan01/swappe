@@ -4,12 +4,14 @@ const prisma = new PrismaClient();
 
 const wss = new WebSocketServer({ port: 3004 });
 
+// eslint-disable-next-line no-undef
 console.log("WebSocket server is running on port 3004");
 
-wss.on("connection", (ws: any) => {
+wss.on("connection", (ws) => {
+  // eslint-disable-next-line no-undef
   console.log("Client connected");
 
-  ws.on("message", async (message: any) => {
+  ws.on("message", async (message) => {
     try {
       const data = JSON.parse(message);
 
@@ -28,6 +30,7 @@ wss.on("connection", (ws: any) => {
 
         // // Ուղարկել նոր հաղորդագրությունը բոլոր client-ներին
         wss.clients.forEach((client) => {
+          // eslint-disable-next-line no-undef
           if (client.readyState === WebSocket.OPEN) {
             client.send(
               JSON.stringify({ type: "MESSAGE", payload: newMessage }),
@@ -36,15 +39,18 @@ wss.on("connection", (ws: any) => {
         });
       }
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error("Error handling message:", error);
     }
   });
 
   ws.on("close", () => {
+    // eslint-disable-next-line no-undef
     console.log("Client disconnected");
   });
 
-  ws.on("error", (error: any) => {
+  ws.on("error", (error) => {
+    // eslint-disable-next-line no-undef
     console.error("WebSocket error:", error);
   });
 });
