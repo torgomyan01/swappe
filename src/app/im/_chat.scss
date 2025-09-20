@@ -435,12 +435,10 @@
         flex-grow: 1;
       .scroll-info {
         overflow-y: auto;
+        overflow-x: hidden;
         padding-right: 10px;
         padding-bottom: 30px;
-        height: calc(100dvh - 500px);
-        @media(max-width: 767px) {
-          padding-bottom: 160px;
-        }
+        height: calc(100dvh - 450px);
 
         &::-webkit-scrollbar {
           width: 4px;

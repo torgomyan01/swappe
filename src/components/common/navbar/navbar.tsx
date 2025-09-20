@@ -148,9 +148,9 @@ function Navbar() {
           <Link href={SITE_URL.ACCOUNT_TRANSACTIONS} className="icon">
             <img src="/img/menu-icon4.svg" alt="" />
           </Link>
-          <a href="#" className="icon">
+          <Link href={SITE_URL.CHAT} className="icon">
             <img src="/img/menu-icon5.svg" alt="" />
-          </a>
+          </Link>
         </div>
       </div>
 

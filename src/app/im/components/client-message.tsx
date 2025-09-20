@@ -15,7 +15,7 @@ function ClientMessage({ message }: IThisProps) {
       </div>
       <div className="left-sms">
         <div className="style">
-          {message.file_type !== "files" && <MyMessageFileBlock />}
+          {message.file_type === "files" && <MyMessageFileBlock />}
 
           {message.file_type === "images" && <MessageImagesBlock />}
 

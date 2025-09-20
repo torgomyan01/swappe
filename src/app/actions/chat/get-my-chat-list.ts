@@ -12,14 +12,33 @@ export async function ActionGetMyChatList() {
       return { status: "error", data: [], error: "logout" };
     }
 
-    const createChat = await prisma.chats.findMany({
+    const chats = await prisma.chats.findMany({
       where: {
-        user_id: session.user.id,
+        OR: [
+          {
+            deal: {
+              client_id: session.user.id,
+            },
+          },
+          {
+            deal: {
+              owner_id: session.user.id,
+            },
+          },
+        ],
       },
       include: {
         deal: {
           include: {
             owner_offer: true,
+            owner: {
+              select: {
+                email: true,
+                id: true,
+                name: true,
+                company: true,
+              },
+            },
             client: {
               select: {
                 email: true,
@@ -35,7 +54,7 @@ export async function ActionGetMyChatList() {
 
     return {
       status: "ok",
-      data: createChat,
+      data: chats,
       error: "",
     };
   } catch (error: any) {

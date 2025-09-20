@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ActionGetChatInfo } from "@/app/actions/chat/get-chat-info";
@@ -27,6 +27,7 @@ function ChatInfo() {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [input, setInput] = useState("");
   const [ws, setWs] = useState<any>(null);
+  const [sendLoading, setSendLoading] = useState(false);
 
   function GetOldMessages() {
     if (id) {
@@ -44,8 +45,6 @@ function ChatInfo() {
         ? `wss://${window.location.host}/ws` // Ավելացրեք /ws ճանապարհը
         : "ws://localhost:3004";
 
-    console.log(wsUrl);
-
     const wsClient: any = new WebSocket(wsUrl);
 
     wsClient.onopen = () => console.log("Connected to WebSocket server");
@@ -54,6 +53,7 @@ function ChatInfo() {
       const data = JSON.parse(event.data);
       if (data.type === "MESSAGE") {
         if (id && data.payload.chat_id === +id) {
+          setSendLoading(false);
           setMessages((prev) => [...prev, data.payload]);
         }
       }
@@ -74,6 +74,7 @@ function ChatInfo() {
   const sendMessage = (e: any) => {
     e.preventDefault();
     if (input && ws && ws.readyState === WebSocket.OPEN && id && chatInfo) {
+      setSendLoading(true);
       const messageData = {
         type: "NEW_MESSAGE",
         chat_id: +id,
@@ -90,112 +91,134 @@ function ChatInfo() {
 
   return (
     <>
-      {chatInfo ? (
-        <div className="chat-info">
-          <div className="top-info">
-            <div className="top-line">
-              <div className="left-inf">
-                <div className="images">
-                  <div className="img-b">
-                    <Image
-                      src={`${fileHost}${chatInfo.deal.client_offer.images[0]}`}
-                      alt={chatInfo.deal.client.company.name}
-                      width={100}
-                      height={100}
-                      className="object-cover"
-                    />
+      {id ? (
+        chatInfo ? (
+          <div className="chat-info">
+            <div className="top-info">
+              <div className="top-line">
+                <div className="left-inf">
+                  <div className="images">
+                    <div className="img-b">
+                      <Image
+                        src={`${fileHost}${chatInfo.deal.client_offer.images[0]}`}
+                        alt={chatInfo.deal.client.company.name}
+                        width={100}
+                        height={100}
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="img-s">
+                      <Image
+                        src={`${fileHost}${chatInfo.deal.client.company.image_path}`}
+                        alt={chatInfo.deal.client.company.name}
+                        width={100}
+                        height={100}
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
-                  <div className="img-s">
-                    <Image
-                      src={`${fileHost}${chatInfo.deal.client.company.image_path}`}
-                      alt={chatInfo.deal.client.company.name}
-                      width={100}
-                      height={100}
-                      className="object-cover"
-                    />
+                  <div className="texts">
+                    <b>{chatInfo?.deal.client.company.name}</b>
+                    <span>Имя менеджера</span>
                   </div>
                 </div>
-                <div className="texts">
-                  <b>{chatInfo?.deal.client.company.name}</b>
-                  <span>Имя менеджера</span>
+                <div className="right-inf">
+                  <div className="dots-wrap">
+                    <div className="dots-icon !cursor-default">
+                      <img
+                        src="/img/chat/dots-menu.svg"
+                        alt=""
+                        className="opacity-0"
+                      />
+                    </div>
+                  </div>
+                  <span className="status">В сети 2 дня назад</span>
                 </div>
               </div>
-              <div className="right-inf">
-                <div className="dots-wrap">
-                  <div className="dots-icon !cursor-default">
-                    <img
-                      src="/img/chat/dots-menu.svg"
-                      alt=""
-                      className="opacity-0"
-                    />
-                  </div>
-                </div>
-                <span className="status">В сети 2 дня назад</span>
+
+              <PrintDealStatus chat={chatInfo} />
+            </div>
+
+            <Messages chat={chatInfo} messages={messages} />
+
+            <div className="bottom-info">
+              <button className="plus" type="button">
+                <img src="/img/chat/plus-white.svg" alt="" />
+              </button>
+              <div className="chat-dialog-wrap">
+                {/*<div className="answer">*/}
+                {/*  <img src="/img/chat/forward.svg" alt="" className="back" />*/}
+                {/*  <div className="img-wrapper">*/}
+                {/*    <img src="/img/chat/answer-img.png" alt="" />*/}
+                {/*  </div>*/}
+                {/*  <div className="texts">*/}
+                {/*    <span className="green">Ответ Diamond Кейтеринг</span>*/}
+                {/*    <span className="black">*/}
+                {/*      Задача организации, в особенности же постоянное*/}
+                {/*      информационно...{" "}*/}
+                {/*    </span>*/}
+                {/*  </div>*/}
+                {/*  <button className="close" type="button">*/}
+                {/*    <img src="/img/close-grey.svg" alt="" />*/}
+                {/*  </button>*/}
+                {/*</div>*/}
+                <form action="#" onSubmit={sendMessage}>
+                  <input
+                    className="w-full resize-none"
+                    placeholder="Начни диалог"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+
+                  <button
+                    className="smile !right-14 !bottom-[14px]"
+                    type="button"
+                  >
+                    <img src="/img/chat/happy.svg" alt="" />
+                  </button>
+                  <button
+                    className="smile !bottom-[11px] !right-6"
+                    type="button"
+                    disabled={sendLoading}
+                  >
+                    {sendLoading ? (
+                      <Spinner
+                        color="secondary"
+                        size="sm"
+                        className="relative top-1"
+                      />
+                    ) : (
+                      <i className="fa-solid fa-paper-plane"></i>
+                    )}
+                  </button>
+                </form>
+
+                {/*<Tooltip content={<EmojiPicker />}>*/}
+                {/*</Tooltip>*/}
+
+                {/*<Dropdown>*/}
+                {/*  <DropdownTrigger>*/}
+                {/*    <button className="smile" type="button">*/}
+                {/*      <img src="/img/chat/happy.svg" alt="" />*/}
+                {/*    </button>*/}
+                {/*  </DropdownTrigger>*/}
+                {/*  <DropdownMenu aria-label="smals">*/}
+                {/*    <DropdownItem key="smals">*/}
+                {/*      <EmojiPicker />*/}
+                {/*    </DropdownItem>*/}
+                {/*  </DropdownMenu>*/}
+                {/*</Dropdown>*/}
               </div>
             </div>
-
-            <PrintDealStatus chat={chatInfo} />
           </div>
-
-          <Messages chat={chatInfo} messages={messages} />
-
-          <div className="bottom-info">
-            <button className="plus" type="button">
-              <img src="/img/chat/plus-white.svg" alt="" />
-            </button>
-            <div className="chat-dialog-wrap">
-              {/*<div className="answer">*/}
-              {/*  <img src="/img/chat/forward.svg" alt="" className="back" />*/}
-              {/*  <div className="img-wrapper">*/}
-              {/*    <img src="/img/chat/answer-img.png" alt="" />*/}
-              {/*  </div>*/}
-              {/*  <div className="texts">*/}
-              {/*    <span className="green">Ответ Diamond Кейтеринг</span>*/}
-              {/*    <span className="black">*/}
-              {/*      Задача организации, в особенности же постоянное*/}
-              {/*      информационно...{" "}*/}
-              {/*    </span>*/}
-              {/*  </div>*/}
-              {/*  <button className="close" type="button">*/}
-              {/*    <img src="/img/close-grey.svg" alt="" />*/}
-              {/*  </button>*/}
-              {/*</div>*/}
-              <form action="#" onSubmit={sendMessage}>
-                <input
-                  className="w-full resize-none"
-                  placeholder="Начни диалог"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
-              </form>
-              <button className="smile !right-14 !bottom-[14px]" type="button">
-                <img src="/img/chat/happy.svg" alt="" />
-              </button>
-              <button className="smile !bottom-[11px] !right-6" type="button">
-                <i className="fa-solid fa-paper-plane"></i>
-              </button>
-
-              {/*<Tooltip content={<EmojiPicker />}>*/}
-              {/*</Tooltip>*/}
-
-              {/*<Dropdown>*/}
-              {/*  <DropdownTrigger>*/}
-              {/*    <button className="smile" type="button">*/}
-              {/*      <img src="/img/chat/happy.svg" alt="" />*/}
-              {/*    </button>*/}
-              {/*  </DropdownTrigger>*/}
-              {/*  <DropdownMenu aria-label="smals">*/}
-              {/*    <DropdownItem key="smals">*/}
-              {/*      <EmojiPicker />*/}
-              {/*    </DropdownItem>*/}
-              {/*  </DropdownMenu>*/}
-              {/*</Dropdown>*/}
-            </div>
+        ) : (
+          <div className="w-full h-[70dvh] flex-jc-c">
+            <Spinner color="secondary" />
           </div>
-        </div>
+        )
       ) : (
-        <div className="w-full h-[70dvh] flex-jc-c">
-          <Spinner color="secondary" />
+        <div className="chat-info !h-[60dvh] !flex-jc-c opacity-50">
+          Выбирайте чат пожалуйста
         </div>
       )}
     </>
