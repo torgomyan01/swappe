@@ -102,9 +102,70 @@ export const getMapIframeUrl = (coords: [number, number]) => {
   return `https://yandex.ru/map-widget/v1/?ll=${lon},${lat}&z=16&pt=${lon},${lat},pm2rdl&whatshere[zoom]=16&z=16&l=map&controls=false`;
 };
 
-export const truncateString = (str: string) => {
+export const truncateString = (str: string, length: number = 30) => {
   if (str.length > 30) {
-    return `${str.slice(0, 30)}...`;
+    return `${str.slice(0, length)}...`;
   }
   return str;
+};
+
+export const CreateObjectGrid = (images: any[]) => {
+  if (images.length === 1) {
+    return {
+      "grid-cols-1": true,
+    };
+  }
+
+  if (
+    images.length === 2 ||
+    images.length === 3 ||
+    images.length === 4 ||
+    images.length === 5
+  ) {
+    return {
+      "grid-cols-2": true,
+    };
+  }
+
+  if (images.length === 6 || images.length === 7) {
+    return {
+      "grid-cols-3": true,
+    };
+  }
+
+  if (images.length === 8) {
+    return {
+      "grid-cols-4": true,
+    };
+  }
+};
+
+export const CreateObjectCols = (index: number, images: any[]) => {
+  if (index === images.length - 1) {
+    if (
+      images.length === 1 ||
+      images.length === 2 ||
+      images.length === 4 ||
+      images.length === 6 ||
+      images.length === 8
+    ) {
+      return {
+        "col-span-1": true,
+      };
+    }
+    if (images.length === 3 || images.length === 5) {
+      return {
+        "col-span-2": true,
+      };
+    }
+    if (images.length === 7) {
+      return {
+        "col-span-3": true,
+      };
+    }
+  } else {
+    return {
+      "col-span-1": true,
+    };
+  }
 };

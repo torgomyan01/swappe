@@ -17,6 +17,8 @@ export const SITE_URL = {
   ACCOUNT_OFFER_CREATE: "/account/offers/create",
   ACCOUNT_TARIFFS_BONUSES: "/account/tariffs-bonuses",
 
+  CHAT: "/im",
+
   COMPANY_CREATE: "/company/create",
   COMPANY_THANKS: "/company/thanks",
   COMPANY: (id: number | string) => `/company/${id}`,

@@ -9,9 +9,10 @@ import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorit
 
 interface IThisProps {
   children?: React.ReactNode;
+  footer?: boolean;
 }
 
-function MainTemplate({ children }: IThisProps) {
+function MainTemplate({ children, footer = true }: IThisProps) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
 
@@ -33,7 +34,7 @@ function MainTemplate({ children }: IThisProps) {
 
       {children}
 
-      <Footer />
+      {footer && <Footer />}
     </>
   );
 }

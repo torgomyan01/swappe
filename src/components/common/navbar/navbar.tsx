@@ -87,10 +87,10 @@ function Navbar() {
               <img src="/img/menu-icon4.svg" alt="" />
             </Link>
             <Tooltip content="Сообщения">
-              <span className="icon cursor-pointer">
+              <Link href={SITE_URL.CHAT} className="icon cursor-pointer">
                 <span className="count">+9</span>
                 <img src="/img/menu-icon5.svg" alt="" />
-              </span>
+              </Link>
             </Tooltip>
           </div>
           {session ? (

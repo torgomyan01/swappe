@@ -32,6 +32,18 @@
     content: "\f024"
 }
 
+.fa-arrow-up-right:before {
+    content: "\e09f"
+}
+
+.fa-paper-plane:before {
+    content: "\f1d8"
+}
+
+.fa-arrow-down-to-line:before {
+    content: "\f33d"
+}
+
 
 
 /*---------------------------------*/

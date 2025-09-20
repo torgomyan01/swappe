@@ -272,7 +272,7 @@ declare interface IUserOfferFront {
   price: string;
   coordinates: [number, number] | null;
   description: string;
-  images: any[];
+  images: string[];
   videos: string[];
   user_id: number;
   state: "active";
@@ -379,5 +379,36 @@ declare interface Capital {
   contentType: string;
 }
 
+declare interface IChatItems {
+  id: number;
+  chat_name: string;
+  deal_id: number;
+  user_id: number;
+  deal: {
+    id: number;
+    owner_id: number;
+    owner_offer_id: number;
+    client_id: number;
+    client_offer_id: number;
+    status: "start";
+    created_at: string;
+    owner_offer: IUserOfferFront;
+    client_offer: IUserOfferFront;
+    client: IUserProfile;
+  };
+}
+
+declare interface IMessage {
+  id: number;
+  chat_id: number;
+  sender_id: number;
+  content: string;
+  file_type: string | null;
+  file_paths: [] | null;
+  selected_chat_id: number | null;
+  created_at: string;
+}
+
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
+type DealsStatus = "start";

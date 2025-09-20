@@ -21,6 +21,9 @@ model users {
   company user_company?
 
   favorites user_favorites[]
+
+  deals_owned_by_me deals[] @relation("DealsOwned")
+  deals_as_client   deals[] @relation("DealsAsClient")
 }
 
 model user_company {
@@ -112,4 +115,48 @@ model offers {
 
   user           users            @relation(fields: [user_id], references: [id])
   user_favorites user_favorites[]
+
+  deals_as_offer_owner  deals[] @relation("offerDeals")
+  deals_as_offer_client deals[] @relation("offerDealsClient")
+}
+
+model deals {
+  id              Int      @id @default(autoincrement())
+  owner_id        Int
+  owner_offer_id  Int
+  client_id       Int
+  client_offer_id Int
+  status          String
+  created_at      DateTime
+
+  owner  users @relation("DealsOwned", fields: [owner_id], references: [id])
+  client users @relation("DealsAsClient", fields: [client_id], references: [id])
+
+  owner_offer  offers  @relation("offerDeals", fields: [owner_offer_id], references: [id])
+  client_offer offers  @relation("offerDealsClient", fields: [client_offer_id], references: [id])
+  chats        chats[]
+}
+
+model chats {
+  id        Int    @id @default(autoincrement())
+  chat_name String @db.VarChar(1000)
+  deal_id   Int
+  user_id   Int
+
+  deal deals @relation(fields: [deal_id], references: [id])
+
+  messages messages[]
+}
+
+model messages {
+  id               Int      @id @default(autoincrement())
+  chat_id          Int
+  sender_id        Int
+  content          String   @db.VarChar(5000)
+  file_type        String?
+  file_paths       Json?
+  selected_chat_id Int?
+  created_at       DateTime
+
+  chats chats? @relation(fields: [chat_id], references: [id])
 }
