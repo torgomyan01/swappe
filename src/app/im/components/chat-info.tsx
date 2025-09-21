@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Spinner } from "@heroui/react";
+import { Spinner } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ActionGetChatInfo } from "@/app/actions/chat/get-chat-info";
