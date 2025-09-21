@@ -10,6 +10,7 @@ import PrintDealStatus from "@/app/im/components/print-deal-status";
 import Messages from "@/app/im/components/messages";
 import { ActionGetMessages } from "@/app/actions/chat/get-messages";
 import { useSession } from "next-auth/react";
+import InputEmoji from "react-input-emoji";
 
 function ChatInfo() {
   const { id } = useParams();
@@ -25,7 +26,6 @@ function ChatInfo() {
   }, [id]);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [input, setInput] = useState("");
   const [ws, setWs] = useState<any>(null);
   const [sendLoading, setSendLoading] = useState(false);
 
@@ -71,21 +71,22 @@ function ChatInfo() {
     };
   }, []);
 
-  const sendMessage = (e: any) => {
-    e.preventDefault();
-    if (input && ws && ws.readyState === WebSocket.OPEN && id && chatInfo) {
+  const [text, setText] = useState("");
+
+  const sendMessage = () => {
+    if (text && ws && ws.readyState === WebSocket.OPEN && id && chatInfo) {
       setSendLoading(true);
+      setText("");
       const messageData = {
         type: "NEW_MESSAGE",
         chat_id: +id,
         sender_id: session.user.id,
-        content: input,
+        content: text,
         file_type: null,
         file_paths: null,
         selected_chat_id: null,
       };
       ws.send(JSON.stringify(messageData));
-      setInput("");
     }
   };
 
@@ -162,24 +163,21 @@ function ChatInfo() {
                 {/*    <img src="/img/close-grey.svg" alt="" />*/}
                 {/*  </button>*/}
                 {/*</div>*/}
-                <form action="#" onSubmit={sendMessage}>
-                  <input
-                    className="w-full resize-none"
-                    placeholder="Начни диалог"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                <form action="#">
+                  <InputEmoji
+                    value={text}
+                    onChange={setText}
+                    cleanOnEnter
+                    onEnter={sendMessage}
+                    placeholder="Напиши сообщение..."
+                    shouldReturn
+                    shouldConvertEmojiToImage={false}
                   />
-
                   <button
-                    className="smile !right-14 !bottom-[14px]"
-                    type="button"
-                  >
-                    <img src="/img/chat/happy.svg" alt="" />
-                  </button>
-                  <button
-                    className="smile !bottom-[11px] !right-6"
+                    className="smile !bottom-[12px] !right-[60px] !cursor-pointer relative z-10"
                     type="button"
                     disabled={sendLoading}
+                    onClick={sendMessage}
                   >
                     {sendLoading ? (
                       <Spinner
@@ -188,7 +186,7 @@ function ChatInfo() {
                         className="relative top-1"
                       />
                     ) : (
-                      <i className="fa-solid fa-paper-plane"></i>
+                      <i className="fa-solid fa-paper-plane text-green"></i>
                     )}
                   </button>
                 </form>

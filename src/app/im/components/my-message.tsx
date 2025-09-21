@@ -2,12 +2,15 @@ import moment from "moment";
 import MessageImagesBlock from "@/app/im/components/message-images-block";
 import MessageFeedback from "@/app/im/components/message-feedback";
 import MyMessageFileBlock from "@/app/im/components/my-message-file-block";
+import { fileHost } from "@/utils/consts";
+import Image from "next/image";
 
 interface IThisProps {
   message: IMessage;
+  info: IChatItems;
 }
 
-function MyMessage({ message }: IThisProps) {
+function MyMessage({ message, info }: IThisProps) {
   return (
     <div className="right-sms-wrap sm:!min-w-[300px]">
       <div className="right-sms">
@@ -18,7 +21,7 @@ function MyMessage({ message }: IThisProps) {
 
           {message.selected_chat_id && <MessageFeedback />}
 
-          {message.content}
+          <p dangerouslySetInnerHTML={{ __html: message.content }} />
         </div>
         <div className="time">
           <img src="/img/chat/massage-state.svg" alt="" />
@@ -26,7 +29,12 @@ function MyMessage({ message }: IThisProps) {
         </div>
       </div>
       <div className="img">
-        <img src="/img/avatar.png" alt="" />
+        <Image
+          src={`${fileHost}${info.deal.owner.company.image_path}`}
+          alt=""
+          width={100}
+          height={100}
+        />
       </div>
     </div>
   );

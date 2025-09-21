@@ -49,11 +49,16 @@ function Messages({ chat, messages }: IThisProps) {
 
           {messages.map((message) =>
             message.sender_id === session?.user.id ? (
-              <MyMessage key={`my-message--${message.id}`} message={message} />
+              <MyMessage
+                key={`my-message--${message.id}`}
+                message={message}
+                info={chat}
+              />
             ) : (
               <ClientMessage
                 key={`my-message--${message.id}`}
                 message={message}
+                info={chat}
               />
             ),
           )}

@@ -29,6 +29,14 @@ export async function ActionGetChatInfo(id: number) {
                 company: true,
               },
             },
+            owner: {
+              select: {
+                email: true,
+                id: true,
+                name: true,
+                company: true,
+              },
+            },
           },
         },
       },

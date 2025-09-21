@@ -395,6 +395,7 @@ declare interface IChatItems {
     owner_offer: IUserOfferFront;
     client_offer: IUserOfferFront;
     client: IUserProfile;
+    owner: IUserProfile;
   };
 }
 
