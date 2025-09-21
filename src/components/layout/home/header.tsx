@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motionOptionText, SITE_URL } from "@/utils/consts";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 const images = [
@@ -19,6 +19,16 @@ function HomeHeader() {
   const { data: session } = useSession();
 
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (menuMobile) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    }
+  }, [menuMobile]);
 
   return (
     <>
