@@ -8,7 +8,6 @@ export default withAuth(
     const userAgent = request.headers.get("user-agent");
 
     if (userAgent) {
-      // Use the UAParser function correctly
       const parser = UAParser.UAParser(userAgent);
       const device = parser.device;
 
