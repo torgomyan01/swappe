@@ -404,8 +404,8 @@ declare interface IMessage {
   chat_id: number;
   sender_id: number;
   content: string;
-  file_type: string | null;
-  file_paths: [] | null;
+  file_type: "files" | "images" | null;
+  file_paths: any;
   selected_chat_id: number | null;
   created_at: string;
 }

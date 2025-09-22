@@ -29,6 +29,8 @@ export const SITE_URL = {
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";
 export const fileHostUpload =
   "https://2410924f2b33.hosting.myjino.ru/save-images.php";
+export const fileHostUploadDoc =
+  "https://2410924f2b33.hosting.myjino.ru/upload-doc-file.php";
 export const fileHostRemove =
   "https://2410924f2b33.hosting.myjino.ru/remove-image.php";
 

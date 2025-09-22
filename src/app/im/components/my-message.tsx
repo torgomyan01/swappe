@@ -15,9 +15,13 @@ function MyMessage({ message, info }: IThisProps) {
     <div className="right-sms-wrap sm:!min-w-[300px]">
       <div className="right-sms">
         <div className="style">
-          {message.file_type === "files" && <MyMessageFileBlock />}
+          {message.file_type === "files" && (
+            <MyMessageFileBlock message={message} />
+          )}
 
-          {message.file_type === "images" && <MessageImagesBlock />}
+          {message.file_type === "images" && (
+            <MessageImagesBlock message={message} />
+          )}
 
           {message.selected_chat_id && <MessageFeedback />}
 

@@ -44,6 +44,14 @@
     content: "\f33d"
 }
 
+.fa-images:before {
+    content: "\f302"
+}
+
+.fa-file:before {
+    content: "\f15b"
+}
+
 
 
 /*---------------------------------*/

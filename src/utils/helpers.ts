@@ -169,3 +169,60 @@ export const CreateObjectCols = (index: number, images: any[]) => {
     };
   }
 };
+
+export const validateDocumentFiles = (files: File[]) => {
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "text/plain",
+    "application/vnd.oasis.opendocument.text",
+  ];
+
+  const maxFileSize = 5 * 1024 * 1024;
+
+  const fileArray = Array.from(files);
+
+  for (const file of fileArray) {
+    // Ստուգում ենք ֆայլի տեսակը
+    if (!allowedMimeTypes.includes(file.type)) {
+      return "type";
+    }
+    // Ստուգում ենք ֆայլի չափը
+    if (file.size > maxFileSize) {
+      return "size";
+    }
+  }
+
+  return "ok";
+};
+
+export const validateImageFiles = (files: File[]) => {
+  const allowedMimeTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/bmp",
+    "image/webp",
+    "image/svg+xml",
+  ];
+
+  const maxFileSize = 5 * 1024 * 1024;
+
+  const fileArray = Array.from(files);
+
+  for (const file of fileArray) {
+    if (!allowedMimeTypes.includes(file.type)) {
+      return "type";
+    }
+
+    if (file.size > maxFileSize) {
+      return "size";
+    }
+  }
+
+  // Եթե բոլոր ֆայլերը թույլատրելի են
+  return "ok";
+};

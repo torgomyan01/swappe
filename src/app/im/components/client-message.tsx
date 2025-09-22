@@ -23,9 +23,13 @@ function ClientMessage({ message, info }: IThisProps) {
       </div>
       <div className="left-sms">
         <div className="style">
-          {message.file_type === "files" && <MyMessageFileBlock />}
+          {message.file_type === "files" && (
+            <MyMessageFileBlock message={message} />
+          )}
 
-          {message.file_type === "images" && <MessageImagesBlock />}
+          {message.file_type === "images" && (
+            <MessageImagesBlock message={message} />
+          )}
 
           {message.selected_chat_id && <MessageFeedback />}
 

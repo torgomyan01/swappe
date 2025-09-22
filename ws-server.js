@@ -14,8 +14,7 @@ wss.on("connection", (ws) => {
     try {
       const data = JSON.parse(message);
 
-      // Ստուգել, որ հաղորդագրությունը ունի բոլոր պարտադիր դաշտերը
-      if (data.type === "NEW_MESSAGE" && data.sender_id && data.content) {
+      if (data.type === "NEW_MESSAGE" && data.sender_id) {
         const newMessage = await prisma.messages.create({
           data: {
             chat_id: data.chat_id,
