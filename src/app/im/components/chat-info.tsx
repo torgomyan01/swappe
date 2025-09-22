@@ -18,6 +18,8 @@ import {
 } from "@/utils/helpers";
 import axios from "axios";
 import clsx from "clsx";
+import { PhotoProvider } from "react-photo-view";
+import FeedbackBlock from "@/app/im/components/feedback-block";
 
 function ChatInfo() {
   const { id } = useParams();
@@ -35,6 +37,8 @@ function ChatInfo() {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [ws, setWs] = useState<any>(null);
   const [sendLoading, setSendLoading] = useState(false);
+
+  const [selectedMessage, setSelectedMessage] = useState<number>(0);
 
   function GetOldMessages() {
     if (id) {
@@ -81,6 +85,10 @@ function ChatInfo() {
   const [text, setText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  const findSelectedMessage = messages.find(
+    (msg) => msg.id === selectedMessage,
+  );
 
   useEffect(() => {
     if (selectedFiles.length > 6) {
@@ -132,7 +140,7 @@ function ChatInfo() {
               content: text,
               file_type: PrintTypeFile(),
               file_paths: paths,
-              selected_chat_id: null,
+              selected_chat_id: selectedMessage,
             };
 
             ws.send(JSON.stringify(messageData));
@@ -148,11 +156,13 @@ function ChatInfo() {
             content: text,
             file_type: null,
             file_paths: null,
-            selected_chat_id: null,
+            selected_chat_id: selectedMessage,
           };
 
           ws.send(JSON.stringify(messageData));
         }
+
+        setSelectedMessage(0);
       }
     }
   };
@@ -255,10 +265,14 @@ function ChatInfo() {
   }
 
   return (
-    <>
+    <PhotoProvider>
       {id ? (
         chatInfo ? (
-          <div className="chat-info">
+          <div
+            className={clsx("chat-info", {
+              "lg:!hidden": !id,
+            })}
+          >
             <div className="top-info">
               <div className="top-line">
                 <div className="left-inf">
@@ -304,7 +318,11 @@ function ChatInfo() {
               <PrintDealStatus chat={chatInfo} />
             </div>
 
-            <Messages chat={chatInfo} messages={messages} />
+            <Messages
+              chat={chatInfo}
+              messages={messages}
+              onSelectMessage={(id) => setSelectedMessage(id)}
+            />
 
             <div className="bottom-info">
               <div className="relative z-10 group">
@@ -397,23 +415,15 @@ function ChatInfo() {
                   </div>
                 ) : null}
 
-                {/*<div className="answer">*/}
-                {/*  <img src="/img/chat/forward.svg" alt="" className="back" />*/}
-                {/*  <div className="img-wrapper">*/}
-                {/*    <img src="/img/chat/answer-img.png" alt="" />*/}
-                {/*  </div>*/}
-                {/*  <div className="texts">*/}
-                {/*    <span className="green">Ответ Diamond Кейтеринг</span>*/}
-                {/*    <span className="black">*/}
-                {/*      Задача организации, в особенности же постоянное*/}
-                {/*      информационно...{" "}*/}
-                {/*    </span>*/}
-                {/*  </div>*/}
-                {/*  <button className="close" type="button">*/}
-                {/*    <img src="/img/close-grey.svg" alt="" />*/}
-                {/*  </button>*/}
-                {/*</div>*/}
-                <form action="#">
+                {selectedMessage && findSelectedMessage ? (
+                  <FeedbackBlock
+                    message={findSelectedMessage}
+                    chatInfo={chatInfo}
+                    onClose={() => setSelectedMessage(0)}
+                  />
+                ) : null}
+
+                <form action="#" className="relative !z-[100]">
                   <InputEmoji
                     value={text}
                     onChange={setText}
@@ -465,11 +475,15 @@ function ChatInfo() {
           </div>
         )
       ) : (
-        <div className="chat-info !h-[60dvh] !flex-jc-c opacity-50">
+        <div
+          className={clsx("chat-info !h-[60dvh] !flex-jc-c opacity-50", {
+            "max-lg:!hidden": !id,
+          })}
+        >
           Выбирайте чат пожалуйста
         </div>
       )}
-    </>
+    </PhotoProvider>
   );
 }
 

@@ -410,6 +410,11 @@ declare interface IMessage {
   created_at: string;
 }
 
+declare interface IGroupedMessages {
+  date: string;
+  messages: IMessage[];
+}
+
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
 type DealsStatus = "start";

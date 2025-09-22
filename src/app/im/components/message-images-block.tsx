@@ -6,13 +6,17 @@ import { PhotoView } from "react-photo-view";
 
 interface IThisProps {
   message: IMessage;
+  isMin?: boolean;
 }
 
-function MessageImagesBlock({ message }: IThisProps) {
+function MessageImagesBlock({ message, isMin = false }: IThisProps) {
   return (
     <div
       className={clsx(
         "w-full grid gap-2 mb-4 items-stretch",
+        {
+          "!mb-2": isMin,
+        },
         CreateObjectGrid(message.file_paths || []),
       )}
     >
@@ -25,7 +29,10 @@ function MessageImagesBlock({ message }: IThisProps) {
             width={200}
             height={200}
             className={clsx(
-              "rounded-[8px] object-cover cursor-pointer",
+              "rounded-[8px] object-cover cursor-pointer w-full",
+              {
+                "!w-[50px] !h-[50px]": isMin,
+              },
               CreateObjectCols(i, message.file_paths || []),
             )}
           />

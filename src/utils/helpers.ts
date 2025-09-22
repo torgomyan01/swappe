@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const RandomKey = (length = 5) => {
   let result = "";
   const characters =
@@ -186,11 +188,9 @@ export const validateDocumentFiles = (files: File[]) => {
   const fileArray = Array.from(files);
 
   for (const file of fileArray) {
-    // Ստուգում ենք ֆայլի տեսակը
     if (!allowedMimeTypes.includes(file.type)) {
       return "type";
     }
-    // Ստուգում ենք ֆայլի չափը
     if (file.size > maxFileSize) {
       return "size";
     }
@@ -223,6 +223,27 @@ export const validateImageFiles = (files: File[]) => {
     }
   }
 
-  // Եթե բոլոր ֆայլերը թույլատրելի են
   return "ok";
+};
+
+export const groupMessagesByDate = (
+  messages: IMessage[],
+): IGroupedMessages[] => {
+  const grouped: { [key: string]: IMessage[] } = {};
+
+  messages.forEach((message) => {
+    const date = moment(message.created_at).startOf("day").format();
+
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+    grouped[date].push(message);
+  });
+
+  return Object.keys(grouped)
+    .map((dateKey) => ({
+      date: dateKey,
+      messages: grouped[dateKey],
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };

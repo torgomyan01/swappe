@@ -12,7 +12,7 @@ function MyMessageFileBlock({ message }: IThisProps) {
       {message.file_paths?.map((filePath: { name: string; url: string }) => (
         <div
           key={RandomKey()}
-          className="w-full p-2 bg-black/20 rounded-[8px] mb-2 flex-js-c gap-2"
+          className="w-full p-2 bg-black/20 rounded-[8px] mb-2 flex-js-c gap-2 flex-wrap"
         >
           <Link
             href={`${fileHost}${filePath.url}`}

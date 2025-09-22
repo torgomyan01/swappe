@@ -4,8 +4,12 @@ import { SITE_URL } from "@/utils/consts";
 import ChatItem from "@/app/im/components/chat-item";
 import ChatItemLoading from "@/app/im/components/chat-item-loading";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import clsx from "clsx";
 
 function ChatList() {
+  const { id } = useParams();
+
   const [items, setItems] = useState<IChatItems[] | null>(null);
 
   useEffect(() => {
@@ -15,7 +19,11 @@ function ChatList() {
   }, []);
 
   return (
-    <div className="dialogues">
+    <div
+      className={clsx("dialogues", {
+        "max-lg:!block": !id,
+      })}
+    >
       <div className="top">
         <b>Диалог и</b>
         <div className="filter-btn">
