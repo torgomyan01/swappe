@@ -15,7 +15,7 @@ function MessageImagesBlock({ message, isMin = false }: IThisProps) {
       className={clsx(
         "w-full grid gap-2 mb-4 items-stretch",
         {
-          "!mb-2": isMin,
+          "!mb-2 !flex-js-s gap-4": isMin,
         },
         CreateObjectGrid(message.file_paths || []),
       )}

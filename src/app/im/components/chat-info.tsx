@@ -1,6 +1,13 @@
 "use client";
 
-import { addToast, Spinner } from "@heroui/react";
+import {
+  addToast,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Spinner,
+} from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ActionGetChatInfo } from "@/app/actions/chat/get-chat-info";
@@ -324,57 +331,58 @@ function ChatInfo() {
               onSelectMessage={(id) => setSelectedMessage(id)}
             />
 
-            <div className="bottom-info">
-              <div className="relative z-10 group">
-                <button className="plus cursor-pointer">
-                  <img src="/img/chat/plus-white.svg" alt="" />
-                </button>
+            <input
+              type="file"
+              className="hidden"
+              multiple
+              id="select-iamge"
+              onChange={selectImages}
+              disabled={!!selectedFiles.length || !!selectedImages.length}
+              accept="image/jpeg, image/png, image/gif, image/bmp, image/webp"
+            />
 
-                <div className="w-[200px] absolute bottom-[100%] left-[50%] transform translate-x-[-50%] bg-white shadow rounded-[8px] p-2 flex-js-s flex-col hidden group-hover:flex">
-                  <label
-                    className={clsx(
-                      "w-full p-2 rounded-[8px] hover:bg-green/20 transition cursor-pointer",
-                      {
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              multiple
+              id="select-files"
+              disabled={!!selectedFiles.length || !!selectedImages.length}
+              accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, .odt"
+            />
+
+            <div className="bottom-info">
+              <Dropdown>
+                <DropdownTrigger>
+                  <button className="plus cursor-pointer">
+                    <img src="/img/chat/plus-white.svg" alt="" />
+                  </button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Static Actions">
+                  <DropdownItem key="new">
+                    <label
+                      htmlFor="select-iamge"
+                      className={clsx("w-full cursor-pointer", {
                         "opacity-50 !cursor-default":
                           !!selectedFiles.length || !!selectedImages.length,
-                      },
-                    )}
-                  >
-                    <input
-                      type="file"
-                      className="hidden"
-                      multiple
-                      onChange={selectImages}
-                      disabled={
-                        !!selectedFiles.length || !!selectedImages.length
-                      }
-                      accept="image/jpeg, image/png, image/gif, image/bmp, image/webp"
-                    />
-                    <i className="fa-regular fa-images mr-2"></i>Картинка
-                  </label>
-                  <label
-                    className={clsx(
-                      "w-full p-2 rounded-[8px] hover:bg-green/20 transition cursor-pointer",
-                      {
+                      })}
+                    >
+                      <i className="fa-regular fa-images mr-2"></i>Картинка
+                    </label>
+                  </DropdownItem>
+                  <DropdownItem key="copy">
+                    <label
+                      htmlFor="select-files"
+                      className={clsx("w-full cursor-pointer", {
                         "opacity-50 !cursor-default":
                           !!selectedFiles.length || !!selectedImages.length,
-                      },
-                    )}
-                  >
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      className="hidden"
-                      multiple
-                      disabled={
-                        !!selectedFiles.length || !!selectedImages.length
-                      }
-                      accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, .odt"
-                    />
-                    <i className="fa-regular fa-file  mr-2"></i>Документ
-                  </label>
-                </div>
-              </div>
+                      })}
+                    >
+                      <i className="fa-regular fa-file  mr-2"></i>Документ
+                    </label>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
 
               <div className="chat-dialog-wrap">
                 {selectedFiles.length ? (
@@ -450,22 +458,6 @@ function ChatInfo() {
                     )}
                   </button>
                 </form>
-
-                {/*<Tooltip content={<EmojiPicker />}>*/}
-                {/*</Tooltip>*/}
-
-                {/*<Dropdown>*/}
-                {/*  <DropdownTrigger>*/}
-                {/*    <button className="smile" type="button">*/}
-                {/*      <img src="/img/chat/happy.svg" alt="" />*/}
-                {/*    </button>*/}
-                {/*  </DropdownTrigger>*/}
-                {/*  <DropdownMenu aria-label="smals">*/}
-                {/*    <DropdownItem key="smals">*/}
-                {/*      <EmojiPicker />*/}
-                {/*    </DropdownItem>*/}
-                {/*  </DropdownMenu>*/}
-                {/*</Dropdown>*/}
               </div>
             </div>
           </div>

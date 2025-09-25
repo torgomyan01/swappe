@@ -126,7 +126,8 @@ model deals {
   owner_offer_id  Int
   client_id       Int
   client_offer_id Int
-  status          String
+  status_client   String
+  statue_owner    String
   created_at      DateTime
 
   owner  users @relation("DealsOwned", fields: [owner_id], references: [id])

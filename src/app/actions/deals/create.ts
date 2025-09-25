@@ -24,7 +24,8 @@ export async function ActionCreateDeals(data: Data) {
         owner_offer_id: data.offer_id,
         client_id: data.client_id,
         client_offer_id: data.client_offer_id,
-        status: "start",
+        status_client: "wait-confirm",
+        statue_owner: "wait-confirm",
         created_at: new Date(),
       },
     });

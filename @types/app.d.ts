@@ -390,7 +390,8 @@ declare interface IChatItems {
     owner_offer_id: number;
     client_id: number;
     client_offer_id: number;
-    status: "start";
+    status_client: DealStatusClient;
+    statue_owner: DealStatusOwner;
     created_at: string;
     owner_offer: IUserOfferFront;
     client_offer: IUserOfferFront;
@@ -417,4 +418,18 @@ declare interface IGroupedMessages {
 
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
-type DealsStatus = "start";
+type DealStatusClient =
+  | "wait-confirm"
+  | "wait-doc-confirm"
+  | "doc-confirmed"
+  | "completed"
+  | "send-review"
+  | "canceled";
+
+type DealStatusOwner =
+  | "wait-confirm"
+  | "wait-doc-confirm"
+  | "doc-confirmed"
+  | "completed"
+  | "send-review"
+  | "canceled";

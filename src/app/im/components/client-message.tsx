@@ -1,7 +1,7 @@
 import MyMessageFileBlock from "@/app/im/components/my-message-file-block";
 import MessageImagesBlock from "@/app/im/components/message-images-block";
 import moment from "moment/moment";
-import { fileHost } from "@/utils/consts";
+import { fileHost, SITE_URL } from "@/utils/consts";
 import Image from "next/image";
 import {
   Dropdown,
@@ -11,6 +11,7 @@ import {
 } from "@heroui/react";
 import FeedbackBlock from "@/app/im/components/feedback-block";
 import { useState } from "react";
+import Link from "next/link";
 
 interface IThisProps {
   message: IMessage;
@@ -28,14 +29,18 @@ function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
 
   return (
     <div className="left-sms-wrap sm:!min-w-[300px] relative z-0">
-      <div className="img">
+      <Link
+        href={SITE_URL.COMPANY(info.deal.client.company.id)}
+        className="img"
+        target="_blank"
+      >
         <Image
           src={`${fileHost}${info.deal.client.company.image_path}`}
           alt=""
           width={100}
           height={100}
         />
-      </div>
+      </Link>
       <div className="left-sms">
         <Dropdown
           classNames={{

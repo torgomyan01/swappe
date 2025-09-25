@@ -8,11 +8,17 @@ export async function ActionGetMessages(chat_id: number) {
       where: {
         chat_id,
       },
+      orderBy: {
+        created_at: "desc",
+      },
+      take: 15,
     });
+
+    const reversedMessages = messages.reverse();
 
     return {
       status: "ok",
-      data: messages,
+      data: reversedMessages,
       error: "",
     };
   } catch (error: any) {

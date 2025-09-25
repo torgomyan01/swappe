@@ -1,7 +1,7 @@
 import moment from "moment";
 import MessageImagesBlock from "@/app/im/components/message-images-block";
 import MyMessageFileBlock from "@/app/im/components/my-message-file-block";
-import { fileHost } from "@/utils/consts";
+import { fileHost, SITE_URL } from "@/utils/consts";
 import Image from "next/image";
 import {
   Dropdown,
@@ -11,6 +11,7 @@ import {
 } from "@heroui/react";
 import FeedbackBlock from "@/app/im/components/feedback-block";
 import { useState } from "react";
+import Link from "next/link";
 
 interface IThisProps {
   message: IMessage;
@@ -71,14 +72,18 @@ function MyMessage({ message, info, onSelectMessage }: IThisProps) {
           {moment(message.created_at).format("hh:mm")}
         </div>
       </div>
-      <div className="img">
+      <Link
+        href={SITE_URL.COMPANY(info.deal.owner.company.id)}
+        target="_blank"
+        className="img"
+      >
         <Image
           src={`${fileHost}${info.deal.owner.company.image_path}`}
           alt=""
           width={100}
           height={100}
         />
-      </div>
+      </Link>
     </div>
   );
 }
