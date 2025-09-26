@@ -102,6 +102,8 @@ export async function ActionCreateUser(
         password: passwordHash,
         status: "no-verified",
         verification_code: code,
+        password_reset_token: "",
+        password_reset_expires: "",
       } as any,
     });
 
