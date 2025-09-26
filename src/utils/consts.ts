@@ -2,6 +2,7 @@ export const SITE_URL = {
   HOME: "/",
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
+  REGISTER_THANKS: "/auth/register/thanks",
   FORGOT_PASSWORD: "/auth/forgot-password",
   FORGOT_PASSWORD_CHECK: "/auth/forgot-password/check",
   VERIFY_USER: "/auth/verify-user",

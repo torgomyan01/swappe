@@ -8,8 +8,10 @@ import clsx from "clsx";
 import DefInput from "@/components/common/input/def-input";
 import { addToast, Button } from "@heroui/react";
 import { ActionCreateUser } from "@/app/actions/auth/create-user";
+import { useRouter } from "next/navigation";
 
 function Register() {
+  const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
   const [password, setPassword] = useState("");
 
@@ -60,6 +62,8 @@ function Register() {
                 "Поздравляем, вы успешно зарегистрировались. Осталось только подтвердить адрес электронной почты.",
               color: "success",
             });
+
+            router.push(`${SITE_URL.REGISTER_THANKS}/${email}`);
           }
         })
         .finally(() => setLoading(false));
