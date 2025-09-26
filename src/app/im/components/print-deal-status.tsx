@@ -10,11 +10,6 @@ interface IThisProps {
 function PrintDealStatus({ chat }: IThisProps) {
   const { data: session }: any = useSession();
 
-  console.log(
-    chat.deal.status_client,
-    "chat.deal.status_clientchat.deal.status_clientchat.deal.status_client",
-  );
-
   function PrintStatuses() {
     if (chat.deal.client.id === session?.user?.id) {
       if (chat.deal.status_client === "wait-confirm") {

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
-import { formatPrice } from "@/utils/helpers";
+import { formatPrice, sliceText } from "@/utils/helpers";
 import { addToast, Button } from "@heroui/react";
 import { useState } from "react";
 import { ActionChangeStatusDealClient } from "@/app/actions/deals/change-status";
@@ -68,7 +68,7 @@ function Completed({ chat }: IThisProps) {
       </div>
       <div className="txts">
         <b>
-          {chat.deal.client_offer.name},{" "}
+          {sliceText(chat.deal.client_offer.name)},{" "}
           {formatPrice(+chat.deal.client_offer.price)}{" "}
         </b>
         <div className="inf-texts">

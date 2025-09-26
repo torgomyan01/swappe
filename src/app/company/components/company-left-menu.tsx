@@ -40,7 +40,7 @@ function CompanyLeftMenu({ company }: IThisProps) {
   ];
 
   useEffect(() => {
-    setLoadingCompany(!!company);
+    setLoadingCompany(true);
   }, [company]);
 
   return (

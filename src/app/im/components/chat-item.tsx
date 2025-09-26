@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import clsx from "clsx";
 import { Tooltip } from "@heroui/react";
+import { sliceText } from "@/utils/helpers";
 
 interface IThisProps {
   item: IChatItems;
@@ -40,7 +41,7 @@ function ChatItem({ item }: IThisProps) {
         </div>
       </div>
       <div className="texts">
-        <b>{item.chat_name}</b>
+        <b title={item.chat_name}>{sliceText(item.chat_name)}</b>
         <span>Swappe</span>
       </div>
     </Link>

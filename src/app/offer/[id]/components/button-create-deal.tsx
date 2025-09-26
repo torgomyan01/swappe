@@ -19,12 +19,17 @@ import clsx from "clsx";
 import { ActionCreateDeals } from "@/app/actions/deals/create";
 import { ActionCreateChat } from "@/app/actions/chat/create";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 interface IThisProps {
   offer: IUserOfferFront;
 }
 
 function ButtonCreateDeal({ offer }: IThisProps) {
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
+  console.log(company);
+
   const { data: session }: any = useSession();
   const router = useRouter();
 
@@ -80,10 +85,28 @@ function ButtonCreateDeal({ offer }: IThisProps) {
     <>
       {session ? (
         offer.user_id !== session.user?.id && (
-          <Button className="green-btn" onPress={() => setModal(true)}>
-            <img src="/img/icons/start-sale.svg" alt="" className="!mr-0" />
-            Предложить сделку
-          </Button>
+          <>
+            {company ? (
+              <Button className="green-btn" onPress={() => setModal(true)}>
+                <img src="/img/icons/start-sale.svg" alt="" className="!mr-0" />
+                Предложить сделку
+              </Button>
+            ) : (
+              <Button
+                className="green-btn"
+                onPress={() =>
+                  addToast({
+                    description:
+                      "Для создания предложения вам необходимо зарегистрировать компанию.",
+                    color: "secondary",
+                  })
+                }
+              >
+                <img src="/img/icons/start-sale.svg" alt="" className="!mr-0" />
+                Предложить сделку
+              </Button>
+            )}
+          </>
         )
       ) : (
         <Link href={SITE_URL.LOGIN} className="green-btn">

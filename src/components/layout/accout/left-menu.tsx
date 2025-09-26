@@ -46,7 +46,7 @@ function LeftMenu({ isMobile = false }: IThisProps) {
   const [loadingCompany, setLoadingCompany] = useState(false);
 
   useEffect(() => {
-    setLoadingCompany(!!company);
+    setLoadingCompany(true);
   }, [company]);
 
   return (
