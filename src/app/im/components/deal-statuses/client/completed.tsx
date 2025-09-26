@@ -12,7 +12,6 @@ interface IThisProps {
 
 function Completed({ chat }: IThisProps) {
   const [loading, setLoading] = useState(false);
-
   function ChangeStatusConfirmDoc() {
     setLoading(true);
 
