@@ -8,6 +8,7 @@ import { ActionChangeStatusDealClient } from "@/app/actions/deals/change-status"
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { ActionChangeOfferStatus } from "@/app/actions/offers/change-offer-status";
 
 function Completed() {
   const { data: session }: any = useSession();
@@ -25,8 +26,7 @@ function Completed() {
       setLoading(true);
 
       addToast({
-        description:
-          "Давайте подождём, пока противоположная сторона не подтвердит договорённость",
+        description: "Ждите )",
         color: "default",
       });
 
@@ -35,9 +35,12 @@ function Completed() {
         chat.deal.statue_owner === "wait-doc-confirm"
       ) {
         addToast({
-          description: "Ждите )",
-          color: "default",
+          description:
+            "Давайте подождём, пока противоположная сторона не подтвердит договорённость",
+          color: "warning",
         });
+
+        setLoading(false);
 
         return;
       }
@@ -50,6 +53,11 @@ function Completed() {
           });
 
           dispatch(UpdateChatInfo(id));
+
+          ActionChangeOfferStatus(
+            [chat.deal.owner_offer_id, chat.deal.client_offer_id],
+            "archive",
+          );
         })
         .finally(() => setLoading(false));
     }

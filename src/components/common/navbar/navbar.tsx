@@ -88,7 +88,7 @@ function Navbar() {
             </Link>
             <Tooltip content="Сообщения">
               <Link href={SITE_URL.CHAT} className="icon cursor-pointer">
-                <span className="count">+9</span>
+                {/*<span className="count">+9</span>*/}
                 <img src="/img/menu-icon5.svg" alt="" />
               </Link>
             </Tooltip>

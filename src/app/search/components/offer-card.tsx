@@ -58,8 +58,6 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
     }
   }
 
-  console.log(offer.images[0]);
-
   return (
     <div className="offer-item group !flex-js-s">
       <div className="img-wrap !p-0">

@@ -63,7 +63,7 @@ function SendReview() {
       ActionChangeStatusDealClient(chat.deal.id, "completed", PrintType)
         .then(() => {
           addToast({
-            description: "Готов, ждем от вас следующие шаг )",
+            description: "Поздравляю с успешным завершением ❤",
             color: "success",
           });
 

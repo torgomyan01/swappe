@@ -262,6 +262,8 @@ declare interface IUserOffer {
   videos: string[];
 }
 
+type OfferStatus = "active" | "archive";
+
 declare interface IUserOfferFront {
   id: number;
   type: string;
@@ -275,7 +277,7 @@ declare interface IUserOfferFront {
   images: string[];
   videos: string[];
   user_id: number;
-  state: "active";
+  state: OfferStatus;
 }
 
 declare interface IUserStore {
@@ -415,6 +417,13 @@ declare interface IMessage {
 declare interface IGroupedMessages {
   date: string;
   messages: IMessage[];
+}
+
+declare interface IReview {
+  id: number;
+  company_id: number;
+  count: number;
+  review: string;
 }
 
 type OfferType = "product" | "service";

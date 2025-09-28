@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function ActionMyOffers() {
+export async function ActionMyOffers(status: OfferStatus) {
   try {
     const session: any = await getServerSession(authOptions);
 
@@ -15,6 +15,7 @@ export async function ActionMyOffers() {
     const createOffer = await prisma.offers.findMany({
       where: {
         user_id: session.user.id,
+        status,
       },
     });
 

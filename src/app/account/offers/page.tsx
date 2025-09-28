@@ -8,16 +8,20 @@ import { useEffect, useState } from "react";
 import { ActionMyOffers } from "@/app/actions/offers/get";
 import { useRouter } from "next/navigation";
 import OfferCard from "@/app/search/components/offer-card";
+import clsx from "clsx";
 
 function Profile() {
   const router = useRouter();
   const [offers, setOffers] = useState<IUserOffer[]>([]);
 
+  const [offerStatus, setOfferStatus] = useState<OfferStatus>("active");
+
   useEffect(() => {
-    ActionMyOffers().then(({ data }) => {
+    setOffers([]);
+    ActionMyOffers(offerStatus).then(({ data }) => {
       setOffers(data as any);
     });
-  }, []);
+  }, [offerStatus]);
 
   return (
     <MainTemplate>
@@ -43,10 +47,22 @@ function Profile() {
             <LeftMenu />
             <div className="profile favorite-account">
               <div className="tabs">
-                <button className="tab-button active">
+                <button
+                  className={clsx("tab-button", {
+                    active: offerStatus === "active",
+                  })}
+                  onClick={() => setOfferStatus("active")}
+                >
                   Активные предложения
                 </button>
-                <button className="tab-button">Архив</button>
+                <button
+                  className={clsx("tab-button", {
+                    active: offerStatus === "archive",
+                  })}
+                  onClick={() => setOfferStatus("archive")}
+                >
+                  Архив
+                </button>
               </div>
               <div className="tab-content-wrap">
                 <div className="tab-content active">
@@ -59,16 +75,18 @@ function Profile() {
                       />
                     ))}
 
-                    <div className="proposal">
-                      <Link href={SITE_URL.ACCOUNT_OFFER_CREATE}>
-                        <div className="icon">
-                          <img src="/img/plus-white.svg" alt="" />
-                        </div>
-                        <span>
-                          Создать <br /> новое предложение
-                        </span>
-                      </Link>
-                    </div>
+                    {offerStatus === "active" && (
+                      <div className="proposal">
+                        <Link href={SITE_URL.ACCOUNT_OFFER_CREATE}>
+                          <div className="icon">
+                            <img src="/img/plus-white.svg" alt="" />
+                          </div>
+                          <span>
+                            Создать <br /> новое предложение
+                          </span>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="tab-content">

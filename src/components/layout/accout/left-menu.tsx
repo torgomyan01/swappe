@@ -7,8 +7,10 @@ import clsx from "clsx";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { Button, Skeleton } from "@heroui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
+import { ActionGetUserCompanyReviews } from "@/app/actions/company/get-user-company-reviews";
+import Rating from "@mui/material/Rating";
 
 const menuItems = [
   {
@@ -30,7 +32,7 @@ const menuItems = [
   {
     name: "Отзывы",
     url: SITE_URL.ACCOUNT_REVIEWS,
-    rightContent: <span className="style">+9</span>,
+    // rightContent: <span className="style">+9</span>,
   },
 ];
 
@@ -45,9 +47,20 @@ function LeftMenu({ isMobile = false }: IThisProps) {
 
   const [loadingCompany, setLoadingCompany] = useState(false);
 
+  const [rating, setRating] = useState(0);
+
   useEffect(() => {
-    setLoadingCompany(true);
+    ActionGetUserCompanyReviews().then(({ data }) => {
+      CalcReviews(data);
+      setLoadingCompany(true);
+    });
   }, [company]);
+
+  function CalcReviews(reviews: IReview[]) {
+    const count = reviews.reduce((a, b) => a + b.count, 0);
+
+    setRating(+(count / reviews.length).toFixed(1));
+  }
 
   return (
     <div
@@ -82,14 +95,16 @@ function LeftMenu({ isMobile = false }: IThisProps) {
               </div>
               <span className="name">{company?.name}</span>
               <div className="stars">
-                <div className="stars-images flex-js-c gap-1">
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star-dubl.svg" alt="star" />
-                </div>
-                <span className="num">4.5</span>
+                <Rating
+                  name="simple-controlled"
+                  value={rating}
+                  readOnly
+                  precision={0.1}
+                  sx={{
+                    fontSize: 30,
+                  }}
+                />
+                <span className="num">{rating}</span>
               </div>
             </>
           ) : (

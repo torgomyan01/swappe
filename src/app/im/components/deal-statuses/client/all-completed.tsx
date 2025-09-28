@@ -51,16 +51,7 @@ function AllCompleted() {
               {formatPrice(+chat.deal.client_offer.price)}{" "}
             </b>
             <div className="inf-texts">
-              <span className="grey">Предложение принято, </span>
-              <Link
-                href="/pdf/contract.pdf"
-                download={`Contract ${chat.deal.client_offer.name}`}
-                target="_blank"
-                className="download"
-              >
-                скачать договор
-                <img src="/img/chat/download.svg" alt="" />
-              </Link>
+              <span className="grey">Бартер осуществлен </span>
             </div>
           </div>
           <div className="new big">
