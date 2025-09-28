@@ -13,7 +13,7 @@ export async function ActionChangeStatusDealClient(
       },
       data: {
         ...(clientType === "client" && { status_client: status }),
-        ...(clientType === "owner" && { status_owner: status }),
+        ...(clientType === "owner" && { statue_owner: status }),
       },
     });
 
