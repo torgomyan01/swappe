@@ -12,6 +12,7 @@ import {
 import FeedbackBlock from "@/app/im/components/feedback-block";
 import { useState } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 interface IThisProps {
   message: IMessage;
@@ -20,6 +21,8 @@ interface IThisProps {
 }
 
 function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleContextMenu = (e: any) => {
@@ -27,15 +30,25 @@ function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
     setIsOpen(true);
   };
 
+  function PrintClientMessageInfo() {
+    if (info.deal.owner.company.id === company?.id) {
+      return info.deal.client.company;
+    }
+
+    if (info.deal.client.company.id === company?.id) {
+      return info.deal.owner.company;
+    }
+  }
+
   return (
     <div className="left-sms-wrap sm:!min-w-[300px] relative z-0">
       <Link
-        href={SITE_URL.COMPANY(info.deal.client.company.id)}
+        href={SITE_URL.COMPANY(PrintClientMessageInfo()?.id || 0)}
         className="img"
         target="_blank"
       >
         <Image
-          src={`${fileHost}${info.deal.client.company.image_path}`}
+          src={`${fileHost}${PrintClientMessageInfo()?.image_path}`}
           alt=""
           width={100}
           height={100}

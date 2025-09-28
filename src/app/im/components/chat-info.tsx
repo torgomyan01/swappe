@@ -10,7 +10,6 @@ import {
 } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ActionGetChatInfo } from "@/app/actions/chat/get-chat-info";
 import { fileHost, fileHostUpload, fileHostUploadDoc } from "@/utils/consts";
 import Image from "next/image";
 import PrintDealStatus from "@/app/im/components/print-deal-status";
@@ -20,6 +19,7 @@ import { useSession } from "next-auth/react";
 import InputEmoji from "react-input-emoji";
 import {
   truncateString,
+  UpdateChatInfo,
   validateDocumentFiles,
   validateImageFiles,
 } from "@/utils/helpers";
@@ -27,17 +27,17 @@ import axios from "axios";
 import clsx from "clsx";
 import { PhotoProvider } from "react-photo-view";
 import FeedbackBlock from "@/app/im/components/feedback-block";
+import { useDispatch, useSelector } from "react-redux";
 
 function ChatInfo() {
-  const { id } = useParams();
+  const dispatch: any = useDispatch();
+  const { id }: { id: string } = useParams();
   const { data: session }: any = useSession<any>();
-  const [chatInfo, setChatInfo] = useState<IChatItems | null>(null);
+  const chatInfo = useSelector((state: IUserStore) => state.userInfo.chatInfo);
 
   useEffect(() => {
     if (id) {
-      ActionGetChatInfo(+id).then(({ data }) => {
-        setChatInfo(data as IChatItems);
-      });
+      dispatch(UpdateChatInfo(id));
     }
   }, [id]);
 
@@ -322,7 +322,7 @@ function ChatInfo() {
                 </div>
               </div>
 
-              <PrintDealStatus chat={chatInfo} />
+              <PrintDealStatus />
             </div>
 
             <Messages

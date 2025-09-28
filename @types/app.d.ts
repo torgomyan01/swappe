@@ -282,6 +282,7 @@ declare interface IUserStore {
   userInfo: {
     company: IUserCompany | null;
     favorites: IUserFavorite[] | null;
+    chatInfo: IChatItems | null;
   };
 }
 

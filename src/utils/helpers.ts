@@ -1,4 +1,6 @@
 import moment from "moment";
+import { ActionGetChatInfo } from "@/app/actions/chat/get-chat-info";
+import { setChatInfo } from "@/redux/user";
 
 export const RandomKey = (length = 5) => {
   let result = "";
@@ -246,4 +248,10 @@ export const groupMessagesByDate = (
       messages: grouped[dateKey],
     }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+};
+
+export const UpdateChatInfo = (id: string) => (dispatch: any) => {
+  ActionGetChatInfo(+id).then(({ data }) => {
+    dispatch(setChatInfo(data as IChatItems));
+  });
 };

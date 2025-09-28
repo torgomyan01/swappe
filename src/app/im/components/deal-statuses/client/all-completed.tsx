@@ -1,59 +1,11 @@
 import Image from "next/image";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
-import { formatPrice, sliceText, UpdateChatInfo } from "@/utils/helpers";
-import { addToast, Button } from "@heroui/react";
-import { useState } from "react";
-import { ActionChangeStatusDealClient } from "@/app/actions/deals/change-status";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { formatPrice, sliceText } from "@/utils/helpers";
+import { useSelector } from "react-redux";
 
-function Completed() {
-  const { data: session }: any = useSession();
-  const { id }: { id: string } = useParams();
-  const dispatch: any = useDispatch();
-
+function AllCompleted() {
   const chat = useSelector((state: IUserStore) => state.userInfo.chatInfo);
-
-  const PrintType =
-    chat?.deal.owner.id === session?.user.id ? "owner" : "client";
-
-  const [loading, setLoading] = useState(false);
-  function ChangeStatusConfirmDoc() {
-    if (chat) {
-      setLoading(true);
-
-      addToast({
-        description:
-          "Давайте подождём, пока противоположная сторона не подтвердит договорённость",
-        color: "default",
-      });
-
-      if (
-        PrintType === "client" &&
-        chat.deal.statue_owner === "wait-doc-confirm"
-      ) {
-        addToast({
-          description: "Ждите )",
-          color: "default",
-        });
-
-        return;
-      }
-
-      ActionChangeStatusDealClient(chat.deal.id, "send-review", PrintType)
-        .then(() => {
-          addToast({
-            description: "Готов, ждем от вас следующие шаг )",
-            color: "success",
-          });
-
-          dispatch(UpdateChatInfo(id));
-        })
-        .finally(() => setLoading(false));
-    }
-  }
 
   return (
     <>
@@ -111,14 +63,9 @@ function Completed() {
               </Link>
             </div>
           </div>
-          <div className="btns">
-            <Button
-              className="green-btn"
-              onPress={ChangeStatusConfirmDoc}
-              isLoading={loading}
-            >
-              Завершить сделку
-            </Button>
+          <div className="new big">
+            <img src="/img/new-style3.svg" alt="" />
+            <span>Бартер осуществлен</span>
           </div>
         </div>
       )}
@@ -126,4 +73,4 @@ function Completed() {
   );
 }
 
-export default Completed;
+export default AllCompleted;

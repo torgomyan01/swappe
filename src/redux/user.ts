@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface IInterface {
   company: IUserCompany | null;
   favorites: IUserFavorite[] | null;
+  chatInfo: IChatItems | null;
 }
 
 const initialState: IInterface = {
   company: null,
   favorites: null,
+  chatInfo: null,
 };
 
 export const userInfo = createSlice({
@@ -34,6 +36,9 @@ export const userInfo = createSlice({
         state.favorites = null;
       }
     },
+    setChatInfo: (state, action: PayloadAction<IChatItems | null>) => {
+      state.chatInfo = action.payload;
+    },
   },
 });
 
@@ -43,5 +48,6 @@ export const {
   setFavorites,
   setAppendFavorites,
   setRemoveFavorite,
+  setChatInfo,
 } = userInfo.actions;
 export default userInfo.reducer;
