@@ -52,7 +52,7 @@ function LeftMenu({ isMobile = false }: IThisProps) {
 
   useEffect(() => {
     ActionGetUserCompanyReviews().then(({ data }) => {
-      CalcReviews(data);
+      CalcReviews(data as IReview[]);
       setLoadingCompany(true);
     });
   }, [company]);

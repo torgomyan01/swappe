@@ -24,6 +24,9 @@ function SendReview() {
   const { id }: { id: string } = useParams();
   const { data: session }: any = useSession();
   const dispatch: any = useDispatch();
+
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
   const chat = useSelector((state: IUserStore) => state.userInfo.chatInfo);
 
   const PrintType =
@@ -56,13 +59,19 @@ function SendReview() {
           ? chat.deal.client_offer_id
           : chat.deal.owner_offer_id;
 
-      ActionCreateCompanyReview(companyId, rating, reviewText, offerId).then(
-        ({ status }) => {
+      if (company) {
+        ActionCreateCompanyReview(
+          companyId,
+          company?.id,
+          rating,
+          reviewText,
+          offerId,
+        ).then(({ status }) => {
           if (status === "ok") {
             ChangeStatusConfirmDoc();
           }
-        },
-      );
+        });
+      }
     }
   }
 

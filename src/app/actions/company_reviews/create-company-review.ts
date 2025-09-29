@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function ActionCreateCompanyReview(
   companyId: number,
+  creater_company_id: number,
   count: number,
   review: string,
   offer_id: number,
@@ -12,6 +13,7 @@ export async function ActionCreateCompanyReview(
     const CreateCompanyReview = await prisma.company_reviews.create({
       data: {
         company_id: companyId,
+        creater_company_id,
         count,
         review,
         created_at: new Date(),

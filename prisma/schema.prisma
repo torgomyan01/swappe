@@ -57,13 +57,16 @@ model user_favorites {
 }
 
 model company_reviews {
-  id           Int           @id @default(autoincrement())
-  company_id   Int
-  offer_id     Int
-  count        Int
-  review       String        @db.Text
-  user_company user_company? @relation(fields: [company_id], references: [id])
-  created_at   DateTime
+  id                 Int      @id @default(autoincrement())
+  company_id         Int
+  creater_company_id Int
+  offer_id           Int
+  count              Int
+  review             String   @db.Text
+  created_at         DateTime
+  offers             offers?  @relation(fields: [offer_id], references: [id])
+
+  creater_company user_company? @relation(fields: [creater_company_id], references: [id])
 }
 
 model countries_tb {
@@ -123,6 +126,8 @@ model offers {
 
   deals_as_offer_owner  deals[] @relation("offerDeals")
   deals_as_offer_client deals[] @relation("offerDealsClient")
+
+  review company_reviews[]
 }
 
 model deals {

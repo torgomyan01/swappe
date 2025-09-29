@@ -427,6 +427,10 @@ declare interface IReview {
   company_id: number;
   count: number;
   review: string;
+  created_at: string;
+  offer_id: number;
+  offers: IUserOfferFront;
+  creater_company: IUserCompany;
 }
 
 type OfferType = "product" | "service";
