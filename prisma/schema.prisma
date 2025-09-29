@@ -44,6 +44,8 @@ model user_company {
   city_data     countries_tb @relation(fields: [city], references: [id])
   industry_data Industry     @relation(fields: [industry], references: [id])
   user          users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  reviews company_reviews[]
 }
 
 model user_favorites {
@@ -55,10 +57,13 @@ model user_favorites {
 }
 
 model company_reviews {
-  id         Int    @id @default(autoincrement())
-  company_id Int
-  count      Int
-  review     String @db.Text
+  id           Int           @id @default(autoincrement())
+  company_id   Int
+  offer_id     Int
+  count        Int
+  review       String        @db.Text
+  user_company user_company? @relation(fields: [company_id], references: [id])
+  created_at   DateTime
 }
 
 model countries_tb {

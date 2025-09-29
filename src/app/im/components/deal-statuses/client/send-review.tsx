@@ -46,15 +46,23 @@ function SendReview() {
 
       setLoading(true);
 
-      ActionCreateCompanyReview(
-        chat.deal.owner.company.id,
-        rating,
-        reviewText,
-      ).then(({ status }) => {
-        if (status === "ok") {
-          ChangeStatusConfirmDoc();
-        }
-      });
+      const companyId =
+        PrintType === "owner"
+          ? chat.deal.client.company.id
+          : chat.deal.owner.company.id;
+
+      const offerId =
+        PrintType === "owner"
+          ? chat.deal.client_offer_id
+          : chat.deal.owner_offer_id;
+
+      ActionCreateCompanyReview(companyId, rating, reviewText, offerId).then(
+        ({ status }) => {
+          if (status === "ok") {
+            ChangeStatusConfirmDoc();
+          }
+        },
+      );
     }
   }
 

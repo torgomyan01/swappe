@@ -5,16 +5,15 @@ import LeftMenu from "@/components/layout/accout/left-menu";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { useState } from "react";
-import FavoriteCompany from "@/app/account/favorites/components/favorite-company";
 import FavoriteOffer from "@/app/account/favorites/components/favorite-offer";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
 const itemsFavorite = [
-  {
-    name: "Компании",
-    component: <FavoriteCompany />,
-  },
+  // {
+  //   name: "Компании",
+  //   component: <FavoriteCompany />,
+  // },
   {
     name: "Предложения",
     component: <FavoriteOffer />,

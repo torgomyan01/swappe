@@ -6,6 +6,7 @@ export async function ActionCreateCompanyReview(
   companyId: number,
   count: number,
   review: string,
+  offer_id: number,
 ) {
   try {
     const CreateCompanyReview = await prisma.company_reviews.create({
@@ -13,6 +14,8 @@ export async function ActionCreateCompanyReview(
         company_id: companyId,
         count,
         review,
+        created_at: new Date(),
+        offer_id,
       },
     });
 

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { ActionGetUserCompanyReviews } from "@/app/actions/company/get-user-company-reviews";
 import Rating from "@mui/material/Rating";
+import { calcReviews } from "@/utils/helpers";
 
 const menuItems = [
   {
@@ -57,9 +58,7 @@ function LeftMenu({ isMobile = false }: IThisProps) {
   }, [company]);
 
   function CalcReviews(reviews: IReview[]) {
-    const count = reviews.reduce((a, b) => a + b.count, 0);
-
-    setRating(+(count / reviews.length).toFixed(1));
+    setRating(+calcReviews(reviews));
   }
 
   return (

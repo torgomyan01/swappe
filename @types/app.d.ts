@@ -230,6 +230,7 @@ declare interface IUserCompany {
   status: "verify" | "no-verify";
   plan: "premium" | "free";
   user: IUserProfile;
+  reviews: IReview[];
 }
 
 declare interface IUserFavorite {
@@ -382,25 +383,27 @@ declare interface Capital {
   contentType: string;
 }
 
+declare interface IDeal {
+  id: number;
+  owner_id: number;
+  owner_offer_id: number;
+  client_id: number;
+  client_offer_id: number;
+  status_client: DealStatusClient;
+  statue_owner: DealStatusOwner;
+  created_at: string;
+  owner_offer: IUserOfferFront;
+  client_offer: IUserOfferFront;
+  client: IUserProfile;
+  owner: IUserProfile;
+}
+
 declare interface IChatItems {
   id: number;
   chat_name: string;
   deal_id: number;
   user_id: number;
-  deal: {
-    id: number;
-    owner_id: number;
-    owner_offer_id: number;
-    client_id: number;
-    client_offer_id: number;
-    status_client: DealStatusClient;
-    statue_owner: DealStatusOwner;
-    created_at: string;
-    owner_offer: IUserOfferFront;
-    client_offer: IUserOfferFront;
-    client: IUserProfile;
-    owner: IUserProfile;
-  };
+  deal: IDeal;
 }
 
 declare interface IMessage {

@@ -255,3 +255,9 @@ export const UpdateChatInfo = (id: string) => (dispatch: any) => {
     dispatch(setChatInfo(data as IChatItems));
   });
 };
+
+export const calcReviews = (reviews: IReview[]) => {
+  const count = reviews.reduce((a, b) => a + b.count, 0);
+
+  return count ? (count / reviews.length).toFixed(1) : 0;
+};

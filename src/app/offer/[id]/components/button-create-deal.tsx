@@ -28,8 +28,6 @@ interface IThisProps {
 function ButtonCreateDeal({ offer }: IThisProps) {
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
-  console.log(company);
-
   const { data: session }: any = useSession();
   const router = useRouter();
 
@@ -39,7 +37,7 @@ function ButtonCreateDeal({ offer }: IThisProps) {
 
   useEffect(() => {
     if (modal) {
-      ActionMyOffers().then(({ data }) => {
+      ActionMyOffers("active").then(({ data }) => {
         setMyOffers(data as IUserOfferFront[]);
       });
     }
