@@ -36,7 +36,7 @@ function HomeHeader() {
         <div className="wrapper">
           <div className="info">
             <img src="/img/head-bg.png" alt="" className="bg" />
-            <Link href={SITE_URL.HOME} className="logo">
+            <Link href={SITE_URL.SEARCH} className="logo">
               <img src="/img/footer-logo.svg" alt="" />
             </Link>
             <ul className="main-menu2">
@@ -85,7 +85,7 @@ function HomeHeader() {
                 onClick={() => setMenuMobile(false)}
               />
             </div>
-            <Link href={SITE_URL.HOME} className="mob-logo">
+            <Link href={SITE_URL.SEARCH} className="mob-logo">
               <img src="/img/footer-logo.svg" alt="" />
             </Link>
             <ul className="main-menu-mobile2">

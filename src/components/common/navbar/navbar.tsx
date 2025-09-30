@@ -49,7 +49,7 @@ function Navbar() {
     <>
       <div className="header-profile">
         <div className="wrapper">
-          <Link href={SITE_URL.HOME} className="logo">
+          <Link href={SITE_URL.SEARCH} className="logo">
             <img src="/img/black-logo.svg" alt="" />
           </Link>
           <form className="search" action={SITE_URL.SEARCH}>

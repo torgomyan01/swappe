@@ -28,7 +28,7 @@ export default withAuth(
       },
     },
     pages: {
-      signIn: SITE_URL.HOME,
+      signIn: SITE_URL.LOGIN,
     },
   },
 );

@@ -7,7 +7,7 @@ function Footer() {
     <footer className="footer">
       <div className="wrapper">
         <div className="info">
-          <Link href={SITE_URL.HOME} className="footer-logo">
+          <Link href={SITE_URL.SEARCH} className="footer-logo">
             <img src="/img/footer-logo.svg" alt="" />
           </Link>
           <div className="menu-wrap">
