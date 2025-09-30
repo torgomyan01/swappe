@@ -141,19 +141,21 @@ function HomeHeader() {
           >
             Платформа для роста бизнесов через бартерный обмен и коллаборации
           </motion.p>
-          <motion.span
-            initial="init"
-            whileInView="animate"
-            transition={{
-              duration: 1,
-            }}
-            viewport={{ once: true, amount: 0.1 }}
-            variants={motionOptionText}
-            className="participate-btn"
-          >
-            <img src="img/participate.svg" alt="" />
-            Хочу участвовать
-          </motion.span>
+          <Link href={SITE_URL.SEARCH}>
+            <motion.span
+              initial="init"
+              whileInView="animate"
+              transition={{
+                duration: 1,
+              }}
+              viewport={{ once: true, amount: 0.1 }}
+              variants={motionOptionText}
+              className="participate-btn"
+            >
+              <img src="/img/participate.svg" alt="" />
+              Хочу участвовать
+            </motion.span>
+          </Link>
           <motion.p
             initial="init"
             whileInView="animate"

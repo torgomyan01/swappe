@@ -20,6 +20,12 @@ export const SITE_URL = {
 
   CHAT: "/im",
 
+  PRIVACY_POLICY: "/privacy-policy",
+  PRIVACY_POLICY_REGARDING: "/privacy-policy/policy-regarding",
+  PRIVACY_POLICY_OFFER: "/privacy-policy/offer",
+  PRIVACY_POLICY_USER_CONSENT: "/privacy-policy/user-consent",
+  PRIVACY_POLICY_ADS_POLITICAL: "/privacy-policy/ads-political",
+
   COMPANY_CREATE: "/company/create",
   COMPANY_THANKS: "/company/thanks",
   COMPANY: (id: number | string) => `/company/${id}`,

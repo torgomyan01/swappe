@@ -161,7 +161,9 @@ function Register() {
 
             <p>
               Нажимая Продолжить, я принимаю{" "}
-              <Link href="#">пользовательское соглашение</Link>
+              <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
+                пользовательское соглашение
+              </Link>
             </p>
             <Button
               type="submit"

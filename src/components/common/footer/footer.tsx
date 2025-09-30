@@ -26,7 +26,7 @@ function Footer() {
           </div>
           <div className="menu-wrap">
             <h4>Положения и условия</h4>
-            <Link href="#">Конфиденциальность</Link>
+            <Link href={SITE_URL.PRIVACY_POLICY}>Конфиденциальность</Link>
             <Link href="#">Условия</Link>
           </div>
         </div>
