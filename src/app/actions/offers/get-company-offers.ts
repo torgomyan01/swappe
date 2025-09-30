@@ -8,6 +8,24 @@ export async function ActionCompanyOffers(user_id: number) {
       where: {
         user_id,
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+            id: true,
+            name: true,
+            company: {
+              include: {
+                reviews: {
+                  include: {
+                    creater_company: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     return {

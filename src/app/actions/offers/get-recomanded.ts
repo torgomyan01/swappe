@@ -2,11 +2,15 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function ActionSingleOffer(id: number) {
+export async function ActionCommandedOffers() {
   try {
-    const createOffer = await prisma.offers.findFirst({
+    const createOffer = await prisma.offers.findMany({
       where: {
-        id,
+        status: "active",
+      },
+      take: 6,
+      orderBy: {
+        id: "desc",
       },
       include: {
         user: {
@@ -36,7 +40,7 @@ export async function ActionSingleOffer(id: number) {
   } catch (error: any) {
     return {
       status: "error",
-      data: {},
+      data: [],
       error: error.message || String(error),
     };
   }

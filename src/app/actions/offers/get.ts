@@ -17,6 +17,24 @@ export async function ActionMyOffers(status: OfferStatus) {
         user_id: session.user.id,
         status,
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+            id: true,
+            name: true,
+            company: {
+              include: {
+                reviews: {
+                  include: {
+                    creater_company: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     return {

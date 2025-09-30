@@ -1,4 +1,4 @@
-import { formatPrice, truncateString } from "@/utils/helpers";
+import { calcReviews, formatPrice, truncateString } from "@/utils/helpers";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { ActionCreateUSerFavorites } from "@/app/actions/favorites/create-user-favorites";
@@ -58,6 +58,8 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
     }
   }
 
+  const OfferReviews = calcReviews(offer.user?.company?.reviews || []);
+
   return (
     <div className="offer-item group !flex-js-s">
       <div className="img-wrap !p-0">
@@ -79,7 +81,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
             open: liked,
           })}
           onClick={CreateFavorites}
-        ></div>
+        />
       </div>
       {onlyTitle ? (
         <div className="mt-2 flex-jsb-c w-full">
@@ -92,7 +94,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
           </Link>
 
           <b className="flex-je-c gap-1 text-[#EDB53E] text-[14px]">
-            4.5{" "}
+            {OfferReviews}{" "}
             <img src="/img/star-small.svg" alt="" className="mb-[2px] block" />
           </b>
         </div>

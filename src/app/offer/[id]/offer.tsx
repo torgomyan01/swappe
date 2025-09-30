@@ -42,7 +42,7 @@ function OfferPage({ offer }: IThisProps) {
             <OfferRightInfo offer={offer} />
           </div>
 
-          <OfferReviews />
+          <OfferReviews offer={offer} />
 
           <SeeMoreCommanded />
         </div>
