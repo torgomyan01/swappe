@@ -128,7 +128,10 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <Link href="#" className="green-btn read mt-10">
+                  <Link
+                    href={SITE_URL.ACCOUNT_CHANGE}
+                    className="green-btn read mt-10"
+                  >
                     <img src="/img/edit-menu.svg" alt="edit-menu." />
                     Редактировать
                   </Link>

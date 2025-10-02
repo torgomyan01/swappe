@@ -64,9 +64,11 @@ function Navbar() {
             </button>
           </form>
           <div className="icons">
-            <span className="icon cursor-pointer">
-              <img src="/img/menu-icon1.svg" alt="" />
-            </span>
+            <Link href={SITE_URL.ACCOUNT_OFFER_CREATE}>
+              <span className="icon cursor-pointer">
+                <img src="/img/menu-icon1.svg" alt="" />
+              </span>
+            </Link>
             <span
               className="icon cursor-pointer"
               onClick={() => setNotifications(!notifications)}
@@ -133,9 +135,9 @@ function Navbar() {
             "hide-on-scroll": !showMobileIcons,
           })}
         >
-          <a href="#" className="icon">
+          <Link href={SITE_URL.ACCOUNT_OFFER_CREATE} className="icon">
             <img src="/img/menu-icon1.svg" alt="" />
-          </a>
+          </Link>
           <span
             className="icon"
             onClick={() => setNotifications(!notifications)}

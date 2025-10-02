@@ -10,9 +10,14 @@ import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorit
 interface IThisProps {
   children?: React.ReactNode;
   footer?: boolean;
+  isEmpty?: boolean;
 }
 
-function MainTemplate({ children, footer = true }: IThisProps) {
+function MainTemplate({
+  children,
+  footer = true,
+  isEmpty = false,
+}: IThisProps) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
 
@@ -30,11 +35,11 @@ function MainTemplate({ children, footer = true }: IThisProps) {
 
   return (
     <>
-      <Navbar />
+      {!isEmpty && <Navbar />}
 
       {children}
 
-      {footer && <Footer />}
+      {footer || (!isEmpty && <Footer />)}
     </>
   );
 }
