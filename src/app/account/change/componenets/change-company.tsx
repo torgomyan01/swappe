@@ -113,6 +113,7 @@ function ChangeCompany() {
             type="text"
             placeholder="Название компании"
             value={company?.name}
+            disabled
           />
         </div>
         <div className="label-wrap">
