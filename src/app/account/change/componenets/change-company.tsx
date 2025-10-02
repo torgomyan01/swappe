@@ -27,15 +27,16 @@ function ChangeCompany() {
 
   const [categories, setCategories] = useState<ICategory[] | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
+  const [city, setCity] = useState<number>(0);
 
   useEffect(() => {
     if (company) {
       setSocialSites(company.sites);
       setSelectedCategories(company.interest_categories);
+      setCity(company.city);
+      setIndustryName(`ind-${company.industry}`);
     }
   }, [company]);
-
-  const [city, setCity] = useState<number>(0);
 
   useEffect(() => {
     ActionGetAllCountries().then(({ data }) => {
@@ -77,6 +78,8 @@ function ChangeCompany() {
 
   function SaveChanges() {
     if (company) {
+      console.log(socialSites);
+
       setLoadingSave(true);
       ActionChangeCompany(
         company.id,
@@ -85,9 +88,7 @@ function ChangeCompany() {
         selectedCategories,
         socialSites,
       )
-        .then(({ data }) => {
-          console.log(data);
-
+        .then(() => {
           addToast({
             description: "Спасибо, изменение успешно сохранено.",
             color: "success",
@@ -175,6 +176,12 @@ function ChangeCompany() {
                 name="social"
                 placeholder="https://"
                 required
+                onChange={(e) => {
+                  const newVal = [...socialSites];
+                  newVal[index] = e.target.value;
+
+                  setSocialSites(newVal);
+                }}
                 defaultValue={id_}
               />
               {index ? (
