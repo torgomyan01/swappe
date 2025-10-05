@@ -35,8 +35,12 @@ function HomeFaq() {
                   key={`question-${index}`}
                   className="question"
                 >
-                  <span className="icon">
-                    <img src="img/question-icon.png" alt="" />
+                  <span className="icon min-w-10 h-10">
+                    <img
+                      src="/img/question-icon.png"
+                      alt=""
+                      className="min-w-10 h-10"
+                    />
                   </span>
                   <span className="text">{message}</span>
                 </motion.div>

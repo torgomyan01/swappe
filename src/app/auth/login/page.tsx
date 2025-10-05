@@ -63,10 +63,11 @@ function Register() {
               name="password"
               formRef={form}
               type="password"
+              allowPasswordToggle
             />
 
             <Link href={SITE_URL.FORGOT_PASSWORD} className="forgot">
-              Забыл пароль?
+              Восстановить пароль
             </Link>
             <Button
               type="submit"

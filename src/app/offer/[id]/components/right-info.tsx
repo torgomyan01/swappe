@@ -37,7 +37,7 @@ function OfferRightInfo({ offer }: IThisProps) {
         ActionCRemoveUserFavorites(liked.id).then(() => {
           dispatch(setRemoveFavorite(liked.id));
           addToast({
-            description: "Готов )",
+            description: "Готов ",
             color: "primary",
           });
         });
@@ -46,7 +46,7 @@ function OfferRightInfo({ offer }: IThisProps) {
           dispatch(dispatch(setAppendFavorites(data as IUserFavorite)));
 
           addToast({
-            description: "Готов )",
+            description: "Готов ",
             color: "primary",
           });
         });

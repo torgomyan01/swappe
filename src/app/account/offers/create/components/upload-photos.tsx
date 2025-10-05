@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { addToast } from "@heroui/react";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ function UploadPhotos() {
   const dispatch = useDispatch();
 
   const [files, setFiles] = useState<File[]>([]);
+  const dragIndexRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (files.length > 9) {
@@ -37,6 +38,32 @@ function UploadPhotos() {
     const NewFiles = files.filter((_, _index) => _index !== index);
 
     setFiles(NewFiles);
+  }
+
+  function onDragStart(index: number) {
+    if (index < files.length) {
+      dragIndexRef.current = index;
+    }
+  }
+
+  function onDragOver(e: React.DragEvent) {
+    e.preventDefault();
+  }
+
+  function onDrop(index: number) {
+    const from = dragIndexRef.current;
+    if (from === null || from === index) {
+      dragIndexRef.current = null;
+      return;
+    }
+    setFiles((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(index, 0, moved);
+      dragIndexRef.current = null;
+      dispatch(setCompanyImages(next));
+      return next;
+    });
   }
 
   const [infoBlock, setInfoBlock] = useState<boolean>(true);
@@ -87,6 +114,10 @@ function UploadPhotos() {
                 "cursor-pointer": index === files.length,
               },
             )}
+            draggable={index < files.length}
+            onDragStart={() => onDragStart(index)}
+            onDragOver={onDragOver}
+            onDrop={() => onDrop(index)}
           >
             {index === 0 && <span className="style">Обложка</span>}
 

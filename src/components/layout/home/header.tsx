@@ -165,7 +165,7 @@ function HomeHeader() {
             viewport={{ once: true, amount: 0.1 }}
             variants={motionOptionText}
           >
-            Запускаемся скоро. Для первых участников — бонусы!
+            Присоединяйтесь первым — получайте бонусы!
           </motion.p>
           <div className="images">
             {images.map((image, i) => (

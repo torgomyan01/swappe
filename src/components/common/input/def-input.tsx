@@ -24,6 +24,9 @@ interface IThisProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
   /** Callback ֆունկցիա, որը կանչվում է, երբ վալիդացիայի կարգավիճակը փոխվում է */
   onValidationChange?: (isValid: boolean) => void;
+
+  /** Եթե true և type="password", ցույց տալ աչքի իկոն՝ տեսանելիության տողլի համար */
+  allowPasswordToggle?: boolean;
 }
 
 function DefInput({
@@ -43,9 +46,11 @@ function DefInput({
   formRef,
   onBlur,
   onValidationChange,
+  allowPasswordToggle,
   ...rest
 }: IThisProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   // uncontrolled fallback
   const [uncontrolled, setUncontrolled] = useState(
@@ -175,19 +180,47 @@ function DefInput({
         {label} {required && <span className="!text-red-500">*</span>}
       </span>
 
-      <input
-        {...rest}
-        ref={inputRef}
-        value={value}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        required={required}
-        aria-invalid={shouldShowErrors || undefined}
-        aria-describedby={
-          shouldShowErrors ? `${rest.id ?? rest.name}-error` : undefined
-        }
-        className={clsx(className, { "!border-red-400": shouldShowErrors })}
-      />
+      <div className="relative">
+        <input
+          {...rest}
+          type={
+            allowPasswordToggle && rest.type === "password"
+              ? passwordVisible
+                ? "text"
+                : "password"
+              : rest.type
+          }
+          ref={inputRef}
+          value={value}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          required={required}
+          aria-invalid={shouldShowErrors || undefined}
+          aria-describedby={
+            shouldShowErrors ? `${rest.id ?? rest.name}-error` : undefined
+          }
+          className={clsx(
+            className,
+            { "!border-red-400": shouldShowErrors },
+            allowPasswordToggle && rest.type === "password" && "pr-10",
+          )}
+        />
+        {allowPasswordToggle && rest.type === "password" ? (
+          <button
+            type="button"
+            aria-label="Toggle password visibility"
+            onClick={() => setPasswordVisible((v) => !v)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+          >
+            <i
+              className={clsx(
+                "fa-solid",
+                passwordVisible ? "fa-eye-slash" : "fa-eye",
+              )}
+            ></i>
+          </button>
+        ) : null}
+      </div>
 
       {shouldShowErrors && (
         <div id={`${rest.id ?? rest.name}-error`} className="mt-2 space-y-1">

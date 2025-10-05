@@ -39,7 +39,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
         ActionCRemoveUserFavorites(liked.id).then(() => {
           dispatch(setRemoveFavorite(liked.id));
           addToast({
-            description: "Готов )",
+            description: "Готов ",
             color: "primary",
           });
         });
@@ -48,7 +48,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
           dispatch(dispatch(setAppendFavorites(data as IUserFavorite)));
 
           addToast({
-            description: "Готов )",
+            description: "Готов ",
             color: "primary",
           });
         });

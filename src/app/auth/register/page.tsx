@@ -6,7 +6,7 @@ import { getPasswordStrength } from "@/utils/helpers";
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import DefInput from "@/components/common/input/def-input";
-import { addToast, Button } from "@heroui/react";
+import { addToast, Button, Checkbox } from "@heroui/react";
 import { ActionCreateUser } from "@/app/actions/auth/create-user";
 import { useRouter } from "next/navigation";
 
@@ -159,12 +159,15 @@ function Register() {
               formRef={form}
             />
 
-            <p>
-              Нажимая Продолжить, я принимаю{" "}
-              <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
-                пользовательское соглашение
-              </Link>
-            </p>
+            <Checkbox color="secondary" required>
+              <p>
+                Нажимая Продолжить, я принимаю{" "}
+                <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
+                  пользовательское соглашение
+                </Link>
+              </p>
+            </Checkbox>
+
             <Button
               type="submit"
               className="bg-green text-white mt-4 h-11"

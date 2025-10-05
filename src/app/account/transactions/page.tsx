@@ -11,6 +11,7 @@ import { ActionGetDeals } from "@/app/actions/deals/get";
 import { useSession } from "next-auth/react";
 import DealItem from "@/app/account/transactions/components/deal-item";
 import { Spinner } from "@heroui/react";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 function Profile() {
   const { data: session }: any = useSession();
@@ -87,11 +88,9 @@ function Profile() {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-[400px] flex-jc-c">
-                      <h3 className="opacity-60">
-                        Вам пока {activeTab[active].toLowerCase()} нет (
-                      </h3>
-                    </div>
+                    <EmptyRes
+                      title={`У вас пока нет ${activeTab[active].toLowerCase()} `}
+                    />
                   )
                 ) : (
                   <div className="w-full h-[400px] flex-jc-c">

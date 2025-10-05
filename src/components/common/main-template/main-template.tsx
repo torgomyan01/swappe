@@ -6,6 +6,7 @@ import { setCompany, setFavorites } from "@/redux/user";
 import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
 import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorites";
+import CookieComponent from "@/components/common/main-template/cookie";
 
 interface IThisProps {
   children?: React.ReactNode;
@@ -40,6 +41,8 @@ function MainTemplate({
       {children}
 
       {footer || (!isEmpty && <Footer />)}
+
+      <CookieComponent />
     </>
   );
 }

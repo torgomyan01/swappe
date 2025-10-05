@@ -60,6 +60,14 @@
     content: "\f004"
 }
 
+.fa-eye:before {
+    content: "\f06e"
+}
+
+.fa-eye-slash:before {
+    content: "\f070"
+}
+
 
 
 /*---------------------------------*/

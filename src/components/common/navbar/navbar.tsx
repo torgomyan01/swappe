@@ -109,7 +109,7 @@ function Navbar() {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem href={SITE_URL.ACCOUNT} key="accout">
-                  Профиле
+                  Профиль
                 </DropdownItem>
                 <DropdownItem
                   key="logout"

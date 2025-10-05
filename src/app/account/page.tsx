@@ -4,9 +4,11 @@ import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { useSession } from "next-auth/react";
 import { SITE_URL } from "@/utils/consts";
-import Link from "next/link";
+import { Link, Button } from "@heroui/react";
+
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { sliceText } from "@/utils/helpers";
 
 function Profile() {
   const { data: session } = useSession();
@@ -102,15 +104,30 @@ function Profile() {
                       <b>Индустрия</b>
                       <div className="social">
                         <div className="links">
-                          <a href="#">
-                            <img src="/img/soc-icon1.svg" alt="soc-icon" />
-                          </a>
-                          <a href="#">
-                            <img src="/img/soc-icon2.svg" alt="soc-icon" />
-                          </a>
-                          <a href="#">
-                            <img src="/img/soc-icon3.svg" alt="soc-icon" />
-                          </a>
+                          <div className="flex-js-s flex-col gap-2">
+                            {company.sites.map((item, i) => (
+                              <Button
+                                key={`link_compnay-${i}`}
+                                showAnchorIcon
+                                as={Link}
+                                color="default"
+                                href={item}
+                                target="_blank"
+                              >
+                                {sliceText(item, 15)}
+                              </Button>
+                            ))}
+                          </div>
+
+                          {/*<a href="#">*/}
+                          {/*  <img src="/img/soc-icon1.svg" alt="soc-icon" />*/}
+                          {/*</a>*/}
+                          {/*<a href="#">*/}
+                          {/*  <img src="/img/soc-icon2.svg" alt="soc-icon" />*/}
+                          {/*</a>*/}
+                          {/*<a href="#">*/}
+                          {/*  <img src="/img/soc-icon3.svg" alt="soc-icon" />*/}
+                          {/*</a>*/}
                         </div>
                       </div>
                     </div>

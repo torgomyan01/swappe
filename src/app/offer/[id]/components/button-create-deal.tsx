@@ -52,7 +52,7 @@ function ButtonCreateDeal({ offer }: IThisProps) {
       setLoading(true);
 
       addToast({
-        description: "Ждите )",
+        description: "Ждите",
         color: "secondary",
       });
 
@@ -70,7 +70,7 @@ function ButtonCreateDeal({ offer }: IThisProps) {
     ActionCreateChat(offer.name, deal_id)
       .then(({ data }: any) => {
         addToast({
-          description: "Готов )",
+          description: "Готов",
           color: "secondary",
         });
 

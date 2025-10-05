@@ -17,7 +17,7 @@ function Profile() {
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </a>
-            <span>Тариф и бонусы</span>
+            <span>Тарифы и бонусы</span>
           </div>
           <div className="top-mob-line">
             <span
@@ -26,12 +26,12 @@ function Profile() {
             >
               <img src="/img/back-icon.svg" alt="" />
             </span>
-            <b>Тариф и бонусы</b>
+            <b>Тарифы и бонусы</b>
           </div>
           <div className="info">
             <LeftMenu />
             <div className="profile bonuses-account">
-              <h3>Тариф и бонусы</h3>
+              <h3>Тарифы и бонусы</h3>
               <div className="bonuses-info-block">
                 <div className="top">
                   <span className="text">Мой тариф</span>

@@ -12,7 +12,7 @@ function Footer() {
           </Link>
           <div className="menu-wrap">
             <h4>Разделы</h4>
-            <Link href="#">Стать ВИП</Link>
+            <Link href="#">Стать партнёром Swappe</Link>
             <Link href="#">Сделки</Link>
             <Link href="#">Избранное</Link>
             <Link href="#">Чат</Link>
@@ -34,7 +34,9 @@ function Footer() {
           Swappe - платформа для бартерного обмена и коллабораций. Условия
           пользования. Политика конфиденциальности. Оформляя подписку на Swappe,
           вы принимаете оферту. &copy; {moment().format("YYYY")} Свопи. Все
-          права защищены.
+          права защищены. ИП Махонина Анастасия Евгеньевна ИНН: 550711863779
+          ОГРНИП:323470400092754{" "}
+          <a href="mailto:support@swappe.ru">support@swappe.ru</a>
         </p>
       </div>
     </footer>
