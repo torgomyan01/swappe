@@ -161,9 +161,10 @@ function Register() {
 
             <Checkbox color="secondary" required>
               <p>
-                Нажимая Продолжить, я принимаю{" "}
+                Я согласен(а) на обработку моих персональных данных в
+                соответствии с{" "}
                 <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
-                  пользовательское соглашение
+                  Политикой конфиденциальности
                 </Link>
               </p>
             </Checkbox>

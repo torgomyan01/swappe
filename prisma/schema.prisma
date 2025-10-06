@@ -16,6 +16,16 @@ model users {
   verification_code      Int
   password_reset_token   String @db.VarChar(500)
   password_reset_expires String
+  balance                Int    @default(0)
+  bonus                  Int    @default(0)
+  referral_code          String @db.VarChar(255)
+  tariff                 String @db.VarChar(255)
+  tariff_start_date      DateTime
+  tariff_end_date        DateTime
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  role                   Json
 
   offers  offers[]
   company user_company?
@@ -24,6 +34,12 @@ model users {
 
   deals_owned_by_me deals[] @relation("DealsOwned")
   deals_as_client   deals[] @relation("DealsAsClient")
+}
+
+model admin_sections {
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(255)
+  data      Json
 }
 
 model user_company {

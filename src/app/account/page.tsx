@@ -16,6 +16,8 @@ function Profile() {
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
+  console.log(session, 55555555);
+
   return (
     <MainTemplate>
       <div className="profile-wrap">

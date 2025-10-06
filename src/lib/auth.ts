@@ -36,6 +36,7 @@ export const authOptions: NextAuthOptions = {
             status: true,
             name: true,
             password_reset_token: true, // Ներառում ենք թոքենը
+            role: true,
           },
         });
         if (!user) {
@@ -51,12 +52,16 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        // Derive roles: if status is 'admin' => roles: ['admin']
+        const roles = user.role;
+
         // Վերադարձվող օբյեկտը պետք է պարունակի բոլոր դաշտերը, որոնք անցնում են callbacks-ի միջով
         return {
           id: user.id,
           email: user.email,
           name: user.name ?? user.email,
           status: user.status,
+          role: roles,
           password_reset_token: user.password_reset_token,
         } as any;
       },
@@ -69,7 +74,13 @@ export const authOptions: NextAuthOptions = {
         token.sub = (user as any).id ?? token.sub; // Պահպանել օգտատիրոջ ID-ն
         token.email = (user as any).email; // Պահպանել email-ը
         (token as any).status = (user as any).status;
-
+        // copy roles/role if provided
+        if ((user as any).roles) {
+          (token as any).roles = (user as any).roles;
+        }
+        if ((user as any).role) {
+          (token as any).role = (user as any).role;
+        }
         (token as any).passwordResetToken = (user as any).password_reset_token;
       }
 
@@ -90,6 +101,13 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).id = token.sub;
         (session.user as any).status = (token as any).status;
         (session.user as any).email = token.email;
+        // propagate roles/role to session
+        if ((token as any).roles) {
+          (session.user as any).roles = (token as any).roles;
+        }
+        if ((token as any).role) {
+          (session.user as any).role = (token as any).role;
+        }
 
         // Պահպանել password_reset_token-ը session.user-ում
         (session.user as any).passwordResetToken = (

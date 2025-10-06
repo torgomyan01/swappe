@@ -23,8 +23,24 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
-        return !!token;
+      authorized: ({ token, req }) => {
+        // Allow public for non-matched paths; matched handled by config.matcher
+        const url = req.nextUrl.pathname;
+        if (!token) return false;
+        if (url.startsWith("/admin")) {
+          const raw =
+            (token as any)?.role ??
+            (token as any)?.roles ??
+            (token as any)?.status;
+          if (Array.isArray(raw)) {
+            return raw.map((r) => String(r).toLowerCase()).includes("admin");
+          }
+          if (typeof raw === "string") {
+            return raw.toLowerCase().includes("admin");
+          }
+          return false;
+        }
+        return true;
       },
     },
     pages: {
@@ -34,5 +50,12 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/account", "/account-menu", "/account/:path*", "/im/:path*"],
+  matcher: [
+    "/account",
+    "/account-menu",
+    "/account/:path*",
+    "/im/:path*",
+    "/admin/:path*",
+    "/admin",
+  ],
 };

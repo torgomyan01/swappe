@@ -104,6 +104,15 @@ export async function ActionCreateUser(
         verification_code: code,
         password_reset_token: "",
         password_reset_expires: "",
+        balance: 0,
+        bonus: 0,
+        referral_code: "",
+        tariff: "",
+        tariff_start_date: new Date(),
+        tariff_end_date: new Date(),
+        role: ["user"],
+        created_at: new Date(),
+        updated_at: new Date(),
       } as any,
     });
 

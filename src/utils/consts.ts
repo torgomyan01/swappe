@@ -34,6 +34,9 @@ export const SITE_URL = {
   COMPANY: (id: number | string) => `/company/${id}`,
   COMPANY_OFFERS: (id: number | string) => `/company/${id}/offers`,
   COMPANY_REVIEWS: (id: number | string) => `/company/${id}/reviews`,
+
+  ADMIN: "admin",
+  ADMIN_TARIFF: "admin/tariff",
 };
 
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";

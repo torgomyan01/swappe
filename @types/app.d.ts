@@ -248,6 +248,9 @@ declare interface IUserProfile {
   password: string;
   status: string;
   verification_code: number;
+  password_reset_token: string;
+  password_reset_expires: string;
+  role: ["admin", "user", "moderator", "manager"];
   company: IUserCompany;
 }
 
@@ -431,6 +434,20 @@ declare interface IReview {
   offer_id: number;
   offers: IUserOfferFront;
   creater_company: IUserCompany;
+}
+
+declare interface IAdminSection {
+  id: number;
+  name: string;
+  data: any;
+}
+
+declare interface ITariff {
+  name: string;
+  price: number;
+  title: string;
+  supportText: string[];
+  description: string;
 }
 
 type OfferType = "product" | "service";

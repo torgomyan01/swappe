@@ -107,16 +107,16 @@ function LeftMenu({ isMobile = false }: IThisProps) {
               </div>
             </>
           ) : (
-            <div>
+            <Link href={SITE_URL.COMPANY_CREATE}>
               <Button color="secondary" className="w-full mb-4">
                 Создайте компаний <i className="fa-regular fa-plus"></i>
               </Button>
-            </div>
+            </Link>
           )}
         </>
       ) : (
         <div className="flex-jc-c gap-4 flex-col mb-4">
-          <Skeleton className="rounded-full w-full h-[120px] w-[120px]" />
+          <Skeleton className="rounded-full h-[120px] w-[120px]" />
 
           <Skeleton className="rounded-lg w-[130px] h-[20px]" />
 
