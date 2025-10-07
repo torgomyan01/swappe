@@ -1,12 +1,11 @@
 "use client";
 
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Input,
   Textarea,
 } from "@heroui/react";
@@ -27,9 +26,6 @@ function TariffCardBase({
   tariff: t,
   index: idx,
   onChangeField,
-  onAddSupport,
-  onRemoveSupport,
-  onChangeSupport,
   onDelete,
 }: TariffCardProps) {
   // Local state for smooth typing
@@ -49,30 +45,28 @@ function TariffCardBase({
   // Debounce helpers
   const debounceRef = useRef<number | null>(null);
   const schedule = (fn: () => void) => {
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    if (debounceRef.current) {
+      window.clearTimeout(debounceRef.current);
+    }
     debounceRef.current = window.setTimeout(fn, 200);
   };
 
   // Propagate changes debounced
   useEffect(() => {
     schedule(() => onChangeField(idx, "title", title));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title]);
 
   useEffect(() => {
     const num = Number(priceStr || 0);
     schedule(() => onChangeField(idx, "price", Number.isFinite(num) ? num : 0));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceStr]);
 
   useEffect(() => {
     schedule(() => onChangeField(idx, "description", description));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [description]);
 
   useEffect(() => {
     schedule(() => onChangeField(idx, "supportText", supportList));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supportList]);
 
   return (

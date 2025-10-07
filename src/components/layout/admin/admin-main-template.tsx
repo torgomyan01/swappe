@@ -12,12 +12,7 @@ import {
   HeroUIProvider,
   ToastProvider,
 } from "@heroui/react";
-import {
-  AppProvider,
-  DashboardLayout,
-  Navigation,
-  PageContainer,
-} from "@toolpad/core";
+import { AppProvider, DashboardLayout, PageContainer } from "@toolpad/core";
 
 import { useSession } from "next-auth/react";
 

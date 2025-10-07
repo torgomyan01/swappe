@@ -7,8 +7,6 @@ import { motion } from "framer-motion";
 function WeHelpYour() {
   const [tariffs, setTariffs] = useState<ITariff[] | null>(null);
 
-  console.log(tariffs);
-
   useEffect(() => {
     ActionGetTariffs().then((res) => {
       if (res.status === "ok") {

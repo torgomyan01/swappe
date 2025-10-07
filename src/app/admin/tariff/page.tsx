@@ -1,16 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  addToast,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Spinner,
-  Textarea,
-} from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import {
   ActionDeleteTariff,
   ActionGetTariffs,
@@ -31,13 +22,15 @@ export default function AdminHomePage() {
     try {
       setLoading(true);
       const res = await ActionGetTariffs();
-      if (res.status === "ok") setTariffs(res.data as Tariff[]);
-      else
+      if (res.status === "ok") {
+        setTariffs(res.data as Tariff[]);
+      } else {
         addToast({
           title: res.error || "Ошибка при загрузке",
           color: "danger",
         });
-    } catch (e: any) {
+      }
+    } catch {
       addToast({ title: "Ошибка при загрузке", color: "danger" });
     } finally {
       setLoading(false);
@@ -53,7 +46,6 @@ export default function AdminHomePage() {
       setTariffs((prev) => {
         const next = [...prev];
         const current = next[idx];
-        // clone the item to ensure memoized children re-render
         next[idx] = { ...current, [field]: value } as Tariff;
         return next;
       });
@@ -87,7 +79,7 @@ export default function AdminHomePage() {
           color: "danger",
         });
       }
-    } catch (e: any) {
+    } catch {
       addToast({ title: "Ошибка при сохранении", color: "danger" });
     } finally {
       setSaving(false);
@@ -103,7 +95,7 @@ export default function AdminHomePage() {
       } else {
         addToast({ title: res.error || "Не удалось удалить", color: "danger" });
       }
-    } catch (e: any) {
+    } catch {
       addToast({ title: "Ошибка при удалении", color: "danger" });
     }
   }, []);

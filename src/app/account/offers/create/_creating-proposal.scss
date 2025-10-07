@@ -1,10 +1,10 @@
 .creating-proposal {
   padding-bottom: 140px;
   padding-top: 20px;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     padding-bottom: 100px;
   }
-  @media(max-width: 767px) {
+  @media (max-width: 767px) {
     padding-bottom: 50px;
   }
 
@@ -13,10 +13,10 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
     margin: 50px 0;
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
       grid-template-columns: 1fr 1fr;
     }
-    @media(max-width: 767px) {
+    @media (max-width: 767px) {
       grid-template-columns: 1fr;
     }
 
@@ -31,7 +31,7 @@
 
       p {
         font-size: 16px;
-        color: #68727D;
+        color: #68727d;
       }
     }
   }
@@ -41,7 +41,7 @@
     @include align-center;
     @include justify-between;
     margin-bottom: 40px;
-    @media(max-width: 767px) {
+    @media (max-width: 767px) {
       margin-bottom: 24px;
     }
 
@@ -49,7 +49,7 @@
       font-size: 24px;
       font-weight: bold;
       color: #252525;
-      @media(max-width: 767px) {
+      @media (max-width: 767px) {
         font-size: 20px;
       }
     }
@@ -61,7 +61,7 @@
       width: 44px;
       height: 44px;
       min-width: 44px;
-      background: #F8F2EA;
+      background: #f8f2ea;
 
       img {
         margin: auto;
@@ -94,26 +94,26 @@
         min-width: 32px;
         font-size: 16px;
         font-weight: 600;
-        color: #68727D;
+        color: #68727d;
         margin-right: 8px;
-        border: 1px solid #FFFCF5;
-        background: #F8F2EA;
+        border: 1px solid #fffcf5;
+        background: #f8f2ea;
       }
 
       .text {
         font-size: 16px;
         font-weight: 600;
-        color: #68727D;
+        color: #68727d;
       }
 
       &.green {
         .num {
-          background: #267F53;
-          color: #FFFCF5;
+          background: #267f53;
+          color: #fffcf5;
         }
 
         .text {
-          color: #1E4A2FFF;
+          color: #1e4a2fff;
         }
       }
     }
@@ -150,7 +150,7 @@
           label {
             padding: 16px;
             border-radius: 16px;
-            background: #F8F2EA;
+            background: #f8f2ea;
           }
         }
       }
@@ -162,17 +162,17 @@
         width: 100%;
         height: 46px;
         border-radius: 16px;
-        background: #F8F2EA;
+        background: #f8f2ea;
         font-size: 14px;
         color: #252525;
         @include placeholder {
-          color: #68727D;
+          color: #68727d;
           font-size: 14px;
         }
 
         &.price-input {
           max-width: 320px;
-          @media(max-width: 767px) {
+          @media (max-width: 767px) {
             max-width: 100%;
           }
         }
@@ -183,7 +183,7 @@
         margin-bottom: 8px;
         font-size: 15px;
         font-weight: 600;
-        color: #BBB8B0;
+        color: #bbb8b0;
       }
 
       .tags {
@@ -199,7 +199,7 @@
           margin-bottom: 8px;
           padding: 7px 11px;
           border-radius: 16px;
-          background: #F2E9DC;
+          background: #f2e9dc;
           font-size: 15px;
           font-weight: 500;
           color: #252525;
@@ -214,8 +214,8 @@
           }
 
           &.active {
-            background: #1E4A2FFF;
-            color: #F2E9DC;
+            background: #1e4a2fff;
+            color: #f2e9dc;
           }
         }
       }
@@ -226,20 +226,20 @@
         @include justify-center;
         @include align-center;
         @include dir-col;
-        border: 1px dashed #68727D;
+        border: 1px dashed #68727d;
         height: 200px;
         border-radius: 16px;
         max-width: 320px;
-        background: #F8F2EA;
+        background: #f8f2ea;
         cursor: pointer;
-        @media(max-width: 767px) {
+        @media (max-width: 767px) {
           max-width: 100%;
         }
 
         .border {
           font-weight: 500;
-          color: #1E4A2FFF;
-          border-bottom: 1px solid #1E4A2FFF;
+          color: #1e4a2fff;
+          border-bottom: 1px solid #1e4a2fff;
         }
 
         .icon {
@@ -248,7 +248,7 @@
           margin-bottom: 4px;
           width: 36px;
           height: 36px;
-          background: #FFFCF5;
+          background: #fffcf5;
 
           img {
             margin: auto;
@@ -263,15 +263,15 @@
         height: 140px;
         margin-bottom: 40px;
         border-radius: 16px;
-        background: #F8F2EA;
+        background: #f8f2ea;
         font-size: 14px;
         color: #252525;
         resize: none;
         @include placeholder {
-          color: #68727D;
+          color: #68727d;
           font-size: 14px;
         }
-        @media(max-width: 767px) {
+        @media (max-width: 767px) {
           margin-bottom: 24px;
         }
       }
@@ -290,10 +290,10 @@
 
         .num {
           border-radius: 20px;
-          background: #267F53;
+          background: #267f53;
           font-size: 14px;
           font-weight: 500;
-          color: #FFFCF5;
+          color: #fffcf5;
           padding: 1px 6px;
         }
       }
@@ -321,7 +321,7 @@
           b {
             font-size: 16px;
             font-weight: 600;
-            color: #1E4A2F;
+            color: #1e4a2f;
             margin-bottom: 4px;
             display: block;
           }
@@ -329,7 +329,7 @@
           span {
             font-size: 14px;
             line-height: 120%;
-            color: #1E4A2F;
+            color: #1e4a2f;
           }
         }
       }
@@ -344,14 +344,14 @@
     .grey-btn {
       padding: 12px 16px;
       border-radius: 16px;
-      background: #F8F2EA;
+      background: #f8f2ea;
       font-size: 14px;
       font-weight: 600;
       color: #343330;
       margin-right: 16px;
 
       &:hover {
-        background: darken(#F8F2EA, 3%);
+        background: darken(#f8f2ea, 3%);
       }
     }
   }
@@ -361,12 +361,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     display: block;
   }
 
   .left-info {
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
       width: 100%;
       margin-bottom: 30px;
     }
@@ -374,7 +374,7 @@
     .swiper {
       width: 100%;
       max-width: 600px;
-      @media(max-width: 1024px) {
+      @media (max-width: 1024px) {
         max-width: 100%;
       }
     }
@@ -387,7 +387,7 @@
         height: 130px;
         border-radius: 16px;
         position: relative;
-        @media(max-width: 1024px) {
+        @media (max-width: 1024px) {
           height: 20vw;
         }
 
@@ -428,7 +428,7 @@
         @include flex;
         height: 410px;
         border-radius: 20px;
-        @media(max-width: 1024px) {
+        @media (max-width: 1024px) {
           height: 60vw;
         }
 
@@ -456,11 +456,12 @@
       @include flex;
       @include align-center;
 
-      b, span {
+      b,
+      span {
         font-size: 12px;
         font-weight: 600;
         margin-right: 8px;
-        color: #BBB8B0;
+        color: #bbb8b0;
       }
 
       .rate-text {
@@ -469,7 +470,7 @@
         @include align-center;
         font-size: 14px;
         font-weight: 600;
-        color: #EDB53E;
+        color: #edb53e;
 
         img {
           width: 10px;
@@ -495,7 +496,7 @@
 
       a {
         border-radius: 16px;
-        background: #F8F2EA;
+        background: #f8f2ea;
         padding: 8px 12px;
         margin-right: 12px;
         font-size: 16px;
@@ -504,7 +505,7 @@
         margin-bottom: 12px;
 
         &:hover {
-          background: darken(#F8F2EA, 3%);
+          background: darken(#f8f2ea, 3%);
         }
       }
     }
@@ -514,7 +515,7 @@
         @include flex;
         @include justify-between;
         margin-bottom: 16px;
-        @media(max-width: 767px) {
+        @media (max-width: 767px) {
           @include dir-col;
         }
 
@@ -522,7 +523,7 @@
           font-weight: 500;
           color: #252525;
           font-size: 16px;
-          @media(max-width: 767px) {
+          @media (max-width: 767px) {
             display: block;
             margin-bottom: 2px;
           }
@@ -531,7 +532,7 @@
         span {
           font-size: 16px;
           font-weight: 500;
-          color: #68727D;
+          color: #68727d;
         }
       }
     }
@@ -563,7 +564,7 @@
 
     .text {
       font-size: 16px;
-      color: #68727D;
+      color: #68727d;
     }
   }
 }
@@ -573,30 +574,30 @@
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 12px;
   margin-bottom: 24px;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
-  @media(max-width: 650px) {
+  @media (max-width: 650px) {
     grid-template-columns: 1fr 1fr;
   }
 
   .item {
-    background: #F8F2EA;
+    background: #f8f2ea;
     border-radius: 16px;
     position: relative;
     cursor: pointer;
-    transition: .3s;
-    @media(max-width: 1024px) {
+    transition: 0.3s;
+    @media (max-width: 1024px) {
       grid-column: inherit !important;
       grid-row: inherit !important;
       height: 22vw;
     }
-    @media(max-width: 650px) {
+    @media (max-width: 650px) {
       height: 40vw;
     }
 
     &:hover {
-      background: darken(#F8F2EA, 2%);
+      background: darken(#f8f2ea, 2%);
     }
 
     &.active {
@@ -614,9 +615,9 @@
     }
 
     &:first-child {
-      border: 1px dashed #68727D;
+      border: 1px dashed #68727d;
       height: 260px;
-      @media(max-width: 1024px) {
+      @media (max-width: 1024px) {
         height: auto;
       }
     }
@@ -673,13 +674,11 @@
       background: rgba(37, 37, 37, 0.24);
       font-size: 14px;
       font-weight: 500;
-      color: #F9F2EA;
-      @media(max-width: 1024px) {
+      color: #f9f2ea;
+      @media (max-width: 1024px) {
         display: none;
       }
     }
-
-
   }
 }
 
@@ -688,32 +687,32 @@
   gap: 12px;
   display: grid;
   margin-bottom: 50px;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
-  @media(max-width: 650px) {
+  @media (max-width: 650px) {
     grid-template-columns: 1fr 1fr;
     margin-bottom: 30px;
   }
 
   .item {
-    background: #F8F2EA;
+    background: #f8f2ea;
     border-radius: 16px;
     position: relative;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
     height: 180px;
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
       grid-column: inherit !important;
       grid-row: inherit !important;
       height: 22vw;
     }
-    @media(max-width: 650px) {
+    @media (max-width: 650px) {
       height: 40vw;
     }
 
     &:hover {
-      background: darken(#F8F2EA, 2%);
+      background: darken(#f8f2ea, 2%);
     }
 
     &.active {
@@ -731,15 +730,14 @@
     }
 
     &:first-child {
-      border: 1px dashed #68727D;
-
+      border: 1px dashed #68727d;
     }
   }
 }
 
-
 .bonuses-info-block {
-  h2, .manage-btn {
+  h2,
+  .manage-btn {
     font-family: "Geologica", sans-serif;
   }
 

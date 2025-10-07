@@ -1,12 +1,29 @@
 "use client";
 
+import { ActionGetTariffs } from "@/app/actions/admin/tariff";
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { SITE_URL } from "@/utils/consts";
+import { Button, Spinner } from "@heroui/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function Profile() {
+  const { data: session } = useSession();
+  console.log(session);
+
   const router = useRouter();
+
+  const [tariffs, setTariffs] = useState<ITariff[] | null>(null);
+
+  useEffect(() => {
+    ActionGetTariffs().then((res) => {
+      if (res.status === "ok") {
+        setTariffs(res.data as unknown as ITariff[]);
+      }
+    });
+  }, []);
 
   return (
     <MainTemplate>
@@ -32,35 +49,7 @@ function Profile() {
             <LeftMenu />
             <div className="profile bonuses-account">
               <h3>Тарифы и бонусы</h3>
-              <div className="bonuses-info-block">
-                <div className="top">
-                  <span className="text">Мой тариф</span>
-                  <span className="date">До 21.03.2025</span>
-                </div>
-                <h2>Продвинутый</h2>
-                <ul>
-                  <li>
-                    <img src="/img/premium.png" alt="" />5 открытых в работе
-                    сделок
-                  </li>
-                  <li>
-                    <img src="/img/premium.png" alt="" />
-                    ПУБЛИЦАЦИЯ 3 ОБЪЯВЛЕНИЙ НА 1 МЕС. ВХОДИТ В ПОДПИСКУ
-                  </li>
-                  <li>
-                    <img src="/img/premium.png" alt="" />
-                    КЭШБЭК С КАЖДОГО ДОПОЛНИТЕЛЬНОГО РАЗМЕЩЕНИЯ 10%
-                  </li>
-                  <li>
-                    <img src="/img/premium.png" alt="" />
-                    размещение дополнительного объявления вне пакета подписки —
-                    370 ₽
-                  </li>
-                </ul>
-                <a href="#" className="manage-btn">
-                  Управлять
-                </a>
-              </div>
+
               <div className="bonuses-info">
                 <div className="bonuses-info-item">
                   <div className="top">
@@ -93,6 +82,73 @@ function Profile() {
                   </a>
                 </div>
               </div>
+
+              <div className="flex-jsb-s gap-2 mb-4 items-stretch">
+                {tariffs ? (
+                  tariffs.map((tariff) => (
+                    <div
+                      key={`tarif-block-${tariff.name}`}
+                      className="level-info border border-gray-200/80"
+                    >
+                      <h3 className="!mb-0">{tariff.title}</h3>
+                      <div className="tab-content-wrap h-full">
+                        <div className="tab-content active !flex-jsb-c flex-col h-full">
+                          <div>
+                            <b className="price">
+                              {`${new Intl.NumberFormat("ru-RU").format(
+                                tariff.price,
+                              )} ₽`}
+                            </b>
+                            <ul>
+                              {tariff.supportText.map((text) => (
+                                <li key={`tarif-text-${text}`}>{text}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <Button className="green-btn">Присоединиться</Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex-jc-c w-full h-[400px]">
+                    <Spinner color="secondary" />
+                  </div>
+                )}
+              </div>
+
+              <hr className="my-8 border-gray-200/80" />
+
+              {/* <div className="bonuses-info-block">
+                <div className="top">
+                  <span className="text">Мой тариф</span>
+                  <span className="date">До 21.03.2025</span>
+                </div>
+                <h2>Продвинутый</h2>
+                <ul>
+                  <li>
+                    <img src="/img/premium.png" alt="" />5 открытых в работе
+                    сделок
+                  </li>
+                  <li>
+                    <img src="/img/premium.png" alt="" />
+                    ПУБЛИЦАЦИЯ 3 ОБЪЯВЛЕНИЙ НА 1 МЕС. ВХОДИТ В ПОДПИСКУ
+                  </li>
+                  <li>
+                    <img src="/img/premium.png" alt="" />
+                    КЭШБЭК С КАЖДОГО ДОПОЛНИТЕЛЬНОГО РАЗМЕЩЕНИЯ 10%
+                  </li>
+                  <li>
+                    <img src="/img/premium.png" alt="" />
+                    размещение дополнительного объявления вне пакета подписки —
+                    370 ₽
+                  </li>
+                </ul>
+                <a href="#" className="manage-btn">
+                  Управлять
+                </a>
+              </div> */}
+
               <h4>Реферальная программа</h4>
               <p>
                 Компания предлагает клиентам посоветовать свой продукт знакомым

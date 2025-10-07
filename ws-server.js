@@ -5,8 +5,6 @@ const prisma = new PrismaClient();
 
 const wss = new WebSocketServer({ port: 3004 });
 
-console.log("WebSocket server is running on port 3004");
-
 wss.on("connection", (ws) => {
   console.log("Client connected");
 

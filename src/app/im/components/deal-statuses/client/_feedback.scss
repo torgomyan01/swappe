@@ -1,8 +1,8 @@
 .feedback-popup-wrap {
-  background: #FFFCF5;
+  background: #fffcf5;
   border-radius: 16px;
   max-width: 600px;
-  @media(max-width: 767px) {
+  @media (max-width: 767px) {
     padding: 24px 16px;
   }
 
@@ -12,7 +12,7 @@
     color: #343330;
     margin-bottom: 24px;
     padding-right: 24px;
-    @media(max-width: 767px) {
+    @media (max-width: 767px) {
       font-size: 16px;
     }
   }
@@ -20,8 +20,8 @@
   .name-transaction {
     padding: 8px 16px;
     border-radius: 20px;
-    border-bottom: 1px solid #F8F2EA;
-    background: #F8F2EA;
+    border-bottom: 1px solid #f8f2ea;
+    background: #f8f2ea;
     @include flex;
     @include align-center;
     margin-bottom: 24px;
@@ -137,7 +137,7 @@
       height: 46px;
       width: 100%;
       border-radius: 16px;
-      background: #F8F2EA;
+      background: #f8f2ea;
       padding: 0px 12px;
     }
   }
@@ -158,11 +158,11 @@
       height: 140px;
       width: 100%;
       border-radius: 16px;
-      background: #F8F2EA;
+      background: #f8f2ea;
       padding: 12px;
       resize: none;
       @include placeholder {
-        color: #68727D;
+        color: #68727d;
       }
     }
   }
@@ -182,19 +182,19 @@
       padding: 12px 14px;
 
       &.cancel {
-        background: #F8F2EA;
+        background: #f8f2ea;
         color: #343330;
 
         &:hover {
-          background: darken(#F8F2EA, 5%);
+          background: darken(#f8f2ea, 5%);
         }
       }
 
       &.green-btn {
-        color: #FFFCF5;
+        color: #fffcf5;
 
         &.disabled {
-          background: #8FA392;
+          background: #8fa392;
         }
       }
     }

@@ -26,7 +26,9 @@ export default withAuth(
       authorized: ({ token, req }) => {
         // Allow public for non-matched paths; matched handled by config.matcher
         const url = req.nextUrl.pathname;
-        if (!token) return false;
+        if (!token) {
+          return false;
+        }
         if (url.startsWith("/admin")) {
           const raw =
             (token as any)?.role ??

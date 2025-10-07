@@ -113,7 +113,9 @@ const SelectCardYandexMap = memo(function ({
     let pollId: number | null = null;
 
     const loadYandexMap = () => {
-      if (isInitialized.current) return;
+      if (isInitialized.current) {
+        return;
+      }
 
       const existing = document.querySelector(
         `script[src*="api-maps.yandex.ru"]`,

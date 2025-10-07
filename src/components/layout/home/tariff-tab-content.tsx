@@ -15,7 +15,7 @@ function TariffTabContent({
 }: TariffTabContentProps) {
   const formattedPrice =
     typeof price === "number"
-      ? new Intl.NumberFormat("ru-RU").format(price) + " ₽"
+      ? `${new Intl.NumberFormat("ru-RU").format(price)} ₽`
       : String(price);
   return (
     <div className="tab-content active">
