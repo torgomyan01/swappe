@@ -450,6 +450,15 @@ declare interface ITariff {
   description: string;
 }
 
+declare interface IPayment {
+  id: number;
+  user_id: number;
+  amount: number;
+  status: "pending" | "paid" | "failed";
+  payment_id: string;
+  created_at: string;
+}
+
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
 type DealStatusClient =

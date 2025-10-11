@@ -68,6 +68,8 @@ export async function ActionCreateUser(
   name: string,
   password: string,
   email: string,
+  referral_code?: string,
+  user_id?: string,
 ) {
   try {
     const parsed = Schema.safeParse({ name, password, email });
@@ -106,8 +108,8 @@ export async function ActionCreateUser(
         password_reset_expires: "",
         balance: 0,
         bonus: 0,
-        referral_code: "",
-        tariff: "",
+        referral_code: crypto.randomUUID(),
+        tariff: "free",
         tariff_start_date: new Date(),
         tariff_end_date: new Date(),
         role: ["user"],
@@ -136,6 +138,20 @@ export async function ActionCreateUser(
         </div>
       `,
     });
+
+    if (referral_code && user_id) {
+      const getRefUser = await prisma.users.findFirst({
+        where: { id: +user_id, referral_code: referral_code },
+        select: { id: true, bonus: true },
+      });
+
+      if (getRefUser) {
+        await prisma.users.update({
+          where: { id: getRefUser.id },
+          data: { bonus: { increment: 350 } as any },
+        });
+      }
+    }
 
     return {
       status: "ok",

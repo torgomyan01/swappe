@@ -4,9 +4,6 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-// Այս ֆայլը կարող է պահանջել NextAuth-ի ընդլայնված տիպերը,
-// որպեսզի կանխի 'as any' կիրառումը։
-
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   pages: {
@@ -27,23 +24,15 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await prisma.users.findFirst({
+        // Fetch full user record; we'll remove password before returning
+        const user: any = await prisma.users.findFirst({
           where: { email },
-          select: {
-            id: true,
-            email: true,
-            password: true,
-            status: true,
-            name: true,
-            password_reset_token: true, // Ներառում ենք թոքենը
-            role: true,
-          },
         });
         if (!user) {
           return null;
         }
 
-        const ok = await bcrypt.compare(password, user.password);
+        const ok = await bcrypt.compare(password, user.password ?? "");
         if (!ok) {
           return null;
         }
@@ -52,29 +41,28 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Derive roles: if status is 'admin' => roles: ['admin']
-        const roles = user.role;
+        // Remove sensitive fields
+        const { password: _pw, ...userSafe } = user;
 
-        // Վերադարձվող օբյեկտը պետք է պարունակի բոլոր դաշտերը, որոնք անցնում են callbacks-ի միջով
+        console.log(_pw, 55555);
+
+        // Normalize role/roles for downstream usage
+        const roles = userSafe.role;
+
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name ?? user.email,
-          status: user.status,
+          ...userSafe,
+          name: userSafe.name ?? userSafe.email,
           role: roles,
-          password_reset_token: user.password_reset_token,
         } as any;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      // 1. Սկզբնական Մուտքի Ժամանակ (user օբյեկտը հասանելի է)
       if (user) {
-        token.sub = (user as any).id ?? token.sub; // Պահպանել օգտատիրոջ ID-ն
-        token.email = (user as any).email; // Պահպանել email-ը
+        token.sub = (user as any).id ?? token.sub;
+        token.email = (user as any).email;
         (token as any).status = (user as any).status;
-        // copy roles/role if provided
         if ((user as any).roles) {
           (token as any).roles = (user as any).roles;
         }
@@ -82,6 +70,8 @@ export const authOptions: NextAuthOptions = {
           (token as any).role = (user as any).role;
         }
         (token as any).passwordResetToken = (user as any).password_reset_token;
+        // Attach full user payload (without password) for session consumption
+        (token as any).user = user as any;
       }
 
       if (trigger === "update" && session) {
@@ -91,17 +81,53 @@ export const authOptions: NextAuthOptions = {
         if (session.name) {
           token.name = session.name;
         }
+
+        // Support client-side session.update({ ... }) for tariff fields
+        const tknAny = token as any;
+        const sessAny = session as any;
+
+        if (sessAny.tariff !== undefined) {
+          // reflect in token top-level if desired
+          tknAny.tariff = sessAny.tariff;
+          // and in embedded user payload
+          tknAny.user = {
+            ...(tknAny.user || {}),
+            tariff: sessAny.tariff,
+          };
+        }
+
+        if (sessAny.tariff_end_date !== undefined) {
+          tknAny.tariff_end_date = sessAny.tariff_end_date;
+          tknAny.user = {
+            ...(tknAny.user || {}),
+            tariff_end_date: sessAny.tariff_end_date,
+          };
+        }
+
+        if (sessAny.tariff_start_date !== undefined) {
+          tknAny.tariff_start_date = sessAny.tariff_start_date;
+          tknAny.user = {
+            ...(tknAny.user || {}),
+            tariff_start_date: sessAny.tariff_start_date,
+          };
+        }
+
+        if (sessAny.balance !== undefined) {
+          tknAny.balance = sessAny.balance;
+          tknAny.user = {
+            ...(tknAny.user || {}),
+            balance: sessAny.balance,
+          };
+        }
       }
       return token;
     },
 
     async session({ session, token }) {
       if (session.user) {
-        // Տվյալները փոխանցել session.user օբյեկտին
         (session.user as any).id = token.sub;
         (session.user as any).status = (token as any).status;
         (session.user as any).email = token.email;
-        // propagate roles/role to session
         if ((token as any).roles) {
           (session.user as any).roles = (token as any).roles;
         }
@@ -109,10 +135,34 @@ export const authOptions: NextAuthOptions = {
           (session.user as any).role = (token as any).role;
         }
 
-        // Պահպանել password_reset_token-ը session.user-ում
         (session.user as any).passwordResetToken = (
           token as any
         ).passwordResetToken;
+
+        // Merge all user fields (sans password) into session.user
+        if ((token as any).user) {
+          Object.assign(session.user as any, (token as any).user);
+          // Ensure password is not present even if somehow included
+          delete (session.user as any).password;
+        }
+
+        // Also mirror explicit top-level fields if set during update
+        if ((token as any).tariff !== undefined) {
+          (session.user as any).tariff = (token as any).tariff;
+        }
+        if ((token as any).tariff_end_date !== undefined) {
+          (session.user as any).tariff_end_date = (
+            token as any
+          ).tariff_end_date;
+        }
+        if ((token as any).tariff_start_date !== undefined) {
+          (session.user as any).tariff_start_date = (
+            token as any
+          ).tariff_start_date;
+        }
+        if ((token as any).balance !== undefined) {
+          (session.user as any).balance = (token as any).balance;
+        }
       }
       return session;
     },

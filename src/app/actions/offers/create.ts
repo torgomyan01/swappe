@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { ActionUpdateUserBonus } from "../auth/update-user-bonus";
 
 export async function ActionCreateOffer(offer: any) {
   try {
@@ -10,6 +11,16 @@ export async function ActionCreateOffer(offer: any) {
 
     if (!session) {
       return { status: "error", data: [], error: "logout" };
+    }
+
+    const getOffers = await prisma.offers.findMany({
+      where: {
+        user_id: session.user.id,
+      },
+    });
+
+    if (!getOffers.length) {
+      await ActionUpdateUserBonus("increment", 50);
     }
 
     const createOffer = await prisma.offers.create({

@@ -34,6 +34,8 @@ model users {
 
   deals_owned_by_me deals[] @relation("DealsOwned")
   deals_as_client   deals[] @relation("DealsAsClient")
+
+  payments payments[]
 }
 
 model admin_sections {
@@ -186,4 +188,15 @@ model messages {
   created_at       DateTime
 
   chats chats? @relation(fields: [chat_id], references: [id])
+}
+
+model payments {
+  id        Int    @id @default(autoincrement())
+  user_id   Int
+  amount    Int
+  status    String
+  payment_id String
+  created_at DateTime
+
+  user users @relation(fields: [user_id], references: [id])
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { ActionUpdateUserBonus } from "../auth/update-user-bonus";
 
 export async function ActionCreateCompanyReview(
   companyId: number,
@@ -20,6 +21,8 @@ export async function ActionCreateCompanyReview(
         offer_id,
       },
     });
+
+    await ActionUpdateUserBonus("increment", 10);
 
     return {
       status: "ok",

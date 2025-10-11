@@ -27,6 +27,11 @@ const NAVIGATION = [
     title: "Тариф",
     icon: <i className="fa-solid fa-badge-check"></i>,
   },
+  {
+    segment: SITE_URL.ADMIN_USERS,
+    title: "Пользователи",
+    icon: <i className="fa-solid fa-users"></i>,
+  },
   // {
   //   segment: SITE_URL.ADMIN_PAGES,
   //   title: "Страницы ",

@@ -5,11 +5,12 @@ import { useState } from "react";
 import clsx from "clsx";
 import SelectCategory from "@/app/company/create/components/select-category";
 import SelectAboutAs from "@/app/company/create/components/select-about-as";
-import { Spinner } from "@heroui/react";
+import { addToast, Spinner } from "@heroui/react";
 import { ActionCreateCompany } from "@/app/actions/company/create-company";
 import axios from "axios";
 import { fileHostUpload, SITE_URL } from "@/utils/consts";
 import { useRouter } from "next/navigation";
+import { ActionUpdateUserBonus } from "@/app/actions/auth/update-user-bonus";
 
 function Register() {
   const router = useRouter();
@@ -46,7 +47,23 @@ function Register() {
             infoCompany[0].phone_number,
           ).then((res) => {
             if (res.status === "ok") {
-              router.push(SITE_URL.COMPANY_THANKS);
+              ActionUpdateUserBonus("increment", 50).then((_res) => {
+                if (_res.status === "ok") {
+                  addToast({
+                    title: "Спасибо вы получили 50 бонусов",
+                    color: "success",
+                  });
+
+                  setTimeout(() => {
+                    router.push(SITE_URL.COMPANY_THANKS);
+                  }, 1000);
+                } else {
+                  addToast({
+                    title: res.error,
+                    color: "danger",
+                  });
+                }
+              });
             }
           });
         }

@@ -87,6 +87,10 @@
   content: "\f336";
 }
 
+.fa-users:before {
+  content: "\f0c0";
+}
+
 /*---------------------------------*/
 
 @font-face {

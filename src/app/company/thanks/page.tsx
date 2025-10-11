@@ -21,7 +21,7 @@ function Page() {
         </div>
         <div className="bottom-text">
           <span>Возникли проблемы?</span>
-          <a href="#">Наша поддержка поможет</a>
+          <Link href={SITE_URL.CHAT}>Наша поддержка поможет</Link>
         </div>
       </div>
     </div>

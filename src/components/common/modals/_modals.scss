@@ -1,0 +1,408 @@
+.tarrif-modal-wrap {
+  position: relative;
+  z-index: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #fffcf5;
+  box-shadow:
+    0 0 1px 0 rgba(113, 128, 150, 0.04),
+    0 4px 8px 0 rgba(113, 128, 150, 0.08);
+  .info {
+    background: url(/img/membership.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding: 16px;
+    .close {
+      right: 15px;
+      top: 15px;
+      position: absolute;
+      left: inherit;
+    }
+    > span {
+      font-size: 14px;
+      display: block;
+      margin-bottom: 2px;
+      font-weight: 600;
+      color: #bbb8b0;
+    }
+    h3 {
+      font-size: 32px;
+      margin-bottom: 24px;
+      color: #fffcf5;
+      font-weight: 600;
+    }
+    ul {
+      li {
+        @include flex;
+        @include align-center;
+        margin-bottom: 12px;
+        img {
+          margin-right: 10px;
+        }
+        span {
+          font-size: 14px;
+          color: white;
+          font-weight: 500;
+          text-transform: lowercase;
+        }
+      }
+    }
+    .dostavlen {
+      border-radius: 20px;
+      background: #1e4a2f;
+      padding: 3px 10px 5px;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      @include inline-flex;
+      color: #fffcf5;
+    }
+  }
+  .buttons {
+    padding: 24px 12px;
+    background: #fffcf5;
+    @include flex;
+    justify-content: flex-end;
+    a {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid #1e4a2f;
+      margin-left: 8px;
+      @include inline-flex;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e4a2f;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:hover {
+        background: #1e4a2f;
+        color: #fffcf5;
+      }
+    }
+  }
+}
+
+.stay-link {
+  color: #323539;
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-top: 20px;
+}
+
+.connectes-basic {
+  //   background: url(../img/modals/connectes-basic.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding: 64px;
+  border-radius: 32px;
+  overflow: hidden;
+  text-align: center;
+
+  img {
+    margin-bottom: 32px;
+  }
+  h3 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fffcf5;
+    margin-bottom: 16px;
+  }
+  span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fffcf5;
+    text-align: center;
+    display: block;
+  }
+}
+
+.funds-wrap {
+  padding: 0;
+  .wrapper {
+    padding: 40px 20px 80px;
+    height: 100vh;
+    @include flex;
+    overflow-y: auto;
+    @include dir-col;
+    @include justify-between;
+    @media (max-width: 767px) {
+      padding: 30px 15px 50px;
+    }
+    .connected-advanced {
+      background: url(/img/membership.png);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      border-radius: 30px;
+      padding: 64px;
+      margin: 20px auto;
+      max-width: 570px;
+      width: 100%;
+      @include flex;
+      @include dir-col;
+      @include align-center;
+      @media (max-width: 767px) {
+        padding: 34px 24px;
+      }
+      b {
+        display: block;
+        margin-bottom: 16px;
+        margin-top: 32px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #fffcf5;
+        text-align: center;
+      }
+      span {
+        text-align: center;
+        font-size: 14px;
+        color: #fffcf5;
+        margin-bottom: 32px;
+      }
+      .green-btn {
+        max-width: 370px;
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
+    .bottom-texts {
+      @include flex;
+      @include justify-center;
+      margin-top: 15px;
+      span {
+        color: #858c95;
+        font-size: 14px;
+        margin-right: 8px;
+      }
+      a {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e4a2f;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.sufficient-funds {
+  margin: 20px auto;
+  max-width: 520px;
+  width: 100%;
+  border-radius: 30px;
+  overflow: hidden;
+  @media (max-width: 767px) {
+    margin: 10px auto;
+  }
+  .top-info {
+    background: url(/img/membership.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding: 36px;
+    @media (max-width: 767px) {
+      padding: 32px 24px;
+    }
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      display: block;
+      color: #fffcf5;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+    h3 {
+      font-size: 32px;
+      margin-bottom: 24px;
+      color: #fffcf5;
+      font-weight: 600;
+      text-align: left;
+    }
+    ul {
+      li {
+        @include flex;
+        @include align-center;
+        margin-bottom: 12px;
+        img {
+          margin-right: 10px;
+        }
+        span {
+          font-size: 14px;
+          color: white;
+          font-weight: 500;
+          text-transform: lowercase;
+        }
+      }
+    }
+  }
+}
+
+.info-w {
+  padding: 48px;
+  background: #fffcf5;
+  text-align: left;
+  @media (max-width: 767px) {
+    padding: 32px 24px;
+  }
+  .notifications {
+    position: static;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    @include flex;
+    @include align-center;
+    margin-bottom: 16px;
+    height: inherit;
+    > span {
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 10px;
+      color: #252525;
+    }
+  }
+  .prices {
+    margin-bottom: 16px;
+    .top-prices {
+      @include flex;
+      @include align-center;
+      @include justify-center;
+      margin-bottom: 4px;
+      span {
+        font-weight: bold;
+        font-size: 15px;
+        color: #323539;
+        text-decoration: line-through;
+        display: inline-block;
+        margin-right: 8px;
+      }
+      b {
+        font-size: 15px;
+        font-weight: bold;
+        color: #edb53e;
+      }
+    }
+  }
+  .price {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: #323539;
+    text-align: center;
+  }
+  .green-btn {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  .back {
+    @include flex;
+    @include align-center;
+    @include justify-center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e4a2f;
+    img {
+      margin-right: 8px;
+    }
+  }
+  .spb {
+    padding: 16px;
+    border-radius: 24px;
+    background: #f8f2ea;
+    @include flex;
+    @include justify-center;
+    margin-bottom: 24px;
+  }
+  .payment-method {
+    margin-bottom: 48px;
+    &.mb10 {
+      margin-bottom: 10px;
+    }
+    > span {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #252525;
+    }
+    .payment-wrap {
+      padding: 16px;
+      border-radius: 24px;
+      background: #f8f2ea;
+      @include flex;
+      @include align-center;
+      .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        overflow: hidden;
+        @include flex;
+        margin-right: 24px;
+        img {
+          width: 1005px;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      .texts {
+        .text {
+          font-size: 14px;
+          font-weight: 600;
+          display: block;
+          color: #bbb8b0;
+        }
+        b {
+          font-size: 24px;
+          display: block;
+          font-weight: bold;
+          color: #252525;
+        }
+      }
+    }
+  }
+}
+
+.use-bonuses {
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(99, 103, 104, 0.16);
+}
+.use-bonuses-wrap {
+  padding: 16px;
+  border-radius: 24px;
+  background: #f8f2ea;
+  @include flex;
+  @include align-center;
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    @include flex;
+    margin-right: 24px;
+    img {
+      width: 1005px;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .texts {
+    .text {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      color: #bbb8b0;
+    }
+    b {
+      font-size: 24px;
+      display: block;
+      font-weight: bold;
+      color: #252525;
+    }
+  }
+}

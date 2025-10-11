@@ -55,7 +55,6 @@ export async function ActionAddAllCountries() {
       }
 
       index++;
-      // փոքր դադար, որ բազան չծանրանա
       setTimeout(insertNext, 200);
     }
 

@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "@heroui/react";
 import { motion } from "framer-motion";
-import { isValidUrl, RandomKey } from "@/utils/helpers";
+import { isValidUrl, RandomKey, truncateString } from "@/utils/helpers";
 import { useEffect, useRef, useState } from "react";
 import { ActionCheckInn } from "@/app/actions/check-inn/check-inn";
 import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countries";
@@ -356,8 +356,10 @@ function InfoCompany({ onSubmit }: IThisProps) {
               {logo ? (
                 <p className="file-types flex-jc-c gap-2">
                   Файл выбран:{" "}
-                  <span className="underline !mb-0">{logo.name}</span> (
-                  {Math.round(logo.size / 1024)} КБ)
+                  <span className="underline !mb-0">
+                    {truncateString(logo.name, 15)}
+                  </span>{" "}
+                  ({Math.round(logo.size / 1024)} КБ)
                 </p>
               ) : (
                 <p className="file-types">JPG, PNG или SVG (не более 1 МБ)</p>

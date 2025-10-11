@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "@/components/common/navbar/navbar";
 import Footer from "@/components/common/footer/footer";
 import { useEffect } from "react";
