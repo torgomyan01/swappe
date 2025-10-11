@@ -20,7 +20,11 @@ function Profile() {
   const { data: session }: any = useSession();
   const [modalState, setModalState] = useState(false);
 
+  console.log(session);
+
   const [tariffs, setTariffs] = useState<ITariff[] | null>(null);
+
+  console.log(tariffs);
 
   const [myTariff, setMyTariff] = useState<ITariff | null>(null);
 
@@ -35,8 +39,6 @@ function Profile() {
     const findTariff = tariffs?.find(
       (tariff) => tariff.name === session.user.tariff,
     );
-
-    console.log(window.location.origin);
 
     setMyTariff(findTariff || null);
   }, [session.user.tarif, tariffs]);
@@ -130,7 +132,7 @@ function Profile() {
                 </div>
               )}
 
-              {session.user.tarif === "free" ? (
+              {session.user.tariff === "free" ? (
                 <div className="flex-jsb-s gap-2 mb-4 items-stretch">
                   {tariffs ? (
                     tariffs.map((tariff) => (

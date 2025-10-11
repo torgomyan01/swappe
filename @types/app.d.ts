@@ -246,12 +246,20 @@ declare interface IUserProfile {
   email: string;
   name: string;
   password: string;
-  status: string;
+  status: "no-verified" | "verified" | "blocked";
   verification_code: number;
   password_reset_token: string;
   password_reset_expires: string;
   role: ["admin", "user", "moderator", "manager"];
   company: IUserCompany;
+  balance: number;
+  bonus: number;
+  referral_code: string;
+  tariff: string;
+  tariff_start_date: Date;
+  tariff_end_date: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
 declare interface IUserOffer {
