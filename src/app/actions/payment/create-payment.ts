@@ -31,6 +31,9 @@ export async function ActionCreatePayment(
       return { status: "error", data: [], error: "logout" };
     }
 
+    // 54‑FZ compliant receipt
+    const TAX_SYSTEM_CODE = 1; // 1–6 depending on your shop settings
+
     const payment = await yookassa.createPayment({
       amount: {
         value: amount.toFixed(2),
@@ -41,7 +44,26 @@ export async function ActionCreatePayment(
         return_url: redirect_url,
       },
       capture: true,
-      description: "Test payment",
+      description: "Balance top-up",
+      receipt: {
+        customer: {
+          email: session.user.email,
+        },
+        tax_system_code: TAX_SYSTEM_CODE,
+        items: [
+          {
+            description: "Пополнение баланса",
+            quantity: "1.0",
+            amount: {
+              value: amount.toFixed(2),
+              currency: "RUB",
+            },
+            vat_code: 1, // 1: no VAT, adjust if your shop uses VAT
+            payment_subject: "service",
+            payment_mode: "full_payment",
+          },
+        ],
+      },
     });
 
     console.log("✅ YooKassa payment created:", payment);
