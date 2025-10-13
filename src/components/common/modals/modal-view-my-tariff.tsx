@@ -1,6 +1,6 @@
 import TarifBlock from "@/app/account/tariffs-bonuses/components/tarif-block";
 import { ActionGetTariffs } from "@/app/actions/admin/tariff";
-import { Modal, ModalBody, ModalContent, Spinner } from "@heroui/react";
+import { Button, Modal, ModalBody, ModalContent, Spinner } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -40,9 +40,9 @@ function ModalViewMyTariff({ show, onClose }: IThisProps) {
             <div className="global-popup">
               <div className="tarrif-modal-wrap !rounded-none">
                 <div className="info">
-                  <a href="#" className="close">
-                    <img src="img/close-pop.svg" alt="" />
-                  </a>
+                  <span className="close cursor-pointer" onClick={onClose}>
+                    <img src="/img/close-pop.svg" alt="" />
+                  </span>
                   <span>Мой тариф</span>
                   <h3>{myTariff?.title}</h3>
                   <ul className="check-list">

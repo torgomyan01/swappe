@@ -1,20 +1,44 @@
 import { SITE_URL } from "@/utils/consts";
-import { Button } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ActionCancelUserPlan } from "@/app/actions/auth/cancel-user-plan";
+import { useState } from "react";
 
 interface IThisProps {
   tariff: ITariff;
 }
 
 function TarifBlock({ tariff }: IThisProps) {
-  const { data: session }: any = useSession();
+  const { data: session, update }: any = useSession();
   const router = useRouter();
 
   function handleChangeTariff() {
     if (session?.user?.tariff !== tariff.name) {
       router.push(SITE_URL.ACCOUNT_TARIFF + "/" + tariff.name);
     }
+  }
+
+  const [loading, setLoading] = useState(false);
+
+  async function handleCancel() {
+    setLoading(true);
+    const res = await ActionCancelUserPlan();
+    if (res.status === "ok") {
+      await update({
+        tariff: "free",
+        tariff_end_date: null,
+      });
+
+      addToast({
+        title: "Подписка успешно отменена",
+        color: "success",
+      });
+
+      window.location.reload();
+    }
+
+    setLoading(false);
   }
 
   return (
@@ -34,7 +58,11 @@ function TarifBlock({ tariff }: IThisProps) {
           </div>
 
           {tariff.name === session.user.tariff ? (
-            <Button className="green-btn disabled" disabled>
+            <Button
+              className="green-btn"
+              onPress={handleCancel}
+              isLoading={loading}
+            >
               Отменить подписку
             </Button>
           ) : (

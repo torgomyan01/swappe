@@ -17,6 +17,18 @@ export async function ActionCreateCompany(
   phone_number: string,
 ) {
   try {
+    console.log(
+      name,
+      inn,
+      city,
+      industry,
+      about_us,
+      interest_categories,
+      sites,
+      image_path,
+      phone_number,
+      55555555,
+    );
     const session: any = await getServerSession(authOptions);
 
     if (!session) {

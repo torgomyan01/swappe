@@ -45,27 +45,46 @@ function Register() {
             infoCompany[0].socials,
             data.url,
             infoCompany[0].phone_number,
-          ).then((res) => {
-            if (res.status === "ok") {
-              ActionUpdateUserBonus("increment", 50).then((_res) => {
-                if (_res.status === "ok") {
-                  addToast({
-                    title: "Спасибо вы получили 50 бонусов",
-                    color: "success",
-                  });
+          )
+            .then((res) => {
+              console.log(res);
 
-                  setTimeout(() => {
-                    router.push(SITE_URL.COMPANY_THANKS);
-                  }, 1000);
-                } else {
-                  addToast({
-                    title: res.error,
-                    color: "danger",
-                  });
-                }
+              if (res.status === "ok") {
+                ActionUpdateUserBonus("increment", 50).then((_res) => {
+                  if (_res.status === "ok") {
+                    addToast({
+                      title: "Спасибо вы получили 50 бонусов",
+                      color: "success",
+                    });
+
+                    setTimeout(() => {
+                      router.push(SITE_URL.COMPANY_THANKS);
+                    }, 1000);
+                  } else {
+                    addToast({
+                      title: res.error,
+                      color: "danger",
+                    });
+                  }
+                });
+              }
+
+              if (res.status === "error") {
+                addToast({
+                  title: res.error,
+                  color: "danger",
+                });
+              }
+            })
+            .catch((e: any) => {
+              console.log(e);
+              addToast({
+                title: "Ошибка",
+                description: "Не удалось создать компанию",
+                color: "danger",
               });
-            }
-          });
+            })
+            .finally(() => setLoading(false));
         }
       });
     } else {
