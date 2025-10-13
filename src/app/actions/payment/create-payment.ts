@@ -6,8 +6,8 @@ import { getServerSession } from "next-auth";
 // @ts-expect-error - YooKassa package doesn't have TypeScript definitions
 import YooKassa from "yookassa";
 
-const SHOP_ID = "1182358";
-const SECRET_KEY = "test_ZRNpZvmZhpgXTTjnNg6y5RSitMuiMXSzeDhcnrX_SCw";
+const SHOP_ID = "1176472";
+const SECRET_KEY = "live_0vGMltxQNTEMPvxoZxIo20qmNnmu2778Bj5Z4erjnr4";
 
 const yookassa = new YooKassa({
   shopId: SHOP_ID,
