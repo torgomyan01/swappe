@@ -1,6 +1,6 @@
 import TarifBlock from "@/app/account/tariffs-bonuses/components/tarif-block";
 import { ActionGetTariffs } from "@/app/actions/admin/tariff";
-import { Button, Modal, ModalBody, ModalContent, Spinner } from "@heroui/react";
+import { Modal, ModalBody, ModalContent, Spinner } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
