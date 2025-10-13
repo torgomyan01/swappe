@@ -36,6 +36,20 @@ model users {
   deals_as_client   deals[] @relation("DealsAsClient")
 
   payments payments[]
+
+  // Relations
+  support_chats support_chats[]
+}
+
+model chat_news {
+  id        Int    @id @default(autoincrement())
+  title     String @db.VarChar(255)
+  content   String @db.VarChar(5000)
+  images    Json
+  videos    Json
+  status    String @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model admin_sections {
@@ -188,6 +202,28 @@ model messages {
   created_at       DateTime
 
   chats chats? @relation(fields: [chat_id], references: [id])
+}
+
+// Support chat models (independent from deals)
+model support_chats {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime @default(now())
+
+  user     users              @relation(fields: [user_id], references: [id])
+  messages support_messages[]
+}
+
+model support_messages {
+  id              Int      @id @default(autoincrement())
+  support_chat_id Int
+  sender_id       Int
+  content         String   @db.VarChar(5000)
+  file_type       String?
+  file_paths      Json?
+  created_at      DateTime
+
+  support_chat support_chats @relation(fields: [support_chat_id], references: [id], onDelete: Cascade)
 }
 
 model payments {

@@ -33,6 +33,16 @@ const NAVIGATION = [
     title: "Пользователи",
     icon: <i className="fa-solid fa-users"></i>,
   },
+  {
+    segment: SITE_URL.ADMIN_SUPPORT,
+    title: "Техническая поддержка",
+    icon: <i className="fa-solid fa-head-side-headphones"></i>,
+  },
+  {
+    segment: SITE_URL.ADMIN_CHAT_NEWS,
+    title: "Чат новостей",
+    icon: <i className="fa-solid fa-newspaper"></i>,
+  },
   // {
   //   segment: SITE_URL.ADMIN_PAGES,
   //   title: "Страницы ",

@@ -18,9 +18,15 @@ interface IThisProps {
   message: IMessage;
   info: IChatItems;
   onSelectMessage: (messageId: number) => void;
+  chatType?: "support" | "deal";
 }
 
-function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
+function ClientMessage({
+  message,
+  info,
+  onSelectMessage,
+  chatType = "deal",
+}: IThisProps) {
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +37,7 @@ function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
   };
 
   function PrintClientMessageInfo() {
-    if (info.deal.owner.company.id === company?.id) {
+    if (info.deal.owner?.company?.id === company?.id) {
       return info.deal.client.company;
     }
 
@@ -47,12 +53,16 @@ function ClientMessage({ message, info, onSelectMessage }: IThisProps) {
         className="img"
         target="_blank"
       >
-        <Image
-          src={`${fileHost}${PrintClientMessageInfo()?.image_path}`}
-          alt=""
-          width={100}
-          height={100}
-        />
+        {chatType === "deal" ? (
+          <Image
+            src={`${fileHost}${PrintClientMessageInfo()?.image_path}`}
+            alt=""
+            width={100}
+            height={100}
+          />
+        ) : (
+          <Image src="/img/support.png" alt="" width={100} height={100} />
+        )}
       </Link>
       <div className="left-sms">
         <Dropdown

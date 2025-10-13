@@ -98,7 +98,7 @@ function Profile() {
                     </div>
                     <div className="item">
                       <b>Город</b>
-                      <span>{company?.city_data.name}</span>
+                      <span>{company?.city_data?.name}</span>
                     </div>
                     <div className="item">
                       <b>Индустрия</b>

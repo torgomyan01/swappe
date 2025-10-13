@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { ActionCheckUserTarifStatus } from "../payment/check-user-tarif-status";
 
 interface Data {
   offer_id: number;
@@ -16,6 +17,44 @@ export async function ActionCreateDeals(data: Data) {
 
     if (!session) {
       return { status: "error", data: [], error: "logout" };
+    }
+
+    const checkUserTarifStatus = await ActionCheckUserTarifStatus();
+
+    if (!checkUserTarifStatus.data) {
+      return {
+        status: "error",
+        data: [],
+        error: "Ваш тариф пока не хватает для создания сделки",
+      };
+    }
+
+    const getUsersDeals = await prisma.deals.findMany({
+      where: {
+        owner_id: session.user.id,
+      },
+    });
+
+    if (checkUserTarifStatus.tariff === "basic") {
+      if (getUsersDeals.length >= 2) {
+        return {
+          status: "error",
+          data: [],
+          error:
+            "Вы достигли максимального количества сделок для вашего тарифа",
+        };
+      }
+    }
+
+    if (checkUserTarifStatus.tariff === "advanced") {
+      if (getUsersDeals.length >= 5) {
+        return {
+          status: "error",
+          data: [],
+          error:
+            "Вы достигли максимального количества сделок для вашего тарифа",
+        };
+      }
     }
 
     const createDeal = await prisma.deals.create({

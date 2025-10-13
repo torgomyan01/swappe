@@ -91,6 +91,23 @@
   content: "\f0c0";
 }
 
+.fa-head-side-headphones:before {
+  content: "\f8c2";
+}
+
+.fa-newspaper:before {
+  content: "\f1ea";
+}
+.fa-message:before {
+  content: "\f075";
+}
+.fa-trash:before {
+  content: "\f2ed";
+}
+.fa-pen:before {
+  content: "\f304";
+}
+
 /*---------------------------------*/
 
 @font-face {

@@ -24,6 +24,8 @@ export const SITE_URL = {
   ACCOUNT_TARIFF: "/account/tariffs-bonuses/change",
 
   CHAT: "/im",
+  SUPPORT: "/im/support",
+  CHAT_NEWS: "/im/news",
 
   PRIVACY_POLICY: "/privacy-policy",
   PRIVACY_POLICY_REGARDING: "/privacy-policy/policy-regarding",
@@ -40,6 +42,8 @@ export const SITE_URL = {
   ADMIN: "admin",
   ADMIN_TARIFF: "admin/tariff",
   ADMIN_USERS: "admin/users",
+  ADMIN_SUPPORT: "admin/support",
+  ADMIN_CHAT_NEWS: "admin/chat-news",
 };
 
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";

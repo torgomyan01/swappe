@@ -33,6 +33,31 @@ wss.on("connection", (ws) => {
           }
         });
       }
+
+      // Support messages channel
+      if (data.type === "NEW_SUPPORT_MESSAGE" && data.sender_id) {
+        const newSupportMessage = await prisma.support_messages.create({
+          data: {
+            support_chat_id: data.support_chat_id,
+            sender_id: data.sender_id,
+            content: data.content,
+            file_type: data.file_type || null,
+            file_paths: data.file_paths || null,
+            created_at: new Date(),
+          },
+        });
+
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "SUPPORT_MESSAGE",
+                payload: newSupportMessage,
+              }),
+            );
+          }
+        });
+      }
     } catch (error) {
       console.error("Error handling message:", error);
     }

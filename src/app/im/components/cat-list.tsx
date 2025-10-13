@@ -4,11 +4,12 @@ import { SITE_URL } from "@/utils/consts";
 import ChatItem from "@/app/im/components/chat-item";
 import ChatItemLoading from "@/app/im/components/chat-item-loading";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import clsx from "clsx";
 
 function ChatList() {
   const { id } = useParams();
+  const pathname = usePathname();
 
   const [items, setItems] = useState<IChatItems[] | null>(null);
 
@@ -34,34 +35,44 @@ function ChatList() {
         <div className="dialogues-items">
           {items ? (
             <>
-              <div className="dialogues-item ">
+              <Link
+                href={SITE_URL.SUPPORT}
+                className={clsx("dialogues-item", {
+                  active: pathname === SITE_URL.SUPPORT,
+                })}
+              >
                 <div className="images">
                   <div className="big-img">
                     <img src="/img/chat/dialogues-big-img.png" alt="" />
                   </div>
                   <div className="small-img">
-                    <img src="/img/chat/dialogues-small-img.png" alt="" />
+                    <img src="/img/support.png" alt="" />
                   </div>
                 </div>
-                <div className="texts">
+                <span className="texts">
                   <b>Чат с поддержкой</b>
                   <span>Swappe</span>
-                </div>
-              </div>
-              <div className="dialogues-item">
+                </span>
+              </Link>
+              <Link
+                href={SITE_URL.CHAT_NEWS}
+                className={clsx("dialogues-item", {
+                  active: pathname === SITE_URL.CHAT_NEWS,
+                })}
+              >
                 <div className="images">
                   <div className="big-img">
                     <img src="/img/chat/dialogues-big-img.png" alt="" />
                   </div>
                   <div className="small-img">
-                    <img src="/img/chat/dialogues-small-img.png" alt="" />
+                    <img src="/img/news.png" alt="" />
                   </div>
                 </div>
                 <div className="texts">
                   <b>Новости</b>
                   <span>Swappe</span>
                 </div>
-              </div>
+              </Link>
 
               {items.length ? (
                 items?.map((item) => (

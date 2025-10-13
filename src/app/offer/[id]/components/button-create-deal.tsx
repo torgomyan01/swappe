@@ -60,8 +60,17 @@ function ButtonCreateDeal({ offer }: IThisProps) {
         offer_id: activeId,
         client_id: offer.user_id,
         client_offer_id: offer.id,
-      }).then(({ data }: any) => {
-        CreateChat(data.id);
+      }).then(({ data, status, error }: any) => {
+        if (status === "error") {
+          addToast({
+            description: error,
+            color: "secondary",
+          });
+        }
+
+        if (status === "ok") {
+          CreateChat(data.id);
+        }
       });
     }
   }
@@ -79,13 +88,25 @@ function ButtonCreateDeal({ offer }: IThisProps) {
       .finally(() => setLoading(false));
   }
 
+  function CreateDeep() {
+    if (session.user.tariff === "free") {
+      addToast({
+        description: "Для создания предложения вам необходимо купить тариф.",
+        color: "warning",
+      });
+      return;
+    }
+
+    setModal(true);
+  }
+
   return (
     <>
       {session ? (
         offer.user_id !== session.user?.id && (
           <>
             {company ? (
-              <Button className="green-btn" onPress={() => setModal(true)}>
+              <Button className="green-btn" onPress={CreateDeep}>
                 <img src="/img/icons/start-sale.svg" alt="" className="!mr-0" />
                 Предложить сделку
               </Button>

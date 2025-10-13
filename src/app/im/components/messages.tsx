@@ -14,9 +14,17 @@ interface IThisProps {
   chat: IChatItems;
   messages: IMessage[];
   onSelectMessage: (messageId: number) => void;
+  offersBlocks?: boolean;
+  chatType?: "support" | "deal";
 }
 
-function Messages({ chat, messages, onSelectMessage }: IThisProps) {
+function Messages({
+  chat,
+  messages,
+  onSelectMessage,
+  offersBlocks = true,
+  chatType = "deal",
+}: IThisProps) {
   const { data: session }: any = useSession<any>();
 
   const [sortMessages, setSortMessages] = useState<IGroupedMessages[]>([]);
@@ -38,23 +46,24 @@ function Messages({ chat, messages, onSelectMessage }: IThisProps) {
   return (
     <div className="middle-info">
       <div className="scroll-info">
-        {/* ref-ը հեռացրել ենք այստեղից */}
-        <div className="transactions-item style2">
-          <div className="status-text">
-            {moment(chat.deal.created_at).calendar()}
-          </div>
-
-          <MessagesStartHero chat={chat} />
-
-          <div className="txt">
-            <div className="new">
-              <img src="/img/new-style.svg" alt="" />
-              <span>Новая</span>
+        {offersBlocks && (
+          <div className="transactions-item style2">
+            <div className="status-text">
+              {moment(chat.deal.created_at).calendar()}
             </div>
-            <b>{chat.chat_name}</b>
-            <span>🌟 «Начни общение — создавай коллаборации!»</span>
+
+            <MessagesStartHero chat={chat} />
+
+            <div className="txt">
+              <div className="new">
+                <img src="/img/new-style.svg" alt="" />
+                <span>Новая</span>
+              </div>
+              <b>{chat.chat_name}</b>
+              <span>🌟 «Начни общение — создавай коллаборации!»</span>
+            </div>
           </div>
-        </div>
+        )}
         <div className="sms-wrap">
           {sortMessages.map((message) => (
             <>
@@ -76,6 +85,7 @@ function Messages({ chat, messages, onSelectMessage }: IThisProps) {
                     message={message}
                     info={chat}
                     onSelectMessage={onSelectMessage}
+                    chatType={chatType}
                   />
                 ),
               )}

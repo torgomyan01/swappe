@@ -467,6 +467,15 @@ declare interface IPayment {
   created_at: string;
 }
 
+declare interface IChatNews {
+  id: number;
+  title: string;
+  content: string;
+  images: string[];
+  videos: string[];
+  created_at: string;
+}
+
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
 type DealStatusClient =
