@@ -13,6 +13,7 @@ import {
   ToastProvider,
 } from "@heroui/react";
 import { AppProvider, DashboardLayout, PageContainer } from "@toolpad/core";
+import { createTheme } from "@mui/material/styles";
 
 import { useSession } from "next-auth/react";
 
@@ -61,6 +62,11 @@ function AdminMainTemplate({
   const router = useRouter();
   const { data: session } = useSession();
 
+  // Force light mode for admin area
+  const lightTheme = createTheme({
+    palette: { mode: "light" },
+  });
+
   function changeUrl(string: string | URL) {
     if (typeof string === "string") {
       router.push(string);
@@ -98,6 +104,7 @@ function AdminMainTemplate({
       <AppProvider
         navigation={NAVIGATION}
         router={routerObj}
+        theme={lightTheme}
         branding={{
           logo: "",
           title: "SWAPPE Admin",

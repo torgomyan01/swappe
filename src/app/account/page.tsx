@@ -4,7 +4,7 @@ import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { useSession } from "next-auth/react";
 import { SITE_URL } from "@/utils/consts";
-import { Link, Button } from "@heroui/react";
+import { Link, Button, Tooltip } from "@heroui/react";
 
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -66,10 +66,12 @@ function Profile() {
                   <b>Пароль</b>
                   <span>Был изменен 1 год назад</span>
                 </div>
-                <div className="item">
-                  <b>Пользователи</b>
-                  <img src="img/avatars.png" alt="avatars" />
-                </div>
+                <Tooltip content="Скоро :)">
+                  <div className="item opacity-50">
+                    <b>Пользователи</b>
+                    <img src="img/avatars.png" alt="avatars" />
+                  </div>
+                </Tooltip>
               </div>
               <div className="border"></div>
 
