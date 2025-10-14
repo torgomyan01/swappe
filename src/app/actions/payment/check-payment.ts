@@ -6,8 +6,6 @@ import { getServerSession } from "next-auth";
 
 export async function ActionCheckPayment(order_id: string) {
   try {
-    console.log("order_id", order_id, 55555);
-
     const session: any = await getServerSession(authOptions);
 
     if (!session) {

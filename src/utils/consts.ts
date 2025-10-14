@@ -13,6 +13,9 @@ export const SITE_URL = {
   SEARCH: "/search",
   PROPOSAL: "/proposal",
   PROPOSAL_: "/proposal/create",
+  ARTICLES: "/articles",
+  ARTICLES_COLLABORATIONS_AND_BARTER: "/articles/collaborations-and-barter",
+  ARTICLES_BARTER: "/articles/barter",
 
   ACCOUNT_REVIEWS: "/account/reviews",
   ACCOUNT_CHANGE: "/account/change",
@@ -44,6 +47,7 @@ export const SITE_URL = {
   ADMIN_USERS: "admin/users",
   ADMIN_SUPPORT: "admin/support",
   ADMIN_CHAT_NEWS: "admin/chat-news",
+  ADMIN_ARTICLES: "admin/articles",
 };
 
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";

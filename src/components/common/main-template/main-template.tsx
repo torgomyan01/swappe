@@ -42,7 +42,7 @@ function MainTemplate({
 
       {children}
 
-      {footer || !isEmpty || <Footer />}
+      {!isEmpty && footer && <Footer />}
 
       <CookieComponent />
     </>

@@ -11,7 +11,9 @@ function Page() {
     <MainTemplate footer={false}>
       <div className="chat-wrap">
         <div className="wrapper">
-          <ChatList />
+          <div className="hidden lg:block">
+            <ChatList />
+          </div>
 
           <ChatNewsInfo />
         </div>

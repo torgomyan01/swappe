@@ -55,8 +55,7 @@ export async function ActionGetUsers() {
       data: users,
       error: null,
     };
-  } catch (error: any) {
-    console.error("Error fetching users:", error);
+  } catch {
     return {
       status: "error",
       data: [],
@@ -121,8 +120,7 @@ export async function ActionUpdateUser(userId: number, userData: any) {
       data: updatedUser,
       error: null,
     };
-  } catch (error: any) {
-    console.error("Error updating user:", error);
+  } catch {
     return {
       status: "error",
       data: null,
@@ -167,8 +165,7 @@ export async function ActionDeleteUser(userId: number) {
       data: null,
       error: null,
     };
-  } catch (error: any) {
-    console.error("Error deleting user:", error);
+  } catch {
     return {
       status: "error",
       data: null,
@@ -232,8 +229,7 @@ export async function ActionGetUsersLastWeek() {
       data: users,
       error: null,
     };
-  } catch (error: any) {
-    console.error("Error fetching users from last week:", error);
+  } catch {
     return {
       status: "error",
       data: [],
@@ -312,8 +308,7 @@ export async function ActionGetUsersStats() {
       },
       error: null,
     };
-  } catch (error: any) {
-    console.error("Error fetching user statistics:", error);
+  } catch {
     return {
       status: "error",
       data: null,

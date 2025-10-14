@@ -104,7 +104,6 @@ export async function ActionSearchOffer(
       error: "",
     };
   } catch (error: any) {
-    console.error("Error in ActionSearchOffer:", error);
     return {
       status: "error",
       data: [],

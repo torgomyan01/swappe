@@ -25,8 +25,6 @@ function ForgotPassword() {
 
     ActionForgotPassword(email)
       .then((res) => {
-        console.log(res);
-
         if (res.status === "ok") {
           setSendEmail(email);
         }

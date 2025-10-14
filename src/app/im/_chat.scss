@@ -371,6 +371,11 @@
       flex-grow: 1;
       overflow-y: auto;
       height: 400px;
+
+      @media (max-width: 1024px) {
+        height: calc(100dvh - 280px);
+      }
+
       .scroll-info {
         overflow-y: auto;
         overflow-x: hidden;

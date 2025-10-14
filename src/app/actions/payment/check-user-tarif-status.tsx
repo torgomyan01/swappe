@@ -31,8 +31,7 @@ export async function ActionCheckUserTarifStatus() {
     const hasAccess = hasActivePaidTariff || withinGracePeriod;
 
     return { status: "ok", data: hasAccess, tariff: user.tariff, error: null };
-  } catch (error) {
-    console.error(error);
+  } catch {
     return { status: "error", data: false, error: "internal_error" };
   }
 }

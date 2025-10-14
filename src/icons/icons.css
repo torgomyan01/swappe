@@ -107,6 +107,9 @@
 .fa-pen:before {
   content: "\f304";
 }
+.fa-book:before {
+  content: "\f02d";
+}
 
 /*---------------------------------*/
 

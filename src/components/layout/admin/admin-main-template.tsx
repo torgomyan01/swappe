@@ -43,6 +43,11 @@ const NAVIGATION = [
     title: "Чат новостей",
     icon: <i className="fa-solid fa-newspaper"></i>,
   },
+  {
+    segment: SITE_URL.ADMIN_ARTICLES,
+    title: "Статьи",
+    icon: <i className="fa-solid fa-book"></i>,
+  },
   // {
   //   segment: SITE_URL.ADMIN_PAGES,
   //   title: "Страницы ",

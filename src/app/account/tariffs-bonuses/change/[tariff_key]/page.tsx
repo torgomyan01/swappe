@@ -19,8 +19,6 @@ function TariffPage() {
 
   const { data: session, update }: any = useSession();
 
-  console.log(session);
-
   const [modalState, setModalState] = useState(false);
 
   const [tariff, setTariff] = useState<ITariff | null>(null);

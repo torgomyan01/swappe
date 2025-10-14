@@ -35,7 +35,6 @@ export async function ActionCancelUserPlan() {
 
     return { status: "ok", data: { companyPlan: "free" }, error: null };
   } catch (error: any) {
-    console.error("Error cancelling user plan:", error);
     return {
       status: "error",
       data: null,

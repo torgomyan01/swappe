@@ -20,11 +20,7 @@ function Profile() {
   const { data: session }: any = useSession();
   const [modalState, setModalState] = useState(false);
 
-  console.log(session);
-
   const [tariffs, setTariffs] = useState<ITariff[] | null>(null);
-
-  console.log(tariffs);
 
   const [myTariff, setMyTariff] = useState<ITariff | null>(null);
 

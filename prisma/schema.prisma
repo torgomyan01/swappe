@@ -236,3 +236,13 @@ model payments {
 
   user users @relation(fields: [user_id], references: [id])
 }
+
+
+model articles {
+  id        Int    @id @default(autoincrement())
+  title     String @db.VarChar(255)
+  content   String @db.VarChar(5000)
+  image     String @db.VarChar(1000)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

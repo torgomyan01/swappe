@@ -78,8 +78,6 @@ function ChangeCompany() {
 
   function SaveChanges() {
     if (company) {
-      console.log(socialSites);
-
       setLoadingSave(true);
       ActionChangeCompany(
         company.id,

@@ -66,8 +66,6 @@ export async function ActionCreatePayment(
       },
     });
 
-    console.log("✅ YooKassa payment created:", payment);
-
     const plainPayment = JSON.parse(JSON.stringify(payment));
 
     await prisma.payments.create({

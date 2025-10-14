@@ -71,9 +71,8 @@ export default function AdminDashboard() {
         } else {
           setError(usersResult.error || "Ошибка загрузки пользователей");
         }
-      } catch (err) {
+      } catch {
         setError("Произошла ошибка при загрузке данных");
-        console.error("Error fetching admin data:", err);
       } finally {
         setLoading(false);
       }

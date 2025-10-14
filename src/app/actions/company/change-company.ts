@@ -10,8 +10,6 @@ export async function ActionChangeCompany(
   sites: object,
 ) {
   try {
-    console.log(industry, 55555);
-
     const CreateCompany = await prisma.user_company.update({
       where: {
         id,

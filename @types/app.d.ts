@@ -476,6 +476,14 @@ declare interface IChatNews {
   created_at: string;
 }
 
+declare interface IArticle {
+  id: number;
+  title: string;
+  content: string;
+  image: string;
+  created_at: string;
+}
+
 type OfferType = "product" | "service";
 type OfferVid = "online" | "offline";
 type DealStatusClient =
