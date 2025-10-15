@@ -8,7 +8,7 @@ import { Link, Button, Tooltip } from "@heroui/react";
 
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { sliceText } from "@/utils/helpers";
+import { passwordChangedText, sliceText } from "@/utils/helpers";
 
 function Profile() {
   const { data: session } = useSession();
@@ -62,7 +62,7 @@ function Profile() {
                 </div>
                 <div className="item">
                   <b>Пароль</b>
-                  <span>Был изменен 1 год назад</span>
+                  <span>{passwordChangedText(session)}</span>
                 </div>
                 <Tooltip content="Скоро :)">
                   <div className="item opacity-50">
@@ -100,10 +100,10 @@ function Profile() {
                     </div>
                     <div className="item">
                       <b>Индустрия</b>
-                      <span>{company?.industry_data.name}</span>
+                      <span>{company?.industry_data?.name}</span>
                     </div>
                     <div className="item">
-                      <b>Индустрия</b>
+                      <b>Официальный сайт и соцсети</b>
                       <div className="social">
                         <div className="links">
                           <div className="flex-js-s flex-col gap-2">

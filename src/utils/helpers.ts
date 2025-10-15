@@ -261,3 +261,31 @@ export const calcReviews = (reviews: IReview[]) => {
 
   return count ? (count / reviews.length).toFixed(1) : 0;
 };
+
+function formatTimeAgo(from: Date) {
+  const now = new Date();
+  const diffMs = now.getTime() - from.getTime();
+  if (diffMs <= 0) return "только что";
+  const minutes = Math.floor(diffMs / 60000);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+  if (years > 0) return `${years} г.`;
+  if (months > 0) return `${months} мес.`;
+  if (days > 0) return `${days} дн.`;
+  if (hours > 0) return `${hours} ч.`;
+  if (minutes > 0) return `${minutes} мин.`;
+  return "только что";
+}
+
+export const passwordChangedText = (session: any) =>
+  (() => {
+    const raw = (session as any)?.user?.password_reset_expires as
+      | string
+      | undefined;
+    if (!raw) return "Еще не изменялся";
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return "Еще не изменялся";
+    return `Был изменен ${formatTimeAgo(d)} назад`;
+  })();

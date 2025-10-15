@@ -47,7 +47,9 @@ function ForgotPassword() {
     >
       {sendedEmail ? (
         <div className="wrapper">
-          <img src="/img/black-logo.svg" alt="" className="logo" />
+          <Link href={SITE_URL.SEARCH}>
+            <img src="/img/black-logo.svg" alt="" className="logo" />
+          </Link>
           <div className="main-info">
             <img src="/img/evriting-img.png" alt="" />
             <b>Все готово</b>
@@ -70,7 +72,9 @@ function ForgotPassword() {
         </div>
       ) : (
         <div className="wrapper">
-          <img src="/img/black-logo.svg" alt="" className="logo" />
+          <Link href={SITE_URL.SEARCH}>
+            <img src="/img/black-logo.svg" alt="" className="logo" />
+          </Link>
           <div className="form-wrap">
             <img src="/img/sign-in-style.png" alt="" />
             <form ref={form} action="#" onSubmit={StartFindPassword}>

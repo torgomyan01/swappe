@@ -79,7 +79,7 @@ function CompanyPage({ company }: IThisProps) {
                 </div>
                 <div className="item">
                   <b>Индустрия</b>
-                  <span>{company?.industry_data.name}</span>
+                  <span>{company?.industry_data?.name}</span>
                 </div>
                 <div className="item">
                   <b>Индустрия</b>

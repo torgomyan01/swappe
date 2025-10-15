@@ -37,8 +37,11 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        if (user.status === "archive") {
+          throw new Error("ARCHIVED_ACCOUNT");
+        }
         if (user.status !== "verified") {
-          return null;
+          throw new Error("NOT_VERIFIED");
         }
 
         // Remove sensitive fields

@@ -12,22 +12,24 @@ function Footer() {
           </Link>
           <div className="menu-wrap">
             <h4>Разделы</h4>
-            <Link href="#">Стать партнёром Swappe</Link>
-            <Link href="#">Сделки</Link>
-            <Link href="#">Избранное</Link>
-            <Link href="#">Чат</Link>
+            <Link href="#">Swappe Club: стать партнером</Link>
+            <Link href={SITE_URL.ACCOUNT_TRANSACTIONS}>Сделки</Link>
+            <Link href={SITE_URL.ACCOUNT_FAVORITES}>Избранное</Link>
+            <Link href={SITE_URL.CHAT}>Чат</Link>
           </div>
           <div className="menu-wrap">
             <h4>О Свопи</h4>
-            <Link href="#">О компании</Link>
-            <Link href="#">Частые вопросы</Link>
-            <Link href="#">Поддержка</Link>
-            <Link href="#">Solutions</Link>
+            <Link href="#">Про Swappe</Link>
+            <Link href="#">FAQ</Link>
+            <Link href={SITE_URL.SUPPORT}>Поддержка</Link>
+            <Link href={SITE_URL.ARTICLES}>Советы и статьи</Link>
           </div>
           <div className="menu-wrap">
             <h4>Положения и условия</h4>
             <Link href={SITE_URL.PRIVACY_POLICY}>Конфиденциальность</Link>
-            <Link href="#">Условия</Link>
+            <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
+              Условия пользования Swappe
+            </Link>
           </div>
         </div>
         <p className="copyright">

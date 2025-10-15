@@ -48,6 +48,8 @@ export const SITE_URL = {
   ADMIN_SUPPORT: "admin/support",
   ADMIN_CHAT_NEWS: "admin/chat-news",
   ADMIN_ARTICLES: "admin/articles",
+  ADMIN_OFFERS: "admin/offers",
+  ADMIN_TRANSACTIONS: "admin/transactions",
 };
 
 export const fileHost = "https://2410924f2b33.hosting.myjino.ru/";

@@ -93,7 +93,9 @@ function ForgotPasswordCheck() {
     <div className="main-wrap">
       {success ? (
         <div className="wrapper">
-          <img src="/img/black-logo.svg" alt="" className="logo" />
+          <Link href={SITE_URL.SEARCH}>
+            <img src="/img/black-logo.svg" alt="" className="logo" />
+          </Link>
           <div className="main-info">
             <img src="/img/changed.png" alt="" />
             <b>Пароль изменен</b>
@@ -105,7 +107,9 @@ function ForgotPasswordCheck() {
         </div>
       ) : (
         <div className="wrapper">
-          <img src="/img/black-logo.svg" alt="" className="logo" />
+          <Link href={SITE_URL.SEARCH}>
+            <img src="/img/black-logo.svg" alt="" className="logo" />
+          </Link>
           <div className="form-wrap">
             <img src="/img/sign-in-style.png" alt="" />
 

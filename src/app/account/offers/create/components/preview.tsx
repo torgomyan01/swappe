@@ -59,13 +59,23 @@ function Preview({ onGoBack }: IThisProps) {
         images: urls,
         videos: offerData.videos,
       })
-        .then(() => {
-          addToast({
-            description: "Готов ",
-            color: "success",
-          });
+        .then((res) => {
+          if (res.status === "error") {
+            addToast({
+              description: res.error,
+              color: "danger",
+            });
+          }
 
-          router.push(SITE_URL.ACCOUNT_SUGGESTIONS);
+          if (res.status === "ok") {
+            addToast({
+              description:
+                "Спасибо, ваше предложение будет рассмотрено модератором, мы как можно скорее его одобрим",
+              color: "success",
+            });
+
+            router.push(SITE_URL.ACCOUNT_SUGGESTIONS);
+          }
         })
         .finally(() => setLoading(false));
     });

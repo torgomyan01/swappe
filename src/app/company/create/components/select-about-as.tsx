@@ -31,7 +31,7 @@ function SelectAboutAs({ onSubmit }: IThisProps) {
 
   return (
     <form className="onbording-form" onSubmit={(e) => e.preventDefault()}>
-      <h2>Как ты узнал про нас?</h2>
+      <h2>Расскажите, как нас нашли?</h2>
       <p>
         Выбери подходящий вариант из списка. <br />
         Если его нет, то выбери Другое

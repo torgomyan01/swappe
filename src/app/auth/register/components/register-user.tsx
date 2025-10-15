@@ -6,8 +6,18 @@ import { getPasswordStrength } from "@/utils/helpers";
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import DefInput from "@/components/common/input/def-input";
-import { addToast, Button, Checkbox } from "@heroui/react";
+import {
+  addToast,
+  Button,
+  Checkbox,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/react";
 import { ActionCreateUser } from "@/app/actions/auth/create-user";
+import { ActionRestoreUserByEmail } from "@/app/actions/auth/restore-user";
 import { useRouter, useParams } from "next/navigation";
 
 function Register() {
@@ -28,6 +38,8 @@ function Register() {
   const minLength = (n: number) => (v: string) => v.length >= n;
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [restoreOpen, setRestoreOpen] = useState(false);
+  const [restoreEmail, setRestoreEmail] = useState("");
 
   function CreateUser(e: any) {
     e.preventDefault();
@@ -64,6 +76,11 @@ function Register() {
             });
           }
 
+          if (res.status === "archived") {
+            setRestoreEmail(email);
+            setRestoreOpen(true);
+          }
+
           if (res.status === "ok") {
             addToast({
               title:
@@ -86,7 +103,9 @@ function Register() {
   return (
     <div className="main-wrap">
       <div className="wrapper">
-        <img src="/img/black-logo.svg" alt="" className="logo" />
+        <Link href={SITE_URL.SEARCH}>
+          <img src="/img/black-logo.svg" alt="" className="logo" />
+        </Link>
         <div className="form-wrap">
           <img src="/img/sign-in-style.png" alt="" />
           <form ref={form} action="#" onSubmit={CreateUser}>
@@ -193,6 +212,49 @@ function Register() {
           </form>
         </div>
       </div>
+      <Modal isOpen={restoreOpen} onOpenChange={setRestoreOpen} hideCloseButton>
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader className="font-geologica">
+                Аккаунт удален
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  На этот e‑mail уже был аккаунт, он отмечен как удаленный.
+                  Восстановить аккаунт?
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="flat" onPress={() => setRestoreOpen(false)}>
+                  Нет
+                </Button>
+                <Button
+                  color="secondary"
+                  onPress={async () => {
+                    const res = await ActionRestoreUserByEmail(restoreEmail);
+                    if (res.status === "ok") {
+                      addToast({
+                        title: "Аккаунт восстановлен. Войдите.",
+                        color: "success",
+                      });
+                      setRestoreOpen(false);
+                      router.push(SITE_URL.LOGIN);
+                    } else {
+                      addToast({
+                        title: res.error || "Не удалось восстановить",
+                        color: "danger",
+                      });
+                    }
+                  }}
+                >
+                  Да, восстановить
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

@@ -34,7 +34,17 @@ function Register() {
 
       setLoading(false);
     } else {
-      addToast({ title: "Неверный e-mail или пароль", color: "danger" });
+      const code = (res as any)?.error || "";
+      if (code === "ARCHIVED_ACCOUNT") {
+        addToast({
+          title: "Аккаунт удален. Восстановите аккаунт через регистрацию.",
+          color: "danger",
+        });
+      } else if (code === "NOT_VERIFIED") {
+        addToast({ title: "Аккаунт не подтвержден", color: "danger" });
+      } else {
+        addToast({ title: "Неверный e-mail или пароль", color: "danger" });
+      }
 
       setLoading(false);
     }
@@ -43,7 +53,9 @@ function Register() {
   return (
     <div className="main-wrap">
       <div className="wrapper">
-        <img src="/img/black-logo.svg" alt="" className="logo" />
+        <Link href={SITE_URL.SEARCH}>
+          <img src="/img/black-logo.svg" alt="" className="logo" />
+        </Link>
         <div className="form-wrap">
           <img src="/img/sign-in-style.png" alt="" />
           <form ref={form} action="#" onSubmit={LoginUser}>

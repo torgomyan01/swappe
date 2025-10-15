@@ -26,7 +26,7 @@ function ChatList() {
       })}
     >
       <div className="top">
-        <b>Диалог и</b>
+        <b>Диалоги</b>
         <div className="filter-btn">
           <img src="/img/chat/filter.svg" alt="" />
         </div>
@@ -83,10 +83,9 @@ function ChatList() {
                   href={SITE_URL.SEARCH}
                   className="w-full h-[200px] !flex-jc-c border border-dashed rounded-[12px] border-black/50 hover:border-black"
                 >
-                  <h4 className="opacity-60 text-center">
-                    <i className="fa-light fa-plus text-[40px]"></i> <br />
-                    Ваш чат пока пусто <br />
-                    создать сделка
+                  <h4 className="opacity-60 text-center px-8">
+                    <i className="fa-light fa-plus text-[40px]"></i> <br />В
+                    чате пока нет сообщений — создайте первую сделку
                   </h4>
                 </Link>
               )}

@@ -81,10 +81,10 @@ function ChatNewsInfo() {
 
           <div className="middle-info">
             <div className="scroll-info">
-              <div className="sms-wrap pl-6">
+              <div className="sms-wrap sm:pl-6 pl-2">
                 {chatInfo.map((item) => (
                   <div
-                    className="grid grid-cols-2 mb-6"
+                    className="grid sm:grid-cols-2 grid-cols-1 mb-6"
                     key={`news-card-${item.id}`}
                   >
                     <Card className="py-4" shadow="sm">

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ActionGetMyCompanyReview } from "@/app/actions/company_reviews/get-my";
 import ReviewItem from "@/app/account/reviews/components/review-item";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 function Profile() {
   const router = useRouter();
@@ -53,13 +54,11 @@ function Profile() {
                     ))}
                   </div>
                 ) : (
-                  <div className="w-full h-[400px] flex-jc-c">
-                    <h3 className="opacity-60">Вам пока нет никакого отзыв </h3>
-                  </div>
+                  <EmptyRes title="Вам пока нет никакого отзыв" />
                 )
               ) : (
                 <div className="w-full h-[400px] flex-jc-c">
-                  <Spinner />
+                  <Spinner color="secondary" />
                 </div>
               )}
             </div>

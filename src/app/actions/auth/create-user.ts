@@ -80,14 +80,21 @@ export async function ActionCreateUser(
     const { name: vName, password: vPassword, email: vEmail } = parsed.data;
 
     // 2) exists check (մնաց միայն email֊ով՝ ինչպես քո կոդում է)
-    const checkUser = await prisma.users.findFirst({
+    const existingUser = await prisma.users.findFirst({
       where: { email: vEmail },
-      select: { id: true },
+      select: { id: true, status: true, email: true },
     });
 
-    if (checkUser) {
+    if (existingUser) {
+      if (existingUser.status === "archive") {
+        return {
+          status: "archived" as const,
+          data: { email: existingUser.email },
+          error: "Этот аккаунт был удален. Восстановить?",
+        };
+      }
       return {
-        status: "error",
+        status: "error" as const,
         data: [],
         error: "Вы уже зарегистрированы на нашем сайте.",
       };
@@ -118,7 +125,7 @@ export async function ActionCreateUser(
         password: passwordHash,
         status: "no-verified",
         verification_code: code,
-        password_reset_token: "",
+        password_reset_token: crypto.randomUUID(),
         password_reset_expires: "",
         balance: 0,
         bonus: 0,

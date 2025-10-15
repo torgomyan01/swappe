@@ -35,7 +35,7 @@ export async function ActionCreateOffer(offer: any) {
         images: offer.images,
         videos: offer.videos,
         user_id: session.user.id,
-        status: "active",
+        status: "moderation",
       },
     });
 

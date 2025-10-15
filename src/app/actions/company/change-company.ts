@@ -38,3 +38,27 @@ export async function ActionChangeCompany(
     };
   }
 }
+
+export async function ActionUpdateCompanyImage(id: number, image_path: string) {
+  try {
+    const updated = await prisma.user_company.update({
+      where: { id },
+      data: { image_path },
+    });
+
+    return {
+      status: "ok" as const,
+      data: updated,
+      error: "",
+    };
+  } catch (error: any) {
+    return {
+      status: "error" as const,
+      data: [],
+      error:
+        typeof error?.message === "string"
+          ? error.message
+          : "Не удалось выполнить операцию. Повторите попытку позже",
+    };
+  }
+}

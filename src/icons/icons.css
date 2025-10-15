@@ -110,6 +110,15 @@
 .fa-book:before {
   content: "\f02d";
 }
+.fa-briefcase:before {
+  content: "\f0b1";
+}
+.fa-money-simple-from-bracket:before {
+  content: "\f648";
+}
+.fa-pencil:before {
+  content: "\f303";
+}
 
 /*---------------------------------*/
 

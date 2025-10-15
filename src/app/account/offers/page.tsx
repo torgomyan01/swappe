@@ -9,6 +9,7 @@ import { ActionMyOffers } from "@/app/actions/offers/get";
 import { useRouter } from "next/navigation";
 import OfferCard from "@/app/search/components/offer-card";
 import clsx from "clsx";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 function Profile() {
   const router = useRouter();
@@ -65,8 +66,22 @@ function Profile() {
                 </button>
               </div>
               <div className="tab-content-wrap">
+                {offers.length === 0 && offerStatus === "archive" ? (
+                  <EmptyRes title="Пока ничего нет" />
+                ) : null}
+
                 <div className="tab-content active">
                   <div className="offers-items">
+                    {offers.length > 0
+                      ? offers.map((offer: IUserOfferFront, index) => (
+                          <OfferCard
+                            key={`my-offers-${index}`}
+                            offer={offer}
+                            onlyTitle
+                          />
+                        ))
+                      : null}
+
                     {offers.map((offer: IUserOfferFront, index) => (
                       <OfferCard
                         key={`my-offers-${index}`}

@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/utils/consts";
 import React from "react";
 
 interface TariffTabContentProps {
@@ -10,7 +11,7 @@ interface TariffTabContentProps {
 function TariffTabContent({
   price,
   items,
-  ctaHref = "#",
+  ctaHref = SITE_URL.REGISTER,
   ctaLabel = "Присоединиться",
 }: TariffTabContentProps) {
   const formattedPrice =

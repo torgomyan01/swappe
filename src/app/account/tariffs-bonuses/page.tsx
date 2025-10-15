@@ -129,7 +129,7 @@ function Profile() {
               )}
 
               {session.user.tariff === "free" ? (
-                <div className="flex-jsb-s gap-2 mb-4 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4 items-stretch">
                   {tariffs ? (
                     tariffs.map((tariff) => (
                       <TarifBlock
@@ -185,9 +185,8 @@ function Profile() {
 
               <h4>Реферальная программа</h4>
               <p>
-                Компания предлагает клиентам посоветовать свой продукт знакомым
-                и получить за это вознаграждение: скидку, деньги или баллы на
-                бонусный счёт.
+                Друзья на Swappe — это новые связи, больше возможностей и 350
+                бонусов за каждого!
               </p>
               <div className="referral-link-wrap">
                 <span>Твоя реферальная ссылка</span>

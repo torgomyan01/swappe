@@ -12,6 +12,7 @@ import ModalChangeEmail from "@/app/account/change/componenets/modal-change-emai
 import { useState } from "react";
 import { Tooltip } from "@heroui/react";
 import ChangeCompany from "@/app/account/change/componenets/change-company";
+import { passwordChangedText } from "@/utils/helpers";
 
 function Profile() {
   const { data: session }: any = useSession();
@@ -74,7 +75,7 @@ function Profile() {
                 </div>
                 <div className="item flex-js-s flex-col">
                   <b>Пароль</b>
-                  <span>Был изменен 1 год назад</span>
+                  <span>{passwordChangedText(session)}</span>
                   <Link
                     href={`${SITE_URL.FORGOT_PASSWORD_CHECK}/${session.user.passwordResetToken}`}
                     target="_blank"

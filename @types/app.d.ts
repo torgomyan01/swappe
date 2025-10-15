@@ -290,6 +290,7 @@ declare interface IUserOfferFront {
   videos: string[];
   user_id: number;
   state: OfferStatus;
+  status: "active" | "archive" | "moderation";
 }
 
 declare interface IUserStore {

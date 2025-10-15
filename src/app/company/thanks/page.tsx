@@ -7,7 +7,9 @@ function Page() {
   return (
     <div className="main-wrap style2">
       <div className="wrapper">
-        <img src="/img/black-logo.svg" alt="" className="logo" />
+        <Link href={SITE_URL.SEARCH}>
+          <img src="/img/black-logo.svg" alt="" className="logo" />
+        </Link>
         <div className="main-info">
           <img src="/img/evriting-img2.png" alt="" />
           <b>Мы уже проверяем</b>
