@@ -19,6 +19,7 @@ model users {
   balance                Int    @default(0)
   bonus                  Int    @default(0)
   referral_code          String @db.VarChar(255)
+  referral_request_count Int 
   tariff                 String @db.VarChar(255)
   tariff_start_date      DateTime
   tariff_end_date        DateTime
@@ -39,6 +40,17 @@ model users {
 
   // Relations
   support_chats support_chats[]
+}
+
+model bouns_history {
+  id          Int @id @default(autoincrement())
+  order_id    String @db.VarChar(255) @unique
+  user_id     Int
+  amount      Int
+  status      String
+  description String @db.VarChar(1000)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model chat_news {
@@ -72,12 +84,26 @@ model user_company {
   image_path          String @db.VarChar(1000)
   status              String @db.VarChar(255)
   plan                String @db.VarChar(255)
+  is_self_employed    Boolean @default(false)
 
   city_data     countries_tb @relation(fields: [city], references: [id])
   industry_data Industry     @relation(fields: [industry], references: [id])
   user          users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   reviews company_reviews[]
+}
+
+model push_notifications {
+  id          Int    @id @default(autoincrement())
+  user_id     Int
+  title       String @db.VarChar(255)
+  type        String @db.VarChar(255)
+  description String @db.VarChar(5000)
+  link        String @db.VarChar(1000)
+  body        Json
+  opened      Boolean @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model user_favorites {

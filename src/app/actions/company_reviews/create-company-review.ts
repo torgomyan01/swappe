@@ -22,7 +22,7 @@ export async function ActionCreateCompanyReview(
       },
     });
 
-    await ActionUpdateUserBonus("increment", 10);
+    await ActionUpdateUserBonus("increment", 10, "Бонус за отзыв о компании");
 
     return {
       status: "ok",

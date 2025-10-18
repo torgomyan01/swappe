@@ -6,6 +6,8 @@ import { fileHost, SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import { sliceText } from "@/utils/helpers";
 import {
+  Alert,
+  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -16,6 +18,7 @@ import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import { ActionGetMyPushNotifications } from "@/app/actions/push-notification/get-my-notofication";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -45,6 +48,25 @@ function Navbar() {
     };
   }, []);
 
+  const [notificationsData, setNotificationsData] = useState<
+    IPushNotification[]
+  >([]);
+
+  useEffect(() => {
+    getNotificationColor();
+    setInterval(getNotificationColor, 10000);
+  }, []);
+
+  function getNotificationColor() {
+    ActionGetMyPushNotifications().then(({ data }) => {
+      setNotificationsData(data as IPushNotification[]);
+    });
+  }
+
+  const push = notificationsData.filter(
+    (notification) => notification.opened === false,
+  );
+
   return (
     <>
       <div className="header-profile">
@@ -73,7 +95,7 @@ function Navbar() {
               className="icon cursor-pointer"
               onClick={() => setNotifications(!notifications)}
             >
-              <span className="circle"></span>
+              {push && <span className="circle"></span>}
               <img src="/img/menu-icon2.svg" alt="" />
             </span>
             <Link
@@ -183,8 +205,37 @@ function Navbar() {
               </div>
             </div>
           </div>
-          <div className="view-all">Пометить все просмотренными (2)</div>
-          <a href="#" className="notifications-item">
+          <div className="view-all">
+            Пометить все просмотренными ({push.length})
+          </div>
+
+          <div className="px-4">
+            {notificationsData.map((notification) => (
+              <div key={`notification-${notification.id}`}>
+                <Alert
+                  color={notification.type as PushNotificationType}
+                  title={notification.title}
+                  description={notification.description}
+                  className="mb-2"
+                  variant="faded"
+                  endContent={
+                    <Button
+                      as={Link}
+                      href={notification.link}
+                      target="_blank"
+                      size="sm"
+                      variant="faded"
+                      className="!flex-jc-c min-w-[90px]"
+                    >
+                      Открыть <i className="fa-solid fa-arrow-right"></i>
+                    </Button>
+                  }
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* <a href="#" className="notifications-item">
             <div className="icon">
               <img src="/img/search/notifications-icon1.svg" alt="" />
             </div>
@@ -242,9 +293,9 @@ function Navbar() {
                 <img src="/img/arr-r.svg" alt="" />
               </div>
             </a>
-          </div>
-          <div className="border"></div>
-          <div className="not-info">
+          </div> */}
+          {/* <div className="border"></div> */}
+          {/* <div className="not-info">
             <div className="head">
               <b>Как все прошло?</b>
               <button className="close" type="button">
@@ -271,7 +322,7 @@ function Navbar() {
           <a href="#" className="leave-feedback">
             <img src="/img/search/rew-icon.svg" alt="" />
             <b>Оставить отзыв</b>
-          </a>
+          </a> */}
         </div>
       </div>
     </>

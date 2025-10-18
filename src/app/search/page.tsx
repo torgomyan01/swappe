@@ -15,6 +15,7 @@ import { RandomKey } from "@/utils/helpers";
 import { useSelector } from "react-redux";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 const OFFERS_PER_PAGE = 9;
 
@@ -117,8 +118,8 @@ function Search() {
                       <OfferCard key={`offer-card-${i}`} offer={item} />
                     ))
                   ) : (
-                    <div className="col-span-3 flex-jc-c h-[150px]">
-                      <h3 className="text-green">Ничего не найдено (</h3>
+                    <div className="col-span-3 pt-10">
+                      <EmptyRes title="Ничего не найдено" />
                     </div>
                   )}
                 </>

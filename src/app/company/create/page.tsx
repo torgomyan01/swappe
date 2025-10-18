@@ -45,12 +45,15 @@ function Register() {
             infoCompany[0].socials,
             data.url,
             infoCompany[0].phone_number,
+            infoCompany[0].is_self_employed,
           )
             .then((res) => {
-              console.log(res);
-
               if (res.status === "ok") {
-                ActionUpdateUserBonus("increment", 50).then((_res) => {
+                ActionUpdateUserBonus(
+                  "increment",
+                  50,
+                  "Бонус за создание компании",
+                ).then((_res) => {
                   if (_res.status === "ok") {
                     addToast({
                       title: "Спасибо вы получили 50 бонусов",

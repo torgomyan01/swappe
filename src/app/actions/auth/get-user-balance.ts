@@ -19,6 +19,7 @@ export async function ActionGetUserBalance() {
       select: {
         balance: true,
         bonus: true,
+        referral_request_count: true,
       },
     });
 

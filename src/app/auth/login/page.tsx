@@ -94,7 +94,14 @@ function Register() {
               {/*  <img src="/img/google-icon.png" alt="" />*/}
               {/*  Вход с аккаунтом Google*/}
               {/*</a>*/}
-              <a href="#" className="yandex">
+              <a
+                href="#"
+                className="yandex"
+                onClick={(e) => {
+                  e.preventDefault();
+                  signIn("yandex", { callbackUrl: SITE_URL.ACCOUNT });
+                }}
+              >
                 <img src="/img/yandex.png" alt="" />
                 Вход с аккаунтом Yandex
               </a>

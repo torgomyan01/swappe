@@ -3,6 +3,7 @@ import {
   addToast,
   Autocomplete,
   AutocompleteItem,
+  Checkbox,
   Listbox,
   ListboxItem,
   Select,
@@ -45,13 +46,18 @@ function InfoCompany({ onSubmit }: IThisProps) {
     }
   }, [company]);
 
+  const [isSelfEmployed, setIsSelfEmployed] = useState(false);
+
   const [companyData, setCompanyData] = useState<TypeData>(null);
+  const [inn, setInn] = useState<string>("");
+  const [nameCompany, setNameCompany] = useState<string>("");
   const [loadingGetData, setLoadingGetData] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<IOrgData | null>(null);
 
   function ChangeInputInn(e: any) {
     e.preventDefault();
     const value = e.target.value;
+    setInn(value);
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
@@ -117,7 +123,9 @@ function InfoCompany({ onSubmit }: IThisProps) {
   function handleSubmit(e: any) {
     e.preventDefault();
 
-    if (!selectedCompany) {
+    console.log(isSelfEmployed, selectedCompany);
+
+    if (!isSelfEmployed && !selectedCompany) {
       addToast({
         title: "Ошибка",
         description: "Выберите компанию по ИНН",
@@ -175,17 +183,18 @@ function InfoCompany({ onSubmit }: IThisProps) {
       return;
     }
 
-    const inn = e.target.inn.value;
+    const inn = isSelfEmployed ? "" : e.target.inn.value;
     const phone_number = e.target.phone_number.value;
 
     const formData = {
-      company: selectedCompany.value,
+      company: isSelfEmployed ? nameCompany : selectedCompany?.value,
       city,
       inn,
       phone_number,
       industry: industryName,
       socials,
       logo,
+      is_self_employed: isSelfEmployed,
     };
 
     onSubmit(formData, 1);
@@ -195,19 +204,36 @@ function InfoCompany({ onSubmit }: IThisProps) {
     <MainTemplate isEmpty>
       <form className="onbording-form" onSubmit={handleSubmit}>
         <h2>О компании</h2>
-        <div className="input-wrap">
-          <span>ИНН компании</span>
-          <InputMask
-            mask="____________"
-            replacement={{ _: /\d/ }}
-            required
-            onChange={ChangeInputInn}
-            placeholder="ИНН"
-            name="inn"
-          />
+
+        <div className="">
+          <div className="flex-jsb-c mb-1">
+            <div className="input-wrap !mb-0">
+              <span>ИНН компании</span>
+            </div>
+            <Checkbox
+              color="secondary"
+              isSelected={isSelfEmployed}
+              onValueChange={setIsSelfEmployed}
+            >
+              Я самозанятый
+            </Checkbox>
+          </div>
+
+          <div className="input-wrap">
+            <InputMask
+              mask="____________"
+              replacement={{ _: /\d/ }}
+              disabled={isSelfEmployed}
+              onChange={ChangeInputInn}
+              placeholder="ИНН"
+              name="inn"
+              className={isSelfEmployed ? "opacity-50" : ""}
+              value={isSelfEmployed ? "" : inn}
+            />
+          </div>
         </div>
 
-        {companyData && !selectedCompany ? (
+        {companyData && !selectedCompany && !isSelfEmployed ? (
           <>
             {companyData.suggestions.length ? (
               <div className="input-wrap">
@@ -239,7 +265,7 @@ function InfoCompany({ onSubmit }: IThisProps) {
           </div>
         )}
 
-        {selectedCompany ? (
+        {isSelfEmployed || selectedCompany ? (
           <motion.div
             className="input-wrap"
             initial={{ scale: 1, opacity: 1 }}
@@ -251,8 +277,11 @@ function InfoCompany({ onSubmit }: IThisProps) {
               type="text"
               name="name_company"
               placeholder="Название"
-              disabled
-              value={selectedCompany.value}
+              onChange={(e) => setNameCompany(e.target.value)}
+              disabled={!isSelfEmployed}
+              value={
+                isSelfEmployed ? nameCompany : selectedCompany?.value || ""
+              }
             />
           </motion.div>
         ) : null}

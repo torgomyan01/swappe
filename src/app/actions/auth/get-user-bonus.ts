@@ -4,12 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
-export async function ActionUpdateUserBonus(
-  type: "increment" | "decrement",
-  amount: number,
-  description: string,
-  order_id?: number,
-) {
+export async function ActionGetUserBonus() {
   try {
     const session: any = await getServerSession(authOptions);
 
@@ -17,33 +12,14 @@ export async function ActionUpdateUserBonus(
       return { status: "error", data: [], error: "logout" };
     }
 
-    const updatedUser = await prisma.users.update({
-      where: { id: order_id ? order_id : session.user.id },
-      data: {
-        bonus: { [type]: amount },
-        referral_request_count: { increment: 1 },
-      },
-    });
-
-    await prisma.bouns_history.create({
-      data: {
-        order_id: crypto.randomUUID(),
-        user_id: session.user.id,
-        amount: amount,
-        status: "success",
-        description: description,
-      },
-    });
-
-    // Обновляем session данные
-    await updateUserSession(session.user.id, {
-      bonus: updatedUser.bonus,
-      balance: updatedUser.balance,
+    const bonusHistory = await prisma.bouns_history.findMany({
+      where: { user_id: session.user.id },
+      orderBy: { created_at: "desc" },
     });
 
     return {
       status: "ok",
-      data: updatedUser,
+      data: bonusHistory,
       error: "",
     };
   } catch (error: any) {

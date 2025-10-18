@@ -118,7 +118,10 @@ function ChangeCompany() {
           <span>ИНН компании</span>
           <input
             type="text"
-            placeholder="12345 12345"
+            placeholder={
+              company?.is_self_employed ? "ИНН самозанятого" : "12345 12345"
+            }
+            className="placeholder:!text-gray-500"
             value={company?.inn}
             disabled
           />

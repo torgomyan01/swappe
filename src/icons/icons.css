@@ -120,6 +120,10 @@
   content: "\f303";
 }
 
+.fa-arrow-right:before {
+  content: "\f061";
+}
+
 /*---------------------------------*/
 
 @font-face {

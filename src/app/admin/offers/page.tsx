@@ -28,12 +28,19 @@ import {
   TableRow,
   Textarea,
 } from "@heroui/react";
-import { Edit, MoreVertical, Trash2, CheckCircle } from "lucide-react";
+import {
+  Edit,
+  MoreVertical,
+  Trash2,
+  CheckCircle,
+  MessageSquare,
+} from "lucide-react";
 import {
   ActionAdminGetOffers,
   ActionAdminChangeOfferStatus,
   ActionAdminUpdateOffer,
   ActionAdminDeleteOffer,
+  ActionAdminSendNotification,
 } from "@/app/actions/admin/offers";
 import Link from "next/link";
 import { fileHost, SITE_URL as CONST } from "@/utils/consts";
@@ -51,6 +58,7 @@ export default function AdminOffersPage() {
 
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [selected, setSelected] = useState<IUserOfferFront | null>(null);
   const [editForm, setEditForm] = useState({
     name: "",
@@ -58,6 +66,10 @@ export default function AdminOffersPage() {
     vid: "",
     price: "",
     description: "",
+  });
+  const [notificationForm, setNotificationForm] = useState({
+    title: "",
+    message: "",
   });
 
   const statusOptions: { key: StatusKey; label: string }[] = useMemo(
@@ -108,6 +120,15 @@ export default function AdminOffersPage() {
     setDeleteOpen(true);
   }
 
+  function openNotification(o: IUserOfferFront) {
+    setSelected(o);
+    setNotificationForm({
+      title: `Уведомление по предложению "${o.name}"`,
+      message: "",
+    });
+    setNotificationOpen(true);
+  }
+
   async function saveEdit() {
     if (!selected) return;
     const res = await ActionAdminUpdateOffer({
@@ -146,6 +167,31 @@ export default function AdminOffersPage() {
     if (res.status === "ok") {
       addToast({ title: "Предложение удалено", color: "success" });
       setDeleteOpen(false);
+      fetchOffers();
+    } else {
+      addToast({ title: res.error, color: "danger" });
+    }
+  }
+
+  async function sendNotification() {
+    if (
+      !selected ||
+      !notificationForm.title.trim() ||
+      !notificationForm.message.trim()
+    ) {
+      addToast({ title: "Заполните все поля", color: "danger" });
+      return;
+    }
+
+    const res = await ActionAdminSendNotification({
+      offerId: selected.id,
+      title: notificationForm.title,
+      message: notificationForm.message,
+    });
+
+    if (res.status === "ok") {
+      addToast({ title: "Уведомление отправлено", color: "success" });
+      setNotificationOpen(false);
       fetchOffers();
     } else {
       addToast({ title: res.error, color: "danger" });
@@ -265,6 +311,15 @@ export default function AdminOffersPage() {
                           Одобрить
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        color="warning"
+                        variant="flat"
+                        startContent={<MessageSquare className="w-4 h-4" />}
+                        onPress={() => openNotification(o)}
+                      >
+                        Уведомить
+                      </Button>
                       <Link href={`${CONST.OFFER}/${o.id}`} target="_blank">
                         <Button size="sm" variant="flat">
                           Открыть
@@ -283,6 +338,13 @@ export default function AdminOffersPage() {
                             onPress={() => openEdit(o)}
                           >
                             Редактировать
+                          </DropdownItem>
+                          <DropdownItem
+                            key="notify"
+                            startContent={<MessageSquare className="w-4 h-4" />}
+                            onPress={() => openNotification(o)}
+                          >
+                            Уведомить пользователя
                           </DropdownItem>
                           {o.status !== "active" ? (
                             <DropdownItem
@@ -458,6 +520,76 @@ export default function AdminOffersPage() {
               </Button>
               <Button color="danger" onPress={confirmDelete}>
                 Удалить
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Notification Modal */}
+        <Modal
+          isOpen={notificationOpen}
+          onOpenChange={setNotificationOpen}
+          size="2xl"
+        >
+          <ModalContent>
+            <ModalHeader>Отправить уведомление</ModalHeader>
+            <ModalBody>
+              <div className="space-y-4">
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="text-sm text-gray-600 mb-1">Предложение:</div>
+                  <div className="font-medium">{selected?.name}</div>
+                  <div className="text-sm text-gray-500">
+                    Пользователь: {selected?.user?.name} (
+                    {selected?.user?.email})
+                  </div>
+                </div>
+                <Input
+                  label="Заголовок уведомления"
+                  placeholder="Введите заголовок"
+                  value={notificationForm.title}
+                  onChange={(e) =>
+                    setNotificationForm({
+                      ...notificationForm,
+                      title: e.target.value,
+                    })
+                  }
+                />
+                <Textarea
+                  label="Сообщение"
+                  placeholder="Введите сообщение для пользователя"
+                  value={notificationForm.message}
+                  onChange={(e) =>
+                    setNotificationForm({
+                      ...notificationForm,
+                      message: e.target.value,
+                    })
+                  }
+                  minRows={4}
+                />
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="text-sm text-yellow-800">
+                    <strong>Внимание:</strong> После отправки уведомления статус
+                    предложения будет изменен на "На модерации".
+                  </div>
+                </div>
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                variant="light"
+                onPress={() => setNotificationOpen(false)}
+              >
+                Отмена
+              </Button>
+              <Button
+                color="warning"
+                onPress={sendNotification}
+                isDisabled={
+                  !notificationForm.title.trim() ||
+                  !notificationForm.message.trim()
+                }
+              >
+                Отправить уведомление
               </Button>
             </ModalFooter>
           </ModalContent>

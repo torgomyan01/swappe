@@ -59,9 +59,103 @@ export const authOptions: NextAuthOptions = {
         } as any;
       },
     }),
+    // Yandex OAuth provider (custom object)
+    {
+      id: "yandex",
+      name: "Yandex",
+      type: "oauth",
+      wellKnown: undefined,
+      authorization: {
+        url: "https://oauth.yandex.com/authorize",
+        params: { scope: "login:email login:info" },
+      },
+      token: "https://oauth.yandex.com/token",
+      userinfo: "https://login.yandex.ru/info?format=json",
+      clientId: process.env.YANDEX_CLIENT_ID,
+      clientSecret: process.env.YANDEX_CLIENT_SECRET,
+      profile(profile: any) {
+        // Yandex returns fields like: id, login, default_email/email, display_name, default_avatar_id
+        const email = profile.default_email || profile.email || "";
+        const name =
+          profile.display_name || profile.real_name || profile.login || email;
+        return {
+          id: String(profile.id || profile.psuid || profile.uuid || email),
+          name,
+          email,
+          image: undefined,
+        } as any;
+      },
+    } as any,
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session, account, profile }) {
+      // Handle OAuth (Yandex) sign-in: ensure local user exists and reflect full payload in token
+      if (account?.provider === "yandex") {
+        const oauthEmail =
+          (user as any)?.email || (profile as any)?.email || "";
+        if (oauthEmail) {
+          // Find or create local user
+          let dbUser: any = await prisma.users.findFirst({
+            where: { email: oauthEmail },
+          });
+          if (!dbUser) {
+            // Reuse initial tariff logic similar to registration
+            const usersCountSample = await prisma.users.findMany({ take: 111 });
+            const now = new Date();
+            const oneYearMs = 30 * 24 * 60 * 60 * 1000 * 12;
+            const tariff_end_date =
+              usersCountSample.length < 109
+                ? new Date(now.getTime() + oneYearMs)
+                : new Date();
+            const tariff = usersCountSample.length < 109 ? "advanced" : "free";
+
+            const randomPasswordHash = await bcrypt.hash(
+              crypto.randomUUID(),
+              12,
+            );
+            const code = Math.floor(1000 + Math.random() * 9000);
+            dbUser = await prisma.users.create({
+              data: {
+                name: (user as any)?.name || oauthEmail,
+                email: oauthEmail,
+                password: randomPasswordHash,
+                status: "verified",
+                verification_code: code,
+                password_reset_token: crypto.randomUUID(),
+                password_reset_expires: "",
+                balance: 0,
+                bonus: 0,
+                referral_code: crypto.randomUUID(),
+                referral_request_count: 0,
+                tariff,
+                tariff_start_date: new Date(),
+                tariff_end_date,
+                role: ["user"],
+                created_at: new Date(),
+                updated_at: new Date(),
+              } as any,
+            });
+          }
+
+          // Map db user to token
+          token.sub = String(dbUser.id);
+          token.email = dbUser.email;
+          (token as any).status = dbUser.status;
+          if (dbUser.roles) {
+            (token as any).roles = dbUser.roles;
+          }
+          if (dbUser.role) {
+            (token as any).role = dbUser.role;
+          }
+          (token as any).passwordResetToken = dbUser.password_reset_token;
+          const { password: _pw, ...safeDbUser } = dbUser;
+          (token as any).user = {
+            ...safeDbUser,
+            name: safeDbUser.name ?? safeDbUser.email,
+          } as any;
+        }
+      }
+
       if (user) {
         token.sub = (user as any).id ?? token.sub;
         token.email = (user as any).email;

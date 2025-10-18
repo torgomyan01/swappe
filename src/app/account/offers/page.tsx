@@ -64,6 +64,14 @@ function Profile() {
                 >
                   Архив
                 </button>
+                <button
+                  className={clsx("tab-button", {
+                    active: offerStatus === "moderation",
+                  })}
+                  onClick={() => setOfferStatus("moderation")}
+                >
+                  На модерации
+                </button>
               </div>
               <div className="tab-content-wrap">
                 {offers.length === 0 && offerStatus === "archive" ? (
@@ -72,23 +80,14 @@ function Profile() {
 
                 <div className="tab-content active">
                   <div className="offers-items">
-                    {offers.length > 0
-                      ? offers.map((offer: IUserOfferFront, index) => (
-                          <OfferCard
-                            key={`my-offers-${index}`}
-                            offer={offer}
-                            onlyTitle
-                          />
-                        ))
-                      : null}
-
-                    {offers.map((offer: IUserOfferFront, index) => (
-                      <OfferCard
-                        key={`my-offers-${index}`}
-                        offer={offer}
-                        onlyTitle
-                      />
-                    ))}
+                    {offers.length > 0 &&
+                      offers.map((offer: IUserOfferFront, index) => (
+                        <OfferCard
+                          key={`my-offers-${index}`}
+                          offer={offer}
+                          onlyTitle
+                        />
+                      ))}
 
                     {offerStatus === "active" && (
                       <div className="proposal">

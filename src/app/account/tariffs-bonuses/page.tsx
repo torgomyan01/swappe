@@ -5,19 +5,27 @@ import { ActionGetUserBalance } from "@/app/actions/auth/get-user-balance";
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { SITE_URL } from "@/utils/consts";
-import { Button, Spinner, Snippet } from "@heroui/react";
+import {
+  Button,
+  Spinner,
+  Snippet,
+  addToast,
+  Link,
+  ModalBody,
+  ModalContent,
+  Modal,
+} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import TarifBlock from "./components/tarif-block";
 import ModalAddBlance from "@/components/common/modals/modal-add-blance";
 import { useSession } from "next-auth/react";
-import ModalViewMyTariff from "@/components/common/modals/modal-view-my-tariff";
-import Link from "next/link";
+import { ActionCancelUserPlan } from "@/app/actions/auth/cancel-user-plan";
 
 function Profile() {
   const router = useRouter();
 
-  const { data: session }: any = useSession();
+  const { data: session, update }: any = useSession();
   const [modalState, setModalState] = useState(false);
 
   const [tariffs, setTariffs] = useState<ITariff[] | null>(null);
@@ -60,6 +68,36 @@ function Profile() {
   }
 
   const referralLink = `${window.location.origin}${SITE_URL.REGISTER}/${session.user.referral_code}/${session.user.id}`;
+
+  const [loading, setLoading] = useState(false);
+  const [moadlCloseTriff, setMoadlCloseTriff] = useState(false);
+
+  async function handleCancel() {
+    setLoading(true);
+    const res = await ActionCancelUserPlan();
+    if (res.status === "ok") {
+      await update({
+        tariff: "free",
+        tariff_end_date: null,
+      });
+
+      addToast({
+        title: "Подписка успешно отменена",
+        color: "success",
+      });
+
+      setMoadlCloseTriff(false);
+    }
+
+    if (res.status === "error") {
+      addToast({
+        title: res.error,
+        color: "danger",
+      });
+    }
+
+    setLoading(false);
+  }
 
   return (
     <MainTemplate>
@@ -116,10 +154,13 @@ function Profile() {
                         <b>{userBalance?.bonus}</b>
                       </div>
                     </div>
-                    <a href="#" className="yellow-btn">
+                    <Link
+                      href={SITE_URL.ACCOUNT_TARIFFS_BONUSES_HISTORY}
+                      className="yellow-btn"
+                    >
                       <img src="/img/gift-icon.svg" alt="" />
-                      Условия программы
-                    </a>
+                      История
+                    </Link>
                   </div>
                 </div>
               ) : (
@@ -168,9 +209,10 @@ function Profile() {
                       <Button
                         color="secondary"
                         className="w-[150px] rounded-full"
-                        onPress={() => setModalControl(true)}
+                        onPress={() => setMoadlCloseTriff(true)}
+                        isLoading={loading}
                       >
-                        Управлять
+                        Отменить
                       </Button>
                     </div>
                   ) : (
@@ -229,10 +271,53 @@ function Profile() {
 
       <ModalAddBlance show={modalState} onClose={() => setModalState(false)} />
 
-      <ModalViewMyTariff
-        show={modalControl}
-        onClose={() => setModalControl(false)}
-      />
+      <Modal
+        size="xl"
+        isOpen={moadlCloseTriff}
+        onOpenChange={setMoadlCloseTriff}
+        hideCloseButton
+      >
+        <ModalContent className="p-0">
+          {() => (
+            <>
+              <ModalBody className="p-0">
+                <div className="popups-wrap">
+                  <div className="global-popup !p-0">
+                    <div className="form-wrap !max-w-full">
+                      <img src="/img/sign-in-style2.png" alt="" />
+                      <div
+                        className="popup-close"
+                        onClick={() => setMoadlCloseTriff(false)}
+                      >
+                        <img src="/img/close-pop.svg" alt="" />
+                      </div>
+                      <form>
+                        <h2>Уверены, что хотите отменить подписку?</h2>
+                        <p>Все преимущества тарифа будут потеряны</p>
+                        <Button
+                          onPress={() => setMoadlCloseTriff(false)}
+                          disabled={loading}
+                          className="green-btn"
+                          type="button"
+                        >
+                          Назад
+                        </Button>
+                        <Button
+                          className="delete-link bg-transparent shadow-none !border-b-white"
+                          isLoading={loading}
+                          onPress={handleCancel}
+                        >
+                          Отменить подписку
+                        </Button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </MainTemplate>
   );
 }

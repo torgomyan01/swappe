@@ -24,6 +24,7 @@ export const SITE_URL = {
   ACCOUNT_SUGGESTIONS: "/account/offers",
   ACCOUNT_OFFER_CREATE: "/account/offers/create",
   ACCOUNT_TARIFFS_BONUSES: "/account/tariffs-bonuses",
+  ACCOUNT_TARIFFS_BONUSES_HISTORY: "/account/tariffs-bonuses/history",
   ACCOUNT_TARIFF: "/account/tariffs-bonuses/change",
 
   CHAT: "/im",

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import nodemailer from "nodemailer";
 import { SITE_URL } from "@/utils/consts";
+import { ActionUpdateUserBonus } from "./update-user-bonus";
 
 const BCRYPT_ROUNDS = 12;
 
@@ -130,6 +131,7 @@ export async function ActionCreateUser(
         balance: 0,
         bonus: 0,
         referral_code: crypto.randomUUID(),
+        referral_request_count: 0,
         tariff,
         tariff_start_date: new Date(),
         tariff_end_date,
@@ -167,10 +169,7 @@ export async function ActionCreateUser(
       });
 
       if (getRefUser) {
-        await prisma.users.update({
-          where: { id: getRefUser.id },
-          data: { bonus: { increment: 350 } as any },
-        });
+        await ActionUpdateUserBonus("increment", 350, "Бонус за реферальный код", getRefUser.id);
       }
     }
 

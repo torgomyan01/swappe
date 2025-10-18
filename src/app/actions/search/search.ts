@@ -14,6 +14,7 @@ export async function ActionSearchOffer(
     const whereConditions: any = {
       ...(params.type && { type: params.type }),
       ...(params.vid && { vid: params.vid }),
+      status: "active",
       OR: [
         {
           name: {

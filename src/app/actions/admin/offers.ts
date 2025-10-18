@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { SITE_URL } from "@/utils/consts";
+import { ActionCreatePushNotification } from "../push-notification/create";
 
 export async function ActionAdminGetOffers(params?: {
   status?: "active" | "archive" | "moderation";
@@ -157,12 +159,106 @@ export async function ActionAdminChangeOfferStatus(
       data: { status },
     });
 
+    if (status === "active") {
+      console.log("create push notification");
+
+      try {
+        await ActionCreatePushNotification(
+          session.user.id,
+          "Ваш предложение опубликован",
+          "success",
+          updated.name,
+          `${SITE_URL.OFFER}/${updated.id}`,
+          {},
+        );
+      } catch (error) {
+        return {
+          status: "error",
+          data: null,
+          error: "Ошибка создания push notification",
+        } as const;
+      }
+    }
+
     return { status: "ok", data: updated, error: null } as const;
   } catch (e: any) {
     return {
       status: "error",
       data: null,
       error: e?.message || "Ошибка смены статуса",
+    } as const;
+  }
+}
+
+export async function ActionAdminSendNotification(input: {
+  offerId: number;
+  title: string;
+  message: string;
+}) {
+  try {
+    const session: any = await getServerSession(authOptions);
+    if (!session)
+      return { status: "error", data: null, error: "Не авторизован" } as const;
+
+    const userRoles = session.user?.role || session.user?.roles || [];
+    const isAdmin = Array.isArray(userRoles)
+      ? userRoles.includes("admin")
+      : userRoles === "admin";
+    if (!isAdmin)
+      return { status: "error", data: null, error: "Доступ запрещен" } as const;
+
+    // Get offer details
+    const offer = await prisma.offers.findUnique({
+      where: { id: input.offerId },
+      include: {
+        user: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+    });
+
+    if (!offer) {
+      return {
+        status: "error",
+        data: null,
+        error: "Предложение не найдено",
+      } as const;
+    }
+
+    // Update offer status to warning
+    await prisma.offers.update({
+      where: { id: input.offerId },
+      data: { status: "moderation" }, // Using moderation as warning status
+    });
+
+    // Create push notification
+    const notification = await ActionCreatePushNotification(
+      offer.user_id,
+      input.title,
+      "warning",
+      input.message,
+      `${SITE_URL.OFFER}/${offer.id}`,
+      {
+        offerId: offer.id,
+        offerName: offer.name,
+        adminMessage: input.message,
+      },
+    );
+
+    if (notification.status !== "ok") {
+      return {
+        status: "error",
+        data: null,
+        error: "Ошибка создания уведомления",
+      } as const;
+    }
+
+    return { status: "ok", data: notification.data, error: null } as const;
+  } catch (e: any) {
+    return {
+      status: "error",
+      data: null,
+      error: e?.message || "Ошибка отправки уведомления",
     } as const;
   }
 }

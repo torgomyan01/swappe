@@ -19,6 +19,7 @@ import {
 import { ActionCreateUser } from "@/app/actions/auth/create-user";
 import { ActionRestoreUserByEmail } from "@/app/actions/auth/restore-user";
 import { useRouter, useParams } from "next/navigation";
+import { ActionUpdateUserBonus } from "@/app/actions/auth/update-user-bonus";
 
 function Register() {
   const { referral_code, user_id } = useParams();

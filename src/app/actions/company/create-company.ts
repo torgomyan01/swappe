@@ -15,6 +15,7 @@ export async function ActionCreateCompany(
   sites: object,
   image_path: string,
   phone_number: string,
+  is_self_employed: boolean,
 ) {
   try {
     const session: any = await getServerSession(authOptions);
@@ -23,16 +24,33 @@ export async function ActionCreateCompany(
       return { status: "error", data: [], error: "logout" };
     }
 
-    const existingCompany = await prisma.user_company.findFirst({
-      where: { inn },
-    });
+    console.log(is_self_employed, 5555);
 
-    if (existingCompany) {
+    // Each user can have only one company (user_company.user_id is unique)
+    const userExistingCompany = await prisma.user_company.findFirst({
+      where: { user_id: session.user.id },
+      select: { id: true },
+    });
+    if (userExistingCompany) {
       return {
         status: "error",
         data: [],
-        error: "Компания с таким ИНН уже зарегистрирована",
+        error: "В личном кабинете уже зарегистрирована компания",
       };
+    }
+
+    if (!is_self_employed) {
+      const existingCompany = await prisma.user_company.findFirst({
+        where: { inn },
+      });
+
+      if (existingCompany) {
+        return {
+          status: "error",
+          data: [],
+          error: "Компания с таким ИНН уже зарегистрирована",
+        };
+      }
     }
 
     const CreateCompany = await prisma.user_company.create({
@@ -49,6 +67,7 @@ export async function ActionCreateCompany(
         sites,
         image_path,
         plan: "free",
+        is_self_employed,
       },
     });
 

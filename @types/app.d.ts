@@ -231,6 +231,7 @@ declare interface IUserCompany {
   plan: "premium" | "free";
   user: IUserProfile;
   reviews: IReview[];
+  is_self_employed: boolean;
 }
 
 declare interface IUserFavorite {
@@ -274,7 +275,7 @@ declare interface IUserOffer {
   videos: string[];
 }
 
-type OfferStatus = "active" | "archive";
+type OfferStatus = "active" | "archive" | "moderation";
 
 declare interface IUserOfferFront {
   id: number;
@@ -483,6 +484,37 @@ declare interface IArticle {
   content: string;
   image: string;
   created_at: string;
+}
+
+declare interface IBounsHistory {
+  id: number;
+  order_id: string;
+  user_id: number;
+  amount: number;
+  status: string;
+  description: string;
+  created_at: string;
+}
+
+type PushNotificationType =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "danger";
+
+declare interface IPushNotification {
+  id: number;
+  user_id: number;
+  title: string;
+  type: PushNotificationType;
+  description: string;
+  link: string;
+  body: any;
+  opened: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 type OfferType = "product" | "service";
