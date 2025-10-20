@@ -18,7 +18,7 @@ export async function ActionGetMyPushNotifications() {
       orderBy: {
         created_at: "desc",
       },
-      take: 10,
+      take: 5,
     });
 
     return {

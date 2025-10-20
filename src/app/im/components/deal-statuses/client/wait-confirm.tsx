@@ -8,6 +8,7 @@ import { ActionChangeStatusDealClient } from "@/app/actions/deals/change-status"
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { ActionCreatePushNotification } from "@/app/actions/push-notification/create";
 
 function WaitConfirm() {
   const { id }: { id: string } = useParams();
@@ -28,7 +29,7 @@ function WaitConfirm() {
       setLoading(true);
 
       addToast({
-        description: "Ждите )",
+        description: "Ждите",
         color: "default",
       });
 
@@ -50,6 +51,24 @@ function WaitConfirm() {
               });
 
               dispatch(UpdateChatInfo(id));
+
+              ActionCreatePushNotification(
+                chatInfo.deal.client.id,
+                "Сделка успешно подтверждена.",
+                "success",
+                chatInfo.deal.client.name,
+                `${SITE_URL.CHAT}/${chatInfo.id}`,
+                {},
+              );
+
+              ActionCreatePushNotification(
+                chatInfo.deal.owner.id,
+                "Сделка успешно подтверждена.",
+                "success",
+                chatInfo.deal.owner.name,
+                `${SITE_URL.CHAT}/${chatInfo.id}`,
+                {},
+              );
             })
             .finally(() => setLoading(false));
         })

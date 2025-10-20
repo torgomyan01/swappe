@@ -141,6 +141,7 @@ export async function ActionAdminUpdateOffer(input: {
 export async function ActionAdminChangeOfferStatus(
   id: number,
   status: "active" | "archive" | "moderation",
+  userId: number,
 ) {
   try {
     const session: any = await getServerSession(authOptions);
@@ -160,11 +161,9 @@ export async function ActionAdminChangeOfferStatus(
     });
 
     if (status === "active") {
-      console.log("create push notification");
-
       try {
         await ActionCreatePushNotification(
-          session.user.id,
+          userId,
           "Ваш предложение опубликован",
           "success",
           updated.name,

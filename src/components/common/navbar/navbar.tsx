@@ -12,6 +12,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Spinner,
   Tooltip,
 } from "@heroui/react";
 import { useSelector } from "react-redux";
@@ -19,6 +20,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { ActionGetMyPushNotifications } from "@/app/actions/push-notification/get-my-notofication";
+import { ActionChangeWritedPushNotification } from "@/app/actions/push-notification/change-writed";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -67,6 +69,23 @@ function Navbar() {
     (notification) => notification.opened === false,
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleChangeWritedPushNotification() {
+    const ids = push.map((notification) => notification.id);
+    setIsLoading(true);
+    ActionChangeWritedPushNotification(ids).then(() => {
+      getNotificationColor();
+      setIsLoading(false);
+    });
+  }
+
+  function handleOpenNotification(id: number) {
+    ActionChangeWritedPushNotification([id]).then(() => {
+      getNotificationColor();
+    });
+  }
+
   return (
     <>
       <div className="header-profile">
@@ -95,7 +114,7 @@ function Navbar() {
               className="icon cursor-pointer"
               onClick={() => setNotifications(!notifications)}
             >
-              {push && <span className="circle"></span>}
+              {push.length ? <span className="circle" /> : null}
               <img src="/img/menu-icon2.svg" alt="" />
             </span>
             <Link
@@ -205,9 +224,15 @@ function Navbar() {
               </div>
             </div>
           </div>
-          <div className="view-all">
-            Пометить все просмотренными ({push.length})
-          </div>
+          {push.length > 0 && (
+            <div
+              className="view-all cursor-pointer flex-jc-c gap-2"
+              onClick={handleChangeWritedPushNotification}
+            >
+              Пометить все просмотренными ({push.length})
+              {isLoading && <Spinner color="secondary" size="sm" />}
+            </div>
+          )}
 
           <div className="px-4">
             {notificationsData.map((notification) => (
@@ -226,6 +251,7 @@ function Navbar() {
                       size="sm"
                       variant="faded"
                       className="!flex-jc-c min-w-[90px]"
+                      onPress={() => handleOpenNotification(notification.id)}
                     >
                       Открыть <i className="fa-solid fa-arrow-right"></i>
                     </Button>

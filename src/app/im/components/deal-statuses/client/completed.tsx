@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ActionChangeOfferStatus } from "@/app/actions/offers/change-offer-status";
+import { ActionCreatePushNotification } from "@/app/actions/push-notification/create";
 
 function Completed() {
   const { data: session }: any = useSession();
@@ -57,6 +58,24 @@ function Completed() {
           ActionChangeOfferStatus(
             [chat.deal.owner_offer_id, chat.deal.client_offer_id],
             "archive",
+          );
+
+          ActionCreatePushNotification(
+            chat.deal.client.id,
+            "Сделка успешно завершена. Оставьте отзыв компании.",
+            "success",
+            chat.deal.client.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
+          );
+
+          ActionCreatePushNotification(
+            chat.deal.owner.id,
+            "Сделка успешно завершена. Оставьте отзыв компании.",
+            "success",
+            chat.deal.owner.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
           );
         })
         .finally(() => setLoading(false));

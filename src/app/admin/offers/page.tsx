@@ -152,7 +152,7 @@ export default function AdminOffersPage() {
     o: IUserOfferFront,
     next: Exclude<StatusKey, "all">,
   ) {
-    const res = await ActionAdminChangeOfferStatus(o.id, next);
+    const res = await ActionAdminChangeOfferStatus(o.id, next, o.user?.id || 0);
     if (res.status === "ok") {
       addToast({ title: "Статус обновлён", color: "success" });
       fetchOffers();

@@ -19,6 +19,7 @@ import { ActionCreateCompanyReview } from "@/app/actions/company_reviews/create-
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { ActionCreatePushNotification } from "@/app/actions/push-notification/create";
 
 function SendReview() {
   const { id }: { id: string } = useParams();
@@ -83,6 +84,24 @@ function SendReview() {
             description: "Поздравляю с успешным завершением ❤",
             color: "success",
           });
+
+          ActionCreatePushNotification(
+            chat.deal.client.id,
+            `Отзыв оставлен на компанию ${chat.deal.owner.company.name}. Спасибо за ваш отзыв!`,
+            "success",
+            chat.deal.client.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
+          );
+
+          ActionCreatePushNotification(
+            chat.deal.owner.id,
+            `Отзыв оставлен на компанию ${chat.deal.client.company.name}. Спасибо за ваш отзыв!`,
+            "success",
+            chat.deal.owner.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
+          );
 
           dispatch(UpdateChatInfo(id));
         })

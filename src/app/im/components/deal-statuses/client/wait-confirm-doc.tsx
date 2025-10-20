@@ -8,6 +8,7 @@ import { ActionChangeStatusDealClient } from "@/app/actions/deals/change-status"
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { ActionCreatePushNotification } from "@/app/actions/push-notification/create";
 
 function WaitConfirmDoc() {
   const { id }: { id: string } = useParams();
@@ -39,6 +40,24 @@ function WaitConfirmDoc() {
           });
 
           dispatch(UpdateChatInfo(id));
+
+          ActionCreatePushNotification(
+            chat.deal.client.id,
+            "Договор успешно заключен.",
+            "success",
+            chat.deal.client.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
+          );
+
+          ActionCreatePushNotification(
+            chat.deal.owner.id,
+            "Договор успешно заключен.",
+            "success",
+            chat.deal.owner.name,
+            `${SITE_URL.CHAT}/${chat.id}`,
+            {},
+          );
         })
         .finally(() => setLoading(false));
     }
