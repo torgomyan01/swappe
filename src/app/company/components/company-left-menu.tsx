@@ -50,7 +50,7 @@ function CompanyLeftMenu({ company }: IThisProps) {
           {company ? (
             <>
               <div className="top">
-                <div className="img-wrap">
+                <div className="img-wrap relative">
                   <Image
                     src={
                       company?.image_path
@@ -60,12 +60,22 @@ function CompanyLeftMenu({ company }: IThisProps) {
                     alt="premium-icon"
                     width={300}
                     height={300}
-                    className="bg-crem"
+                    className="bg-crem object-cover border"
                   />
-                  {company?.plan === "premium" ? (
-                    <div className="premium w-[110px]">
+                  {company.user.tariff === "basic" ||
+                  company.user.tariff === "advanced" ? (
+                    <div
+                      className={clsx("premium w-[110px]", {
+                        "w-[110px]": company.user.tariff === "basic",
+                        "w-[135px]": company.user.tariff === "advanced",
+                      })}
+                    >
                       <img src="/img/premium-icon.svg" alt="premium-icon" />
-                      <span>Премиум</span>
+                      <span>
+                        {company.user.tariff === "basic"
+                          ? "Базовый"
+                          : "Продвинутый"}
+                      </span>
                     </div>
                   ) : null}
                 </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { SITE_URL } from "@/utils/consts";
 import { useParams } from "next/navigation";
 
 function Thanks() {
@@ -21,7 +20,7 @@ function Thanks() {
         </div>
         <div className="bottom-text">
           <span>Возникли проблемы?</span>
-          <a href={SITE_URL.CHAT}>Наша поддержка поможет</a>
+          <a href="mailto:support@swappe.ru">support@swappe.ru</a>
         </div>
       </div>
     </div>

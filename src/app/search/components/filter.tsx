@@ -1,7 +1,13 @@
 import "../_left-menu.scss";
 
-import { useEffect, useState } from "react";
-import { Autocomplete, AutocompleteItem, Button, Slider } from "@heroui/react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Autocomplete,
+  AutocompleteItem,
+  Button,
+  Input,
+  Slider,
+} from "@heroui/react";
 import { ActionGetAllCategory } from "@/app/actions/category/get-category";
 import clsx from "clsx";
 import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countries";
@@ -39,6 +45,7 @@ function Filter({ mobileShow, onClose }: IThisProps) {
   }, [valuePriceBanners, dispatch]);
 
   const [category, setCategory] = useState<ICategory[] | null>(null);
+  const [categoryQuery, setCategoryQuery] = useState<string>("");
 
   useEffect(() => {
     ActionGetAllCategory().then(({ data }) => {
@@ -73,6 +80,15 @@ function Filter({ mobileShow, onClose }: IThisProps) {
       setCountries(data);
     });
   }, []);
+
+  const visibleCategories = useMemo(() => {
+    const list = category ?? [];
+    const q = categoryQuery.trim().toLowerCase();
+    const filtered = q
+      ? list.filter((c) => c.name.toLowerCase().includes(q))
+      : list;
+    return q ? filtered : filtered.slice(0, 3);
+  }, [category, categoryQuery]);
 
   return (
     <div
@@ -133,8 +149,22 @@ function Filter({ mobileShow, onClose }: IThisProps) {
         </div>
       </div>
       <span className="title">Категории</span>
+      <div className="input-wrap !mb-2">
+        <Input
+          type="text"
+          placeholder="Поиск категории"
+          value={categoryQuery}
+          onChange={(e) => setCategoryQuery(e.target.value)}
+          color="secondary"
+          variant="bordered"
+          radius="lg"
+          startContent={
+            <i className="fa-regular fa-search text-[14px] opacity-60"></i>
+          }
+        />
+      </div>
       <div className="tags">
-        {category?.map((category: ICategory) => (
+        {visibleCategories.map((category: ICategory) => (
           <button
             key={`cat__${category.id}`}
             className={clsx("tag cursor-pointer", {

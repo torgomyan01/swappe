@@ -159,7 +159,12 @@ function LeftMenu({ isMobile = false }: IThisProps) {
                   </button>
                   {session?.user?.tariff === "basic" ||
                   session?.user?.tariff === "advanced" ? (
-                    <div className="premium w-[110px]">
+                    <div
+                      className={clsx("premium w-[110px]", {
+                        "w-[110px]": session?.user?.tariff === "basic",
+                        "w-[135px]": session?.user?.tariff === "advanced",
+                      })}
+                    >
                       <img src="/img/premium-icon.svg" alt="premium-icon" />
                       <span>
                         {session?.user?.tariff === "basic"

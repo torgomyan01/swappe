@@ -1,4 +1,5 @@
 import { InputMask } from "@react-input/mask";
+import UrlInput from "@/components/common/input/url-input";
 import {
   addToast,
   Autocomplete,
@@ -336,7 +337,7 @@ function InfoCompany({ onSubmit }: IThisProps) {
         {socialSites.map((id_, index) => (
           <div key={`social-site-${id_}`} className="input-wrap relative">
             <span>Официальный сайт и соцсети</span>
-            <input type="text" name="social" placeholder="https://" required />
+            <UrlInput name="social" placeholder="https://" required />
             {index ? (
               <i
                 className="fa-regular fa-xmark absolute right-4 bottom-[16px] opacity-60 hover:opacity-100 cursor-pointer"

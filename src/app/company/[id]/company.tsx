@@ -4,6 +4,8 @@ import MainTemplate from "@/components/common/main-template/main-template";
 import { SITE_URL } from "@/utils/consts";
 import Link from "next/link";
 import CompanyLeftMenu from "@/app/company/components/company-left-menu";
+import { Button } from "@heroui/react";
+import { sliceText } from "@/utils/helpers";
 
 interface IThisProps {
   company: IUserCompany;
@@ -42,7 +44,7 @@ function CompanyPage({ company }: IThisProps) {
                   </b>
                   <span>{company.user.email}</span>
                 </div>
-                <div className="item">
+                {/* <div className="item">
                   <b>
                     Контактный телефон{" "}
                     <img src="/img/check-Icon.svg" alt="check-Icon" />
@@ -50,7 +52,7 @@ function CompanyPage({ company }: IThisProps) {
                   <a href={`tel:${company?.phone_number}`}>
                     {company?.phone_number}
                   </a>
-                </div>
+                </div> */}
               </div>
               <div className="border"></div>
 
@@ -75,25 +77,40 @@ function CompanyPage({ company }: IThisProps) {
                 </div>
                 <div className="item">
                   <b>Город</b>
-                  <span>{company?.city_data.name}</span>
+                  <span>{company?.city_data?.name}</span>
                 </div>
                 <div className="item">
                   <b>Индустрия</b>
                   <span>{company?.industry_data?.name}</span>
                 </div>
                 <div className="item">
-                  <b>Индустрия</b>
+                  <b>Официальный сайт и соцсети</b>
                   <div className="social">
                     <div className="links">
-                      <a href="#">
-                        <img src="/img/soc-icon1.svg" alt="soc-icon" />
-                      </a>
-                      <a href="#">
-                        <img src="/img/soc-icon2.svg" alt="soc-icon" />
-                      </a>
-                      <a href="#">
-                        <img src="/img/soc-icon3.svg" alt="soc-icon" />
-                      </a>
+                      <div className="flex-js-s flex-col gap-2">
+                        {company.sites.map((item, i) => (
+                          <Button
+                            key={`link_compnay-${i}`}
+                            showAnchorIcon
+                            as={Link}
+                            color="default"
+                            href={item}
+                            target="_blank"
+                          >
+                            {sliceText(item, 15)}
+                          </Button>
+                        ))}
+                      </div>
+
+                      {/*<a href="#">*/}
+                      {/*  <img src="/img/soc-icon1.svg" alt="soc-icon" />*/}
+                      {/*</a>*/}
+                      {/*<a href="#">*/}
+                      {/*  <img src="/img/soc-icon2.svg" alt="soc-icon" />*/}
+                      {/*</a>*/}
+                      {/*<a href="#">*/}
+                      {/*  <img src="/img/soc-icon3.svg" alt="soc-icon" />*/}
+                      {/*</a>*/}
                     </div>
                   </div>
                 </div>
@@ -103,7 +120,7 @@ function CompanyPage({ company }: IThisProps) {
                     {company?.interest_categories.map((item, index) => (
                       <button
                         key={`interest_categories-${index}`}
-                        className="green-btn !bg-transparent !text-green !border border-green !my-0 hover:!bg-green hover:!text-white"
+                        className="green-btn"
                       >
                         {item.name}
                       </button>

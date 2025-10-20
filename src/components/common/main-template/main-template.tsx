@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
 import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorites";
 import CookieComponent from "@/components/common/main-template/cookie";
+import TelegramBlock from "./telegram-block";
 
 interface IThisProps {
   children?: React.ReactNode;
@@ -45,6 +46,8 @@ function MainTemplate({
       {!isEmpty && footer && <Footer />}
 
       <CookieComponent />
+
+      <TelegramBlock />
     </>
   );
 }

@@ -124,6 +124,10 @@
   content: "\f061";
 }
 
+.fa-search:before {
+  content: "\f002";
+}
+
 /*---------------------------------*/
 
 @font-face {
