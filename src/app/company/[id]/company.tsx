@@ -91,7 +91,6 @@ function CompanyPage({ company }: IThisProps) {
                         {company.sites.map((item, i) => (
                           <Button
                             key={`link_compnay-${i}`}
-                            showAnchorIcon
                             as={Link}
                             color="default"
                             href={item}
