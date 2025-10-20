@@ -168,7 +168,7 @@ function Profile() {
               )}
 
               {session.user.tariff === "free" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4 items-stretch gap-y-6">
                   {tariffs ? (
                     tariffs.map((tariff) => (
                       <TarifBlock

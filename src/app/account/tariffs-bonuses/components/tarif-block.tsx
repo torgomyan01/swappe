@@ -42,9 +42,9 @@ function TarifBlock({ tariff }: IThisProps) {
   }
 
   return (
-    <div className="level-info border border-gray-200/80">
+    <div className="level-info border border-gray-200/80 !max-w-full">
       <h3 className="!mb-0">{tariff.title}</h3>
-      <div className="tab-content-wrap h-full">
+      <div className="tab-content-wrap">
         <div className="tab-content active !flex-jsb-c flex-col h-full">
           <div>
             <b className="price">

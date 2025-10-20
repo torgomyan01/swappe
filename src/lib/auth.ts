@@ -73,6 +73,8 @@ export const authOptions: NextAuthOptions = {
       userinfo: "https://login.yandex.ru/info?format=json",
       clientId: process.env.YANDEX_CLIENT_ID,
       clientSecret: process.env.YANDEX_CLIENT_SECRET,
+      // Explicitly set the redirect URI to match what you configure in Yandex OAuth
+      redirectUri: `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/callback/yandex`,
       profile(profile: any) {
         // Yandex returns fields like: id, login, default_email/email, display_name, default_avatar_id
         const email = profile.default_email || profile.email || "";
