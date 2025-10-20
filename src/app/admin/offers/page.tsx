@@ -569,7 +569,7 @@ export default function AdminOffersPage() {
                 <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <div className="text-sm text-yellow-800">
                     <strong>Внимание:</strong> После отправки уведомления статус
-                    предложения будет изменен на "На модерации".
+                    предложения будет изменен на {`"На модерации"`}.
                   </div>
                 </div>
               </div>

@@ -20,7 +20,11 @@ export async function ActionCreateOffer(offer: any) {
     });
 
     if (!getOffers.length) {
-      await ActionUpdateUserBonus("increment", 50, "Бонус за создание первого предложения");
+      await ActionUpdateUserBonus(
+        "increment",
+        50,
+        "Бонус за создание первого предложения",
+      );
     }
 
     const createOffer = await prisma.offers.create({

@@ -148,7 +148,9 @@ export const authOptions: NextAuthOptions = {
             (token as any).role = dbUser.role;
           }
           (token as any).passwordResetToken = dbUser.password_reset_token;
-          const { password: _pw, ...safeDbUser } = dbUser;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { password, ...safeDbUser } = dbUser;
+
           (token as any).user = {
             ...safeDbUser,
             name: safeDbUser.name ?? safeDbUser.email,

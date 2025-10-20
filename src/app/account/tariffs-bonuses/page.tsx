@@ -37,8 +37,6 @@ function Profile() {
     bonus: number;
   } | null>(null);
 
-  const [modalControl, setModalControl] = useState<boolean>(false);
-
   useEffect(() => {
     const findTariff = tariffs?.find(
       (tariff) => tariff.name === session.user.tariff,

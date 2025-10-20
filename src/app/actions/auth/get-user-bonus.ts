@@ -33,17 +33,3 @@ export async function ActionGetUserBonus() {
     };
   }
 }
-
-// Функция для обновления session данных
-async function updateUserSession(userId: string, newData: any) {
-  try {
-    // В NextAuth session автоматически обновляется при следующем запросе
-    // Но мы можем принудительно обновить кэш
-    console.log("Updating session for user:", userId, "with data:", newData);
-
-    // Здесь можно добавить дополнительную логику для обновления session
-    // Например, через cookies или другие методы
-  } catch (error) {
-    console.error("Error updating user session:", error);
-  }
-}

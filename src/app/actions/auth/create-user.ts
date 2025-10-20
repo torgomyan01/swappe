@@ -169,7 +169,12 @@ export async function ActionCreateUser(
       });
 
       if (getRefUser) {
-        await ActionUpdateUserBonus("increment", 350, "Бонус за реферальный код", getRefUser.id);
+        await ActionUpdateUserBonus(
+          "increment",
+          350,
+          "Бонус за реферальный код",
+          getRefUser.id,
+        );
       }
     }
 

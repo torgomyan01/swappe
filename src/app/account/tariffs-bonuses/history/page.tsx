@@ -10,7 +10,6 @@ import { SITE_URL } from "@/utils/consts";
 import { addToast, Link, Skeleton, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { ActionGetUserBalance } from "@/app/actions/auth/get-user-balance";
 
 interface IUserBalance {
@@ -21,8 +20,6 @@ interface IUserBalance {
 
 function Profile() {
   const router = useRouter();
-
-  const { data: session }: any = useSession();
 
   const [bonusHistory, setBonusHistory] = useState<IBounsHistory[] | null>(
     null,

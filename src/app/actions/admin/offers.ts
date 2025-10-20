@@ -171,7 +171,7 @@ export async function ActionAdminChangeOfferStatus(
           `${SITE_URL.OFFER}/${updated.id}`,
           {},
         );
-      } catch (error) {
+      } catch {
         return {
           status: "error",
           data: null,
