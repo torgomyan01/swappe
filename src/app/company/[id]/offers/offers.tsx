@@ -7,6 +7,9 @@ import CompanyLeftMenu from "@/app/company/components/company-left-menu";
 import { useEffect, useState } from "react";
 import { ActionCompanyOffers } from "@/app/actions/offers/get-company-offers";
 import OfferCard from "@/app/search/components/offer-card";
+import clsx from "clsx";
+import { Spinner } from "@heroui/react";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 interface IThisProps {
   company: IUserCompany;
@@ -15,11 +18,21 @@ interface IThisProps {
 function CompanyPageOffers({ company }: IThisProps) {
   const [offers, setOffers] = useState<IUserOffer[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
+  const [offerStatus, setOfferStatus] = useState<OfferStatus>("active");
+
   useEffect(() => {
-    ActionCompanyOffers(+company.user_id).then(({ data }) => {
-      setOffers(data as any);
-    });
-  }, []);
+    setLoading(true);
+    setOffers([]);
+    ActionCompanyOffers(+company.user_id, offerStatus)
+      .then(({ data }) => {
+        setOffers(data as any);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [offerStatus]);
 
   return (
     <MainTemplate>
@@ -42,23 +55,50 @@ function CompanyPageOffers({ company }: IThisProps) {
             <CompanyLeftMenu company={company} />
             <div className="profile favorite-account">
               <div className="tabs">
-                <button className="tab-button active">
+                <button
+                  className={clsx("tab-button", {
+                    active: offerStatus === "active",
+                  })}
+                  onClick={() => setOfferStatus("active")}
+                >
                   Активные предложения
                 </button>
-                <button className="tab-button">Архив</button>
+                <button
+                  className={clsx("tab-button", {
+                    active: offerStatus === "archive",
+                  })}
+                  onClick={() => setOfferStatus("archive")}
+                >
+                  Архив
+                </button>
               </div>
               <div className="tab-content-wrap">
-                <div className="tab-content active">
-                  <div className="offers-items">
-                    {offers.map((offer: IUserOfferFront, index) => (
-                      <OfferCard
-                        key={`my-offers-${index}`}
-                        offer={offer}
-                        onlyTitle
-                      />
-                    ))}
+                {loading ? (
+                  <div className="w-full h-[400px] flex-jc-c">
+                    <Spinner color="secondary" />
                   </div>
-                </div>
+                ) : (
+                  <>
+                    {offers.length > 0 ? (
+                      <div className="tab-content active">
+                        <div className="offers-items">
+                          {offers.map((offer: IUserOfferFront, index) => (
+                            <OfferCard
+                              key={`my-offers-${index}`}
+                              offer={offer}
+                              onlyTitle
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <EmptyRes
+                        title={`${offerStatus === "active" ? "Активные предложения" : "Архивные предложения"} не найдены`}
+                      />
+                    )}
+                  </>
+                )}
+
                 <div className="tab-content">
                   <div className="offers-items">
                     <div className="offer-item">

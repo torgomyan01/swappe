@@ -10,18 +10,26 @@ import { useRouter } from "next/navigation";
 import OfferCard from "@/app/search/components/offer-card";
 import clsx from "clsx";
 import EmptyRes from "@/components/common/empty-res/empty-res";
+import { Spinner } from "@heroui/react";
 
 function Profile() {
   const router = useRouter();
   const [offers, setOffers] = useState<IUserOffer[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
   const [offerStatus, setOfferStatus] = useState<OfferStatus>("active");
 
   useEffect(() => {
     setOffers([]);
-    ActionMyOffers(offerStatus).then(({ data }) => {
-      setOffers(data as any);
-    });
+    setLoading(true);
+    ActionMyOffers(offerStatus)
+      .then(({ data }) => {
+        setOffers(data as any);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [offerStatus]);
 
   return (
@@ -74,9 +82,18 @@ function Profile() {
                 </button>
               </div>
               <div className="tab-content-wrap">
-                {offers.length === 0 && offerStatus === "archive" ? (
-                  <EmptyRes title="Пока ничего нет" />
-                ) : null}
+                {loading ? (
+                  <div className="w-full h-[400px] flex-jc-c">
+                    <Spinner color="secondary" />
+                  </div>
+                ) : (
+                  <>
+                    {(offers.length === 0 && offerStatus === "archive") ||
+                    (offers.length === 0 && offerStatus === "moderation") ? (
+                      <EmptyRes title="Пока ничего нет" />
+                    ) : null}
+                  </>
+                )}
 
                 <div className="tab-content active">
                   <div className="offers-items">

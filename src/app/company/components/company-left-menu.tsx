@@ -14,6 +14,9 @@ import {
   Skeleton,
 } from "@heroui/react";
 import { useEffect, useState } from "react";
+import Rating from "@mui/material/Rating";
+import { calcReviews } from "@/utils/helpers";
+import { ActionGetUserCompanyReviews } from "@/app/actions/company/get-user-company-reviews";
 
 interface IThisProps {
   company: IUserCompany;
@@ -40,8 +43,17 @@ function CompanyLeftMenu({ company }: IThisProps) {
   ];
 
   useEffect(() => {
-    setLoadingCompany(true);
+    ActionGetUserCompanyReviews().then(({ data }) => {
+      CalcReviews(data as IReview[]);
+      setLoadingCompany(true);
+    });
   }, [company]);
+
+  const [rating, setRating] = useState(0);
+
+  function CalcReviews(reviews: IReview[]) {
+    setRating(+calcReviews(reviews));
+  }
 
   return (
     <div className="profile-menu-wrap sticky top-4">
@@ -82,14 +94,16 @@ function CompanyLeftMenu({ company }: IThisProps) {
               </div>
               <span className="name">{company?.name}</span>
               <div className="stars">
-                <div className="stars-images flex-js-c gap-1">
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star.svg" alt="star" />
-                  <img src="/img/star-dubl.svg" alt="star" />
-                </div>
-                <span className="num">4.5</span>
+                <Rating
+                  name="simple-controlled"
+                  value={rating}
+                  readOnly
+                  precision={0.1}
+                  sx={{
+                    fontSize: 30,
+                  }}
+                />
+                <span className="num">{rating}</span>
               </div>
 
               <div className="flex-jc-c gap-2 mb-4">

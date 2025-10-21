@@ -2,11 +2,15 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function ActionCompanyOffers(user_id: number) {
+export async function ActionCompanyOffers(
+  user_id: number,
+  status: OfferStatus,
+) {
   try {
     const createOffer = await prisma.offers.findMany({
       where: {
         user_id,
+        status,
       },
       include: {
         user: {

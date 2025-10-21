@@ -18,7 +18,6 @@ export async function ActionAddAllCountries() {
 
     async function insertNext() {
       if (index >= data.length) {
-        console.log("✅ All records inserted!");
         return;
       }
 
