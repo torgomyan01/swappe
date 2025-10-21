@@ -54,7 +54,7 @@ function Profile() {
                     ))}
                   </div>
                 ) : (
-                  <EmptyRes title="Вам пока нет никакого отзыв" />
+                  <EmptyRes title="У вас пока нет отзывов" />
                 )
               ) : (
                 <div className="w-full h-[400px] flex-jc-c">
