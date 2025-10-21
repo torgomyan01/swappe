@@ -33,7 +33,10 @@ function TelegramBlock() {
       )}
     >
       <div className="flex-je-c">
-        <i className="fa-regular fa-xmark text-2xl"></i>
+        <i
+          className="fa-regular fa-xmark text-2xl"
+          onClick={() => setView(false)}
+        ></i>
       </div>
 
       <div className="flex-jc-c">

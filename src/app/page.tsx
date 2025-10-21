@@ -9,6 +9,7 @@ import HomeFaq from "@/components/layout/home/home-faq";
 import WhyAre from "@/components/layout/home/why-are";
 import Footer from "@/components/common/footer/footer";
 import CookieComponent from "@/components/common/main-template/cookie";
+import TelegramBlock from "@/components/common/main-template/telegram-block";
 
 function Page() {
   // useEffect(() => {
@@ -32,6 +33,8 @@ function Page() {
       <Footer />
 
       <CookieComponent />
+
+      <TelegramBlock />
     </>
   );
 }
