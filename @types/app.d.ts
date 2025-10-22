@@ -313,8 +313,8 @@ declare interface ISearchFilterStore {
 }
 
 declare interface IDataSearchFilter {
-  type: OfferType;
-  vid: OfferVid;
+  type: OfferType | "";
+  vid: OfferVid | "";
   category: ICategory[] | null;
   price: [number, number] | null;
   countryCompanyId: number | null;

@@ -38,6 +38,8 @@ function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
     (state: IUserStore) => state.userInfo.favorites,
   );
 
+  console.log(offer);
+
   const liked = favorites?.find((favorite) => favorite.offer_id === offer.id);
 
   function CreateFavorites() {

@@ -13,6 +13,7 @@ import clsx from "clsx";
 import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countries";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetSearchFilter,
   setCategoryStore,
   setCountryCompanyId,
   setPrice,
@@ -89,6 +90,13 @@ function Filter({ mobileShow, onClose }: IThisProps) {
       : list;
     return q ? filtered : filtered.slice(0, 3);
   }, [category, categoryQuery]);
+
+  const clearFilter = () => {
+    dispatch(resetSearchFilter());
+    setValuePriceBanners([0, 1000000]);
+    setCategoryQuery("");
+    setCountries([]);
+  };
 
   return (
     <div
@@ -216,6 +224,11 @@ function Filter({ mobileShow, onClose }: IThisProps) {
           </AutocompleteItem>
         ))}
       </Autocomplete>
+
+      <Button color="secondary" className="w-full mt-4" onPress={clearFilter}>
+        Сбросить фильтры
+      </Button>
+
       <Button className="green-btn" onPress={onClose}>
         Применить фильтрацию
       </Button>

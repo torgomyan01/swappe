@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: IDataSearchFilter = {
-  type: "product",
-  vid: "offline",
+export const initialSearchFilterState: IDataSearchFilter = {
+  type: "",
+  vid: "",
   category: null,
   price: null,
   countryCompanyId: null,
@@ -10,7 +10,7 @@ const initialState: IDataSearchFilter = {
 
 export const searchFilter = createSlice({
   name: "searchFilter",
-  initialState,
+  initialState: initialSearchFilterState,
   reducers: {
     setType: (state, action: PayloadAction<OfferType>) => {
       state.type = action.payload;
@@ -27,6 +27,13 @@ export const searchFilter = createSlice({
     setCountryCompanyId: (state, action: PayloadAction<number | null>) => {
       state.countryCompanyId = action.payload;
     },
+    resetSearchFilter: (state) => {
+      state.type = "";
+      state.vid = "";
+      state.category = null;
+      state.price = null;
+      state.countryCompanyId = null;
+    },
   },
 });
 
@@ -37,5 +44,6 @@ export const {
   setCategoryStore,
   setPrice,
   setCountryCompanyId,
+  resetSearchFilter,
 } = searchFilter.actions;
 export default searchFilter.reducer;
