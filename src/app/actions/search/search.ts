@@ -88,7 +88,17 @@ export async function ActionSearchOffer(
               email: true,
               id: true,
               name: true,
-              company: true,
+              company: {
+                select: {
+                  id: true,
+                  name: true,
+                  reviews: {
+                    select: {
+                      count: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },

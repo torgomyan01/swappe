@@ -38,8 +38,6 @@ function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
     (state: IUserStore) => state.userInfo.favorites,
   );
 
-  console.log(offer);
-
   const liked = favorites?.find((favorite) => favorite.offer_id === offer.id);
 
   function CreateFavorites() {
@@ -181,7 +179,7 @@ function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
           <div className="text-wrap flex-jsb-c w-full">
             {offer.user.company && <span>{offer.user.company.name}</span>}
             <b>
-              4.5 <img src="/img/star-small.svg" alt="" />
+              {OfferReviews} <img src="/img/star-small.svg" alt="" />
             </b>
           </div>
 
