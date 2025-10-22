@@ -41,6 +41,8 @@ function Register() {
   const [restoreOpen, setRestoreOpen] = useState(false);
   const [restoreEmail, setRestoreEmail] = useState("");
 
+  const [subscribeGetNews, setSubscribeGetNews] = useState<boolean>(true);
+
   function CreateUser(e: any) {
     e.preventDefault();
 
@@ -67,6 +69,7 @@ function Register() {
         email,
         referral_code as string | undefined,
         user_id as string | undefined,
+        subscribeGetNews,
       )
         .then((res) => {
           if (res.status === "error") {
@@ -187,12 +190,24 @@ function Register() {
             />
 
             <Checkbox color="secondary" required>
-              <p>
+              <p className="!text-start">
                 Я согласен(а) на обработку моих персональных данных в
                 соответствии с{" "}
                 <Link href={SITE_URL.PRIVACY_POLICY_USER_CONSENT}>
                   Политикой конфиденциальности
                 </Link>
+              </p>
+            </Checkbox>
+
+            <Checkbox
+              color="secondary"
+              className="mt-3"
+              onValueChange={setSubscribeGetNews}
+              isSelected={subscribeGetNews}
+            >
+              <p className="!text-start">
+                Хочу получать полезные новости и специальные предложения от
+                Swappe.
               </p>
             </Checkbox>
 

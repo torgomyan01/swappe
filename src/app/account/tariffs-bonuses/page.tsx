@@ -21,6 +21,7 @@ import TarifBlock from "./components/tarif-block";
 import ModalAddBlance from "@/components/common/modals/modal-add-blance";
 import { useSession } from "next-auth/react";
 import { ActionCancelUserPlan } from "@/app/actions/auth/cancel-user-plan";
+import HistoryInvatingUsers from "./components/history-invating-users";
 
 function Profile() {
   const router = useRouter();
@@ -232,36 +233,7 @@ function Profile() {
                 <span>Твоя реферальная ссылка</span>
                 <Snippet>{referralLink}</Snippet>
               </div>
-              <h4>История активаций</h4>
-              <div className="activate">
-                <div className="item">
-                  <div className="img">
-                    <img src="/img/rew-avatar.png" alt="" />
-                  </div>
-                  <div className="texts">
-                    <b>Название компании</b>
-                    <span>26 Nov 2021</span>
-                  </div>
-                </div>
-                <div className="item">
-                  <div className="img">
-                    <img src="/img/rew-avatar.png" alt="" />
-                  </div>
-                  <div className="texts">
-                    <b>Название компании</b>
-                    <span>26 Nov 2021</span>
-                  </div>
-                </div>
-                <div className="item">
-                  <div className="img">
-                    <img src="/img/rew-avatar.png" alt="" />
-                  </div>
-                  <div className="texts">
-                    <b>Название компании</b>
-                    <span>26 Nov 2021</span>
-                  </div>
-                </div>
-              </div>
+              <HistoryInvatingUsers />
             </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Spinner,
+  Switch,
   Tooltip,
 } from "@heroui/react";
 import { useSelector } from "react-redux";
@@ -21,6 +22,7 @@ import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { ActionGetMyPushNotifications } from "@/app/actions/push-notification/get-my-notofication";
 import { ActionChangeWritedPushNotification } from "@/app/actions/push-notification/change-writed";
+import EmptyRes from "../empty-res/empty-res";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -65,6 +67,16 @@ function Navbar() {
     });
   }
 
+  const [onlyNew, setOnlyNew] = useState(false);
+
+  useEffect(() => {
+    const onlyNew = localStorage.getItem("onlyNewNotifications");
+    console.log("onlyNew", onlyNew);
+    if (onlyNew) {
+      setOnlyNew(onlyNew === "1");
+    }
+  }, []);
+
   const push = notificationsData.filter(
     (notification) => notification.opened === false,
   );
@@ -85,6 +97,16 @@ function Navbar() {
       getNotificationColor();
     });
   }
+
+  function handleChangeOnlyNew(value: boolean) {
+    setOnlyNew(value);
+
+    localStorage.setItem("onlyNewNotifications", value ? "1" : "0");
+  }
+
+  const filteredNotifications = notificationsData.filter((notification) =>
+    onlyNew ? notification.opened === false : true,
+  );
 
   return (
     <>
@@ -217,12 +239,12 @@ function Navbar() {
           </div>
           <div className="top-line">
             <b>Уведомления</b>
-            <div className="new">
-              <span>Только новые</span>
-              <div className="switch" id="mySwitch">
-                <div className="slider"></div>
-              </div>
-            </div>
+            <Switch
+              color="secondary"
+              aria-label="Только новые"
+              onValueChange={handleChangeOnlyNew}
+              isSelected={onlyNew}
+            />
           </div>
           {push.length > 0 && (
             <div
@@ -235,30 +257,38 @@ function Navbar() {
           )}
 
           <div className="px-4">
-            {notificationsData.map((notification) => (
-              <div key={`notification-${notification.id}`}>
-                <Alert
-                  color={notification.type as PushNotificationType}
-                  title={notification.title}
-                  description={notification.description}
-                  className="mb-2"
-                  variant="faded"
-                  endContent={
-                    <Button
-                      as={Link}
-                      href={notification.link}
-                      target="_blank"
-                      size="sm"
+            {filteredNotifications.length ? (
+              <>
+                {filteredNotifications.map((notification) => (
+                  <div key={`notification-${notification.id}`}>
+                    <Alert
+                      color={notification.type as PushNotificationType}
+                      title={notification.title}
+                      description={notification.description}
+                      className="mb-2"
                       variant="faded"
-                      className="!flex-jc-c min-w-[90px]"
-                      onPress={() => handleOpenNotification(notification.id)}
-                    >
-                      Открыть <i className="fa-solid fa-arrow-right"></i>
-                    </Button>
-                  }
-                />
-              </div>
-            ))}
+                      endContent={
+                        <Button
+                          as={Link}
+                          href={notification.link}
+                          target="_blank"
+                          size="sm"
+                          variant="faded"
+                          className="!flex-jc-c min-w-[90px]"
+                          onPress={() =>
+                            handleOpenNotification(notification.id)
+                          }
+                        >
+                          Открыть <i className="fa-solid fa-arrow-right"></i>
+                        </Button>
+                      }
+                    />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <EmptyRes title="Уведомлений нет" />
+            )}
           </div>
 
           {/* <a href="#" className="notifications-item">

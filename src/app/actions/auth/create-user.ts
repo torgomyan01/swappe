@@ -71,6 +71,7 @@ export async function ActionCreateUser(
   email: string,
   referral_code?: string,
   user_id?: string,
+  subscribe_get_news?: boolean,
 ) {
   try {
     const parsed = Schema.safeParse({ name, password, email });
@@ -138,6 +139,8 @@ export async function ActionCreateUser(
         role: ["user"],
         created_at: new Date(),
         updated_at: new Date(),
+        inviting_user_id: user_id ? +user_id : null,
+        subscribe_get_news: subscribe_get_news || false,
       } as any,
     });
 

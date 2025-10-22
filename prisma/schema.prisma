@@ -27,7 +27,9 @@ model users {
   updated_at             DateTime @updatedAt
 
   role                   Json
-
+  inviting_user_id       Int?
+  subscribe_get_news    Boolean @default(false)
+  
   offers  offers[]
   company user_company?
 

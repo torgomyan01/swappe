@@ -20,6 +20,7 @@ import { ActionCreateDeals } from "@/app/actions/deals/create";
 import { ActionCreateChat } from "@/app/actions/chat/create";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import EmptyRes from "@/components/common/empty-res/empty-res";
 
 interface IThisProps {
   offer: IUserOfferFront;
@@ -184,7 +185,7 @@ function ButtonCreateDeal({ offer }: IThisProps) {
                     </Swiper>
                   </div>
                 ) : (
-                  <div className="w-full flex-jc-c">no offer</div>
+                  <EmptyRes title="Нет активных предложений" size="lg" />
                 )
               ) : (
                 <div className="w-full h-[200px] flex-jc-c">

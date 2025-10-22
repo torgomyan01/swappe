@@ -39,7 +39,7 @@ function HomeFaq() {
                     <img
                       src="/img/question-icon.png"
                       alt=""
-                      className="min-w-10 h-10"
+                      className="min-w-10 min-h-10"
                     />
                   </span>
                   <span className="text">{message}</span>

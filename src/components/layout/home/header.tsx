@@ -41,13 +41,13 @@ function HomeHeader() {
             </Link>
             <ul className="main-menu2">
               <li>
-                <Link href="#service">О сервисе</Link>
+                <Link href="#service">Тарифы </Link>
               </li>
               <li>
-                <Link href="#business-size">Отзывы</Link>
+                <Link href="#business-size">Для кого</Link>
               </li>
               <li>
-                <Link href="#why-are">Кто мы</Link>
+                <Link href="#why-are">очему Swappe</Link>
               </li>
               <li>
                 <Link href="#faq">FAQ</Link>

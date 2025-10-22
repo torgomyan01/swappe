@@ -89,7 +89,11 @@ function Profile() {
                     </div>
                   ) : (
                     <EmptyRes
-                      title={`У вас пока нет ${activeTab[active].toLowerCase()} `}
+                      title={
+                        activeTab[active] === "Активные сделки"
+                          ? "Пока нет активных сделок"
+                          : "Пока нет завершенных сделок"
+                      }
                     />
                   )
                 ) : (

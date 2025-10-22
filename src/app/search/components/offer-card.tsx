@@ -4,7 +4,15 @@ import Link from "next/link";
 import { ActionCreateUSerFavorites } from "@/app/actions/favorites/create-user-favorites";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { addToast } from "@heroui/react";
+import {
+  addToast,
+  DropdownItem,
+  DropdownMenu,
+  Button,
+  DropdownTrigger,
+  Dropdown,
+  Tooltip,
+} from "@heroui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAppendFavorites, setRemoveFavorite } from "@/redux/user";
 import clsx from "clsx";
@@ -17,7 +25,7 @@ interface IThisProps {
 }
 
 function OfferCard({ offer, onlyTitle = false }: IThisProps) {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -60,6 +68,8 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
 
   const OfferReviews = calcReviews(offer.user?.company?.reviews || []);
 
+  const checkMyOffer = offer.user_id === session?.user?.id;
+
   return (
     <div className="offer-item group !flex-js-s">
       <div className="img-wrap !p-0">
@@ -76,12 +86,50 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
             height={400}
           />
         </Link>
-        <div
-          className={clsx("favorite", {
-            open: liked,
-          })}
-          onClick={CreateFavorites}
-        />
+        {checkMyOffer ? (
+          <Dropdown className="min-w-0 w-fit">
+            <DropdownTrigger className="absolute top-6 right-6">
+              <Button className="min-w-[40px]">
+                <i className="fa-solid fa-ellipsis-vertical transform rotate-90"></i>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="changes offer"
+              className="offer-item-dropdown"
+            >
+              <DropdownItem key="new">
+                <Tooltip
+                  content="Статистика"
+                  color="secondary"
+                  placement="right"
+                >
+                  <img src="/img/icons/stats.svg" alt="edit" />
+                </Tooltip>
+              </DropdownItem>
+              <DropdownItem key="new">
+                <Tooltip
+                  content="Редактировать"
+                  color="secondary"
+                  placement="right"
+                >
+                  <img src="/img/icons/edit.svg" alt="edit" />
+                </Tooltip>
+              </DropdownItem>
+              <DropdownItem key="new">
+                <Tooltip content="В архив" color="secondary" placement="right">
+                  <img src="/img/icons/Archive.svg" alt="edit" />
+                </Tooltip>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        ) : (
+          <div
+            className={clsx("favorite", {
+              open: liked,
+            })}
+            onClick={CreateFavorites}
+          />
+        )}
       </div>
       {onlyTitle ? (
         <div className="mt-2 flex-jsb-c w-full">

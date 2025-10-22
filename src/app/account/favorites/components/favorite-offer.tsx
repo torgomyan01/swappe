@@ -30,7 +30,7 @@ function FavoriteOffer() {
             )}
           </div>
         ) : (
-          <EmptyRes title="У вас пока нет избранное предложения" />
+          <EmptyRes title="Вы ещё ничего не добавили" />
         )
       ) : (
         <div className="w-full h-[200px] flex-jc-c">

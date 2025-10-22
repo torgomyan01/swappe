@@ -26,7 +26,7 @@ function TelegramBlock() {
   return (
     <div
       className={clsx(
-        "w-[490px] fixed right-6 bottom-6 bg-white rounded-3xl shadow-2xl p-8 border border-[#EAECF0] transform transition",
+        "w-[calc(100%-40px)] sm:w-[490px] fixed right-6 bottom-6 bg-white rounded-3xl shadow-2xl p-8 border border-[#EAECF0] transform transition z-50",
         {
           "translate-x-[calc(100%+100px)] pointer-events-none": !view,
         },
@@ -34,7 +34,7 @@ function TelegramBlock() {
     >
       <div className="flex-je-c">
         <i
-          className="fa-regular fa-xmark text-2xl"
+          className="fa-regular fa-xmark text-2xl cursor-pointer"
           onClick={() => setView(false)}
         ></i>
       </div>
