@@ -8,10 +8,15 @@ function FavoriteOffer() {
   const [favorites, setFavorites] = useState<IUserFavorite[] | null>(null);
 
   useEffect(() => {
+    UpdateFavorites();
+  }, []);
+
+  function UpdateFavorites() {
+    setFavorites(null);
     ActionGetUserFavorites().then(({ data }) => {
       setFavorites(data as IUserFavorite[]);
     });
-  }, []);
+  }
 
   return (
     <div className="tab-content active">
@@ -25,6 +30,7 @@ function FavoriteOffer() {
                     key={`fav__${index}`}
                     offer={favorite.offers}
                     onlyTitle
+                    onUpdate={UpdateFavorites}
                   />
                 ),
             )}

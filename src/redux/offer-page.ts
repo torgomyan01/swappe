@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 
 interface IInterface {
   offer: IUserOffer;
@@ -52,6 +52,37 @@ export const userOffer = createSlice({
     setCompanyVideos: (state, action: PayloadAction<string[]>) => {
       state.offer.videos = action.payload;
     },
+    initializeOffer: (state, action: PayloadAction<IUserOfferFront>) => {
+      const offer = action.payload;
+      state.offer = {
+        type: offer.type,
+        vid: offer.vid,
+        name: offer.name,
+        category: offer.category,
+        price: offer.price,
+        coordinates: offer.coordinates,
+        description: offer.description,
+        images: offer.images.map((img: string) => {
+          // Convert string URLs to File objects for editing
+          // This is a placeholder - we'll handle this differently in the component
+          return img;
+        }),
+        videos: offer.videos,
+      };
+    },
+    resetOffer: (state) => {
+      state.offer = {
+        type: "",
+        vid: "",
+        name: "",
+        category: [],
+        price: "",
+        coordinates: null,
+        description: "",
+        images: [],
+        videos: [],
+      };
+    },
   },
 });
 
@@ -66,5 +97,26 @@ export const {
   setCompanyDescription,
   setCompanyImages,
   setCompanyVideos,
+  initializeOffer,
+  resetOffer,
 } = userOffer.actions;
+// Selectors for better performance
+export const selectOffer = (state: IUserOfferStore) => state.userOffer.offer;
+export const selectOfferImages = createSelector(
+  [selectOffer],
+  (offer) => offer.images,
+);
+export const selectOfferVideos = createSelector(
+  [selectOffer],
+  (offer) => offer.videos,
+);
+export const selectOfferCategories = createSelector(
+  [selectOffer],
+  (offer) => offer.category,
+);
+export const selectOfferCoordinates = createSelector(
+  [selectOffer],
+  (offer) => offer.coordinates,
+);
+
 export default userOffer.reducer;

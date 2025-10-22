@@ -10,7 +10,14 @@ import { useRouter } from "next/navigation";
 import OfferCard from "@/app/search/components/offer-card";
 import clsx from "clsx";
 import EmptyRes from "@/components/common/empty-res/empty-res";
-import { Spinner } from "@heroui/react";
+import {
+  DropdownItem,
+  DropdownMenu,
+  Button,
+  DropdownTrigger,
+  Spinner,
+  Dropdown,
+} from "@heroui/react";
 
 function Profile() {
   const router = useRouter();
@@ -19,6 +26,8 @@ function Profile() {
   const [loading, setLoading] = useState(true);
 
   const [offerStatus, setOfferStatus] = useState<OfferStatus>("active");
+
+  console.log(offerStatus);
 
   useEffect(() => {
     setOffers([]);
@@ -43,19 +52,58 @@ function Profile() {
             </Link>
             <span>Мои предложения</span>
           </div>
-          <div className="top-mob-line">
+          <div className="top-mob-line max-sm:!flex-jsb-c lg:!hidden">
             <span
-              className="back"
+              className="back max-sm:!relative max-sm:!mb-0 max-sm:!translate-y-[20px] max-sm:!top-0"
               onClick={() => router.push(SITE_URL.ACCOUNT)}
             >
               <img src="/img/back-icon.svg" alt="" />
             </span>
             <b>Мои предложения</b>
+
+            <Dropdown>
+              <DropdownTrigger>
+                <Button className="min-w-0 sm:!hidden">
+                  <i className="fa-regular fa-filter"></i>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                onAction={(keys: string) => {
+                  setOfferStatus(keys as OfferStatus);
+                }}
+                aria-label="Offer status"
+              >
+                <DropdownItem
+                  key="active"
+                  className={clsx({
+                    "bg-green text-white": offerStatus === "active",
+                  })}
+                >
+                  Активные предложения
+                </DropdownItem>
+                <DropdownItem
+                  key="archive"
+                  className={clsx({
+                    "bg-green text-white": offerStatus === "archive",
+                  })}
+                >
+                  Архив
+                </DropdownItem>
+                <DropdownItem
+                  key="moderation"
+                  className={clsx({
+                    "bg-green text-white": offerStatus === "moderation",
+                  })}
+                >
+                  На модерации
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
           <div className="info">
             <LeftMenu />
             <div className="profile favorite-account">
-              <div className="tabs">
+              <div className="tabs max-sm:!hidden">
                 <button
                   className={clsx("tab-button", {
                     active: offerStatus === "active",

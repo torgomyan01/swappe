@@ -12,19 +12,23 @@ import {
   DropdownTrigger,
   Dropdown,
   Tooltip,
+  Spinner,
 } from "@heroui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAppendFavorites, setRemoveFavorite } from "@/redux/user";
 import clsx from "clsx";
 import { ActionCRemoveUserFavorites } from "@/app/actions/favorites/remove-user-favorites";
 import Image from "next/image";
+import { ActionRemoveOffer } from "@/app/actions/offers/remove-offer";
+import { useState } from "react";
 
 interface IThisProps {
   offer: IUserOfferFront;
   onlyTitle?: boolean;
+  onUpdate?: () => void;
 }
 
-function OfferCard({ offer, onlyTitle = false }: IThisProps) {
+function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
   const { data: session }: any = useSession();
 
   const router = useRouter();
@@ -70,6 +74,23 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
 
   const checkMyOffer = offer.user_id === session?.user?.id;
 
+  const [loading, setLoading] = useState(false);
+
+  function RemoveOffer() {
+    setLoading(true);
+    ActionRemoveOffer(offer.id)
+      .then(({ status, error }) => {
+        if (status === "error") {
+          addToast({ description: error, color: "danger" });
+        }
+        if (status === "ok") {
+          addToast({ description: "Предложение удалено", color: "success" });
+          onUpdate?.();
+        }
+      })
+      .finally(() => setLoading(false));
+  }
+
   return (
     <div className="offer-item group !flex-js-s">
       <div className="img-wrap !p-0">
@@ -88,7 +109,7 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
         </Link>
         {checkMyOffer ? (
           <Dropdown className="min-w-0 w-fit">
-            <DropdownTrigger className="absolute top-6 right-6">
+            <DropdownTrigger className="absolute top-4 sm:top-6 right-4 sm:right-6">
               <Button className="min-w-[40px]">
                 <i className="fa-solid fa-ellipsis-vertical transform rotate-90"></i>
               </Button>
@@ -106,7 +127,10 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
                   <img src="/img/icons/stats.svg" alt="edit" />
                 </Tooltip>
               </DropdownItem>
-              <DropdownItem key="new">
+              <DropdownItem
+                key="new"
+                href={SITE_URL.ACCOUNT_OFFER_CHANGE(offer.id)}
+              >
                 <Tooltip
                   content="Редактировать"
                   color="secondary"
@@ -115,10 +139,14 @@ function OfferCard({ offer, onlyTitle = false }: IThisProps) {
                   <img src="/img/icons/edit.svg" alt="edit" />
                 </Tooltip>
               </DropdownItem>
-              <DropdownItem key="new">
-                <Tooltip content="В архив" color="secondary" placement="right">
-                  <img src="/img/icons/Archive.svg" alt="edit" />
-                </Tooltip>
+              <DropdownItem key="new" onClick={RemoveOffer}>
+                {loading ? (
+                  <Spinner color="danger" />
+                ) : (
+                  <Tooltip content="Удалить" color="danger" placement="right">
+                    <img src="/img/icons/Archive.svg" alt="edit" />
+                  </Tooltip>
+                )}
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

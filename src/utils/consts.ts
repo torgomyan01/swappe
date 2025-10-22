@@ -23,6 +23,7 @@ export const SITE_URL = {
   ACCOUNT_TRANSACTIONS: "/account/transactions",
   ACCOUNT_SUGGESTIONS: "/account/offers",
   ACCOUNT_OFFER_CREATE: "/account/offers/create",
+  ACCOUNT_OFFER_CHANGE: (id: number | string) => `/account/offers/change/${id}`,
   ACCOUNT_TARIFFS_BONUSES: "/account/tariffs-bonuses",
   ACCOUNT_TARIFFS_BONUSES_HISTORY: "/account/tariffs-bonuses/history",
   ACCOUNT_TARIFF: "/account/tariffs-bonuses/change",

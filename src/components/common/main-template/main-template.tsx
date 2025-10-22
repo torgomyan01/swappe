@@ -9,17 +9,20 @@ import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
 import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorites";
 import CookieComponent from "@/components/common/main-template/cookie";
+import { Spinner } from "@heroui/react";
 
 interface IThisProps {
   children?: React.ReactNode;
   footer?: boolean;
   isEmpty?: boolean;
+  loading?: boolean;
 }
 
 function MainTemplate({
   children,
   footer = true,
   isEmpty = false,
+  loading = false,
 }: IThisProps) {
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -38,13 +41,21 @@ function MainTemplate({
 
   return (
     <>
-      {!isEmpty && <Navbar />}
+      {loading ? (
+        <div className="w-full h-[100dvh] flex-jc-c">
+          <Spinner color="secondary" />
+        </div>
+      ) : (
+        <>
+          {!isEmpty && <Navbar />}
 
-      {children}
+          {children}
 
-      {!isEmpty && footer && <Footer />}
+          {!isEmpty && footer && <Footer />}
 
-      <CookieComponent />
+          <CookieComponent />
+        </>
+      )}
     </>
   );
 }

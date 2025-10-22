@@ -17,18 +17,10 @@ interface IThisProps {
 function CompanyPageReviews({ company }: IThisProps) {
   const [reviews, setReviews] = useState<IReview[] | null>(null);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    setLoading(true);
-    setReviews([]);
-    ActionGetCompanyReview(company.id)
-      .then(({ data }) => {
-        setReviews(data as IReview[]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    ActionGetCompanyReview(company.id).then(({ data }) => {
+      setReviews(data as IReview[]);
+    });
   }, []);
 
   return (
@@ -51,7 +43,7 @@ function CompanyPageReviews({ company }: IThisProps) {
           <div className="info">
             <CompanyLeftMenu company={company} />
             <div className="profile review-account">
-              {loading ? (
+              {reviews ? (
                 reviews?.length ? (
                   <div className="review-items">
                     {reviews.map((item, index) => (

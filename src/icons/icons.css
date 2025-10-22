@@ -132,6 +132,10 @@
   content: "\f142";
 }
 
+.fa-filter:before {
+  content: "\f0b0";
+}
+
 /*---------------------------------*/
 
 @font-face {

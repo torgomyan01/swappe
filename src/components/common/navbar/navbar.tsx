@@ -127,30 +127,38 @@ function Navbar() {
             </button>
           </form>
           <div className="icons">
-            <Link href={SITE_URL.ACCOUNT_OFFER_CREATE}>
-              <span className="icon cursor-pointer">
-                <img src="/img/menu-icon1.svg" alt="" />
+            <Tooltip content="Создать предложение">
+              <Link href={SITE_URL.ACCOUNT_OFFER_CREATE}>
+                <span className="icon cursor-pointer">
+                  <img src="/img/menu-icon1.svg" alt="" />
+                </span>
+              </Link>
+            </Tooltip>
+            <Tooltip content="Уведомления">
+              <span
+                className="icon cursor-pointer"
+                onClick={() => setNotifications(!notifications)}
+              >
+                {push.length ? <span className="circle" /> : null}
+                <img src="/img/menu-icon2.svg" alt="" />
               </span>
-            </Link>
-            <span
-              className="icon cursor-pointer"
-              onClick={() => setNotifications(!notifications)}
-            >
-              {push.length ? <span className="circle" /> : null}
-              <img src="/img/menu-icon2.svg" alt="" />
-            </span>
-            <Link
-              href={SITE_URL.ACCOUNT_FAVORITES}
-              className="icon cursor-pointer"
-            >
-              <img src="/img/menu-icon3.svg" alt="" />
-            </Link>
-            <Link
-              href={SITE_URL.ACCOUNT_TRANSACTIONS}
-              className="icon cursor-pointer"
-            >
-              <img src="/img/menu-icon4.svg" alt="" />
-            </Link>
+            </Tooltip>
+            <Tooltip content="Избранное">
+              <Link
+                href={SITE_URL.ACCOUNT_FAVORITES}
+                className="icon cursor-pointer"
+              >
+                <img src="/img/menu-icon3.svg" alt="" />
+              </Link>
+            </Tooltip>
+            <Tooltip content="Транзакции">
+              <Link
+                href={SITE_URL.ACCOUNT_TRANSACTIONS}
+                className="icon cursor-pointer"
+              >
+                <img src="/img/menu-icon4.svg" alt="" />
+              </Link>
+            </Tooltip>
             <Tooltip content="Сообщения">
               <Link href={SITE_URL.CHAT} className="icon cursor-pointer">
                 {/*<span className="count">+9</span>*/}
