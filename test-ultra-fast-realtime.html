@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>INSTANT Real-time Online Status Test</title>
+    <title>ULTRA-FAST Real-time Online Status Test</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         padding: 20px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -51,7 +51,7 @@
         height: 12px;
         border-radius: 50%;
         background: #4caf50;
-        animation: pulse 2s infinite;
+        animation: pulse 1s infinite;
       }
       .indicator.offline {
         background: #f44336;
@@ -59,7 +59,7 @@
       }
       .indicator.connecting {
         background: #ff9800;
-        animation: pulse 1s infinite;
+        animation: pulse 0.5s infinite;
       }
       .indicator.disconnected {
         background: #9e9e9e;
@@ -70,7 +70,7 @@
           opacity: 1;
         }
         50% {
-          opacity: 0.5;
+          opacity: 0.3;
         }
         100% {
           opacity: 1;
@@ -113,7 +113,7 @@
         border-radius: 10px;
         padding: 20px;
         margin-top: 20px;
-        max-height: 300px;
+        max-height: 400px;
         overflow-y: auto;
         font-family: "Courier New", monospace;
         font-size: 14px;
@@ -160,11 +160,26 @@
         font-size: 0.9em;
         opacity: 0.8;
       }
+      .ultra-fast {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+        animation: ultra-fast-pulse 0.5s infinite;
+      }
+      @keyframes ultra-fast-pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>⚡ INSTANT Real-time Online Status Test</h1>
+      <h1>⚡ ULTRA-FAST Real-time Online Status Test</h1>
 
       <div class="status" id="connectionStatus">
         <div class="indicator" id="statusIndicator"></div>
@@ -184,6 +199,10 @@
           <div class="stat-value" id="reconnectAttempts">0</div>
           <div class="stat-label">Reconnect Attempts</div>
         </div>
+        <div class="stat-card ultra-fast">
+          <div class="stat-value" id="ultraFastStatus">ULTRA-FAST</div>
+          <div class="stat-label">Mode Active</div>
+        </div>
       </div>
 
       <div class="controls">
@@ -195,6 +214,7 @@
           Reconnect
         </button>
         <button onclick="clearLog()">Clear Log</button>
+        <button onclick="testUltraFast()">Test Ultra-Fast</button>
       </div>
 
       <div class="log" id="log"></div>
@@ -238,7 +258,10 @@
 
         isConnecting = true;
         updateStatus("connecting", "Connecting...");
-        log("⚡ INSTANT: Attempting to connect to WebSocket server...", "info");
+        log(
+          "⚡ ULTRA-FAST: Attempting to connect to WebSocket server...",
+          "info",
+        );
 
         const userId = Math.floor(Math.random() * 1000) + 1;
         const wsUrl = `ws://localhost:3001/ws-online-status?userId=${userId}`;
@@ -250,7 +273,7 @@
             isConnecting = false;
             updateStatus("online", "Connected");
             log(
-              `✅ INSTANT: Connected to WebSocket server as user ${userId}`,
+              `✅ ULTRA-FAST: Connected to WebSocket server as user ${userId}`,
               "success",
             );
             updateStats();
@@ -265,29 +288,29 @@
             try {
               const message = JSON.parse(event.data);
               log(
-                `📨 INSTANT: Received message: ${JSON.stringify(message, null, 2)}`,
+                `📨 ULTRA-FAST: Received message: ${JSON.stringify(message, null, 2)}`,
                 "info",
               );
 
               if (message.type === "USER_ONLINE") {
                 log(
-                  `🟢 INSTANT: User ${message.userId} came ONLINE`,
+                  `🟢 ULTRA-FAST: User ${message.userId} came ONLINE`,
                   "success",
                 );
               } else if (message.type === "USER_OFFLINE") {
                 log(
-                  `🔴 INSTANT: User ${message.userId} went OFFLINE`,
+                  `🔴 ULTRA-FAST: User ${message.userId} went OFFLINE`,
                   "warning",
                 );
               } else if (message.type === "CONNECTION_ESTABLISHED") {
                 log(
-                  `🎯 INSTANT: Connection established for user ${message.userId}`,
+                  `🎯 ULTRA-FAST: Connection established for user ${message.userId}`,
                   "success",
                 );
               }
             } catch (error) {
               log(
-                `❌ INSTANT: Error parsing message: ${error.message}`,
+                `❌ ULTRA-FAST: Error parsing message: ${error.message}`,
                 "error",
               );
             }
@@ -298,7 +321,7 @@
             isConnecting = false;
             updateStatus("disconnected", "Disconnected");
             log(
-              `🔌 INSTANT: WebSocket closed: ${event.code} - ${event.reason}`,
+              `🔌 ULTRA-FAST: WebSocket closed: ${event.code} - ${event.reason}`,
               "warning",
             );
             updateStats();
@@ -311,14 +334,14 @@
           ws.onerror = (error) => {
             isConnecting = false;
             updateStatus("disconnected", "Connection Error");
-            log(`❌ INSTANT: WebSocket error: ${error}`, "error");
+            log(`❌ ULTRA-FAST: WebSocket error: ${error}`, "error");
             updateStats();
           };
         } catch (error) {
           isConnecting = false;
           updateStatus("disconnected", "Connection Failed");
           log(
-            `❌ INSTANT: Failed to create WebSocket: ${error.message}`,
+            `❌ ULTRA-FAST: Failed to create WebSocket: ${error.message}`,
             "error",
           );
           updateStats();
@@ -331,7 +354,7 @@
           ws = null;
           updateStatus("disconnected", "Disconnected");
           log(
-            "🔌 INSTANT: Manually disconnected from WebSocket server",
+            "🔌 ULTRA-FAST: Manually disconnected from WebSocket server",
             "info",
           );
           updateStats();
@@ -347,10 +370,10 @@
           disconnect();
         }
         reconnectAttempts++;
-        log(`🔄 INSTANT: Reconnection attempt ${reconnectAttempts}`, "info");
+        log(`🔄 ULTRA-FAST: Reconnection attempt ${reconnectAttempts}`, "info");
         setTimeout(() => {
           connect();
-        }, 1000);
+        }, 500); // Ultra-fast reconnection
       }
 
       function clearLog() {
@@ -359,10 +382,28 @@
         updateStats();
       }
 
+      function testUltraFast() {
+        log("🚀 ULTRA-FAST: Testing ultra-fast mode...", "info");
+        log("⚡ ULTRA-FAST: Simulating instant status changes...", "info");
+
+        // Simulate ultra-fast status changes
+        setTimeout(() => {
+          log("🟢 ULTRA-FAST: Simulated user came ONLINE", "success");
+        }, 100);
+
+        setTimeout(() => {
+          log("🔴 ULTRA-FAST: Simulated user went OFFLINE", "warning");
+        }, 2000);
+
+        setTimeout(() => {
+          log("🟢 ULTRA-FAST: Simulated user came ONLINE again", "success");
+        }, 4000);
+      }
+
       // Auto-connect on page load
       window.onload = () => {
         log(
-          "🚀 INSTANT: Page loaded, ready to test real-time online status",
+          "🚀 ULTRA-FAST: Page loaded, ready to test ultra-fast real-time online status",
           "info",
         );
         updateStats();
@@ -372,7 +413,7 @@
       document.addEventListener("visibilitychange", () => {
         if (!document.hidden && ws) {
           log(
-            "👁️ INSTANT: Page became visible, WebSocket should be active",
+            "👁️ ULTRA-FAST: Page became visible, WebSocket should be active",
             "info",
           );
         }
