@@ -328,8 +328,8 @@ export const getOnlineStatus = (
   const diffMs = now.getTime() - lastSeenDate.getTime();
   const diffMinutes = Math.floor(diffMs / 60000);
 
-  // Consider user online if they were active within last 5 minutes
-  if (diffMinutes <= 5) {
+  // Consider user online if they were active within last 1 minute (instant real-time)
+  if (diffMinutes <= 1) {
     return {
       isOnline: true,
       statusText: "В сети",

@@ -28,12 +28,10 @@
     "no-console": "warn",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off",
-    "curly": ["warn", "all"],
     "no-confusing-arrow": ["warn", { "allowParens": false }],
     "operator-linebreak": "off",
     "no-prototype-builtins": "warn",
     "no-extra-boolean-cast": "warn",
-    "no-useless-escape": "warn",
     "no-useless-catch": "warn",
     "object-shorthand": "warn",
     "prefer-const": "warn",
@@ -43,6 +41,10 @@
     "react/display-name": "off",
     "import/no-cycle": "off",
     "react/no-find-dom-node": "warn",
+    "@typescript-eslint/no-require-imports": "off",
+    "no-undef": "off",
+    "no-useless-escape": "off",
+    "curly": "off"
 
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

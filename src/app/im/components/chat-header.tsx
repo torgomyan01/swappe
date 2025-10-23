@@ -7,7 +7,8 @@ import PrintDealStatus from "@/app/im/components/print-deal-status";
 // Removed server action import - using API route instead
 import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
-import { useRealtimeOnlineStatus } from "@/hooks/use-realtime-online-status";
+import { useInstantOnlineStatus } from "@/hooks/use-instant-online-status";
+import { useInstantActivityTracker } from "@/hooks/use-instant-activity-tracker-simple";
 
 interface ChatHeaderProps {
   chatInfo: IChatItems;
@@ -73,8 +74,18 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     [otherUserId, realTimeStatus?.lastSeen],
   );
 
-  // Initialize real-time online status
-  useRealtimeOnlineStatus(onlineStatusCallbacks);
+  // Initialize INSTANT real-time online status
+  useInstantOnlineStatus(onlineStatusCallbacks);
+
+  // Initialize INSTANT activity tracking
+  useInstantActivityTracker({
+    updateInterval: 5000, // 5 seconds for instant updates
+    debounceTime: 1000, // 1 second debounce
+    enableMouseTracking: true,
+    enableKeyboardTracking: true,
+    enableScrollTracking: true,
+    enableFocusTracking: true,
+  });
 
   // Fetch other user's last seen information
   useEffect(() => {

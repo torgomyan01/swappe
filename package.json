@@ -6,14 +6,14 @@
     "node": ">=20.13.1"
   },
   "scripts": {
-    "dev": "concurrently \"next dev --turbopack\" \"node src/lib/simple-websocket-server.js\"",
+    "dev": "concurrently \"next dev --turbopack\" \"node src/lib/optimized-websocket-server.js\"",
     "dev:next": "next dev --turbopack",
-    "dev:ws": "node src/lib/simple-websocket-server.js",
+    "dev:ws": "node src/lib/optimized-websocket-server.js",
     "socket": "node ws-server.js",
     "build": "prisma generate && next build",
-    "start": "concurrently \"next start -p 3003\" \"node src/lib/simple-websocket-server.js\"",
+    "start": "concurrently \"next start -p 3003\" \"node src/lib/optimized-websocket-server.js\"",
     "start:next": "next start -p 3003",
-    "start:ws": "node src/lib/simple-websocket-server.js",
+    "start:ws": "node src/lib/optimized-websocket-server.js",
     "lint": "next lint",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
