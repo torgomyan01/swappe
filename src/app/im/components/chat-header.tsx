@@ -1,14 +1,15 @@
 "use client";
 
-import { memo, useEffect, useState, useMemo } from "react";
+import { memo, useEffect, useState, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { fileHost } from "@/utils/consts";
 import PrintDealStatus from "@/app/im/components/print-deal-status";
 // Removed server action import - using API route instead
-import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
-import { useSimpleStatus } from "@/hooks/use-simple-status";
-import { useSimpleActivity } from "@/hooks/use-simple-activity";
+import { ActionGetLastSeenUser } from "@/app/actions/auth/get-last-seen-user";
+import { getOnlineStatus } from "@/utils/helpers";
+import clsx from "clsx";
+import { useIntervalManager } from "@/hooks/use-interval-manager";
 
 interface ChatHeaderProps {
   chatInfo: IChatItems;
@@ -16,7 +17,7 @@ interface ChatHeaderProps {
 
 const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
   const { data: session }: any = useSession<any>();
-  const [otherUserInfo, setOtherUserInfo] = useState<any>(null);
+  const [status, setStatus] = useState<any>(null);
 
   // Determine which user is the "other" user in the chat
   const otherUserId = useMemo(() => {
@@ -30,43 +31,32 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     return chatInfo.deal.client_id;
   }, [session?.user?.id, chatInfo?.deal]);
 
-  // Use simple status hook
-  const { status, isLoading } = useSimpleStatus(otherUserId || 0, {
-    updateInterval: 10000, // 10 seconds
-    enablePolling: true,
-  });
+  // Memoized function to get status
+  const getStatus = useCallback((userId: number) => {
+    ActionGetLastSeenUser(userId).then(({ data }) => {
+      const date = getOnlineStatus(data?.last_seen as Date);
+      console.log(date);
+      setStatus(date);
+    });
+  }, []);
 
-  // Use simple activity tracking
-  useSimpleActivity({
-    updateInterval: 30000, // 30 seconds
-    debounceTime: 5000, // 5 seconds debounce
-    enableMouseTracking: true,
-    enableKeyboardTracking: true,
-    enableScrollTracking: true,
-    enableFocusTracking: true,
-  });
-
-  // Fetch other user's information
+  // Initial status fetch
   useEffect(() => {
     if (otherUserId) {
-      // This will be handled by the useSimpleStatus hook
-      // We just need to fetch the user info for display
-      setOtherUserInfo({
-        id: otherUserId,
-        name:
-          chatInfo.deal?.client_id === session?.user?.id
-            ? chatInfo.deal?.owner?.name
-            : chatInfo.deal?.client?.name,
-      });
+      getStatus(otherUserId);
     }
-  }, [otherUserId, chatInfo, session?.user?.id]);
+  }, [otherUserId, getStatus]);
 
-  // Status display logic
-  const displayStatus = status || {
-    isOnline: false,
-    statusText: "Загрузка...",
-    statusClass: "offline",
-  };
+  // Use interval manager for periodic status updates
+  useIntervalManager(
+    "user-status",
+    () => {
+      if (otherUserId) {
+        getStatus(otherUserId);
+      }
+    },
+    60000, // 1 minute
+  );
 
   return (
     <div className="top-info">
@@ -103,12 +93,9 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
               <img src="/img/chat/dots-menu.svg" alt="" className="opacity-0" />
             </div>
           </div>
-          <span className={`status ${displayStatus.statusClass}`}>
-            {isLoading && <span className="loading-indicator">⟳</span>}
-            {!isLoading && displayStatus.isOnline && (
-              <span className="online-indicator"></span>
-            )}
-            {displayStatus.statusText}
+          <span className={clsx("status", status?.statusClass)}>
+            {status?.isOnline && <span className="online-indicator"></span>}
+            {status?.statusText}
           </span>
         </div>
       </div>

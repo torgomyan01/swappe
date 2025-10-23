@@ -1,16 +1,17 @@
-import { authOptions } from "@/lib/auth";
+"use server";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
 export async function ActionUpdateLastSeen() {
   try {
     const session: any = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
-      return { status: "error", data: null, error: "Unauthorized" };
+    if (!session) {
+      return { status: "error", data: [], error: "logout" };
     }
 
-    // Update the user's last_seen timestamp
     await prisma.users.update({
       where: { id: session.user.id },
       data: {
@@ -18,9 +19,19 @@ export async function ActionUpdateLastSeen() {
       },
     });
 
-    return { status: "ok", data: null, error: null };
-  } catch (error) {
-    console.error("Error updating last seen:", error);
-    return { status: "error", data: null, error: "Failed to update last seen" };
+    return {
+      status: "ok",
+      data: [],
+      error: "",
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: [],
+      error:
+        typeof error?.message === "string"
+          ? error.message
+          : "Не удалось выполнить операцию. Повторите попытку позже",
+    };
   }
 }
