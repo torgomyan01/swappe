@@ -47,7 +47,7 @@ function HomeHeader() {
                 <Link href="#business-size">Для кого</Link>
               </li>
               <li>
-                <Link href="#why-are">очему Swappe</Link>
+                <Link href="#why-are">Почему Swappe</Link>
               </li>
               <li>
                 <Link href="#faq">FAQ</Link>

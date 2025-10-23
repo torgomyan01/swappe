@@ -5,6 +5,7 @@ import MessageImagesBlock from "@/app/im/components/message-images-block";
 import { sliceText } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
+import { memo } from "react";
 
 interface IThisProps {
   message: IMessage;
@@ -13,7 +14,7 @@ interface IThisProps {
   isReadOnly?: boolean;
 }
 
-function FeedbackBlock({
+const FeedbackBlock = memo(function FeedbackBlock({
   message,
   chatInfo,
   onClose,
@@ -82,6 +83,6 @@ function FeedbackBlock({
       )}
     </div>
   );
-}
+});
 
 export default FeedbackBlock;

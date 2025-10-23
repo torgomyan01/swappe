@@ -71,7 +71,6 @@ function Navbar() {
 
   useEffect(() => {
     const onlyNew = localStorage.getItem("onlyNewNotifications");
-    console.log("onlyNew", onlyNew);
     if (onlyNew) {
       setOnlyNew(onlyNew === "1");
     }

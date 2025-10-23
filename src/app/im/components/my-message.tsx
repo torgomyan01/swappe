@@ -10,7 +10,7 @@ import {
   DropdownTrigger,
 } from "@heroui/react";
 import FeedbackBlock from "@/app/im/components/feedback-block";
-import { useState } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
@@ -20,15 +20,37 @@ interface IThisProps {
   onSelectMessage: (messageId: number) => void;
 }
 
-function MyMessage({ message, info, onSelectMessage }: IThisProps) {
+const MyMessage = memo(function MyMessage({
+  message,
+  info,
+  onSelectMessage,
+}: IThisProps) {
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleContextMenu = (e: any) => {
+  const handleContextMenu = useCallback((e: any) => {
     e.preventDefault();
     setIsOpen(true);
-  };
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const handleSelectMessage = useCallback(() => {
+    onSelectMessage(message.id);
+  }, [onSelectMessage, message.id]);
+
+  // Memoize the formatted time to prevent unnecessary recalculations
+  const formattedTime = useMemo(() => {
+    return moment(message.created_at).format("hh:mm");
+  }, [message.created_at]);
+
+  // Memoize the company link to prevent unnecessary re-renders
+  const companyLink = useMemo(() => {
+    return SITE_URL.COMPANY(company?.id || 0);
+  }, [company?.id]);
 
   return (
     <div className="right-sms-wrap sm:!min-w-[300px] relative">
@@ -40,7 +62,7 @@ function MyMessage({ message, info, onSelectMessage }: IThisProps) {
               "py-1 px-1 border border-default-200 bg-linear-to-br from-white to-default-200 dark:from-default-50 dark:to-black",
           }}
           isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={handleClose}
         >
           <DropdownTrigger>
             <div className="style" onContextMenu={handleContextMenu}>
@@ -62,7 +84,7 @@ function MyMessage({ message, info, onSelectMessage }: IThisProps) {
           <DropdownMenu aria-label="menu message" variant="faded">
             <DropdownItem
               key={`select-${message.id}`}
-              onPress={() => onSelectMessage(message.id)}
+              onPress={handleSelectMessage}
             >
               <div className="flex-js-c gap-2">
                 <i className="fa-solid fa-reply"></i>Ответить
@@ -72,14 +94,10 @@ function MyMessage({ message, info, onSelectMessage }: IThisProps) {
         </Dropdown>
         <div className="time">
           <img src="/img/chat/massage-state.svg" alt="" />
-          {moment(message.created_at).format("hh:mm")}
+          {formattedTime}
         </div>
       </div>
-      <Link
-        href={SITE_URL.COMPANY(company?.id || 0)}
-        target="_blank"
-        className="img"
-      >
+      <Link href={companyLink} target="_blank" className="img">
         <Image
           src={`${fileHost}${company?.image_path}`}
           alt=""
@@ -89,6 +107,6 @@ function MyMessage({ message, info, onSelectMessage }: IThisProps) {
       </Link>
     </div>
   );
-}
+});
 
 export default MyMessage;

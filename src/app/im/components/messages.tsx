@@ -4,7 +4,7 @@ import MessagesStartHero from "@/app/im/components/messages-start-hero";
 import MyMessage from "@/app/im/components/my-message";
 import { useSession } from "next-auth/react";
 import ClientMessage from "@/app/im/components/client-message";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo, useMemo, useCallback } from "react";
 import "react-photo-view/dist/react-photo-view.css";
 import { groupMessagesByDate } from "@/utils/helpers";
 
@@ -18,7 +18,7 @@ interface IThisProps {
   chatType?: "support" | "deal";
 }
 
-function Messages({
+const Messages = memo(function Messages({
   chat,
   messages,
   onSelectMessage,
@@ -31,65 +31,83 @@ function Messages({
 
   const messagesEndRef: any = useRef(null);
 
+  // Memoize the sorted messages to prevent unnecessary recalculations
+  const sortedMessages = useMemo(() => {
+    return groupMessagesByDate(messages);
+  }, [messages]);
+
+  useEffect(() => {
+    setSortMessages(sortedMessages);
+  }, [sortedMessages]);
+
   useEffect(() => {
     if (messagesEndRef.current) {
       setTimeout(() => {
         messagesEndRef.current.scrollIntoView();
       }, 1000);
     }
+  }, [sortMessages]);
 
-    const sorted = groupMessagesByDate(messages);
+  // Memoize the offers block to prevent unnecessary re-renders
+  const offersBlock = useMemo(() => {
+    if (!offersBlocks) return null;
 
-    setSortMessages(sorted);
-  }, [messages]);
+    return (
+      <div className="transactions-item style2">
+        <div className="status-text">
+          {moment(chat.deal.created_at).calendar()}
+        </div>
+
+        <MessagesStartHero chat={chat} />
+
+        <div className="txt">
+          <div className="new">
+            <img src="/img/new-style.svg" alt="" />
+            <span>Новая</span>
+          </div>
+          <b>{chat.chat_name}</b>
+          <span>🌟 «Начни общение — создавай коллаборации!»</span>
+        </div>
+      </div>
+    );
+  }, [offersBlocks, chat]);
+
+  // Memoize message rendering to prevent unnecessary re-renders
+  const renderMessage = useCallback(
+    (message: IMessage) => {
+      return message.sender_id === session?.user.id ? (
+        <MyMessage
+          key={`my-message--${message.id}`}
+          message={message}
+          info={chat}
+          onSelectMessage={onSelectMessage}
+        />
+      ) : (
+        <ClientMessage
+          key={`client-message--${message.id}`}
+          message={message}
+          info={chat}
+          onSelectMessage={onSelectMessage}
+          chatType={chatType}
+        />
+      );
+    },
+    [session?.user.id, chat, onSelectMessage, chatType],
+  );
 
   return (
     <div className="middle-info">
       <div className="scroll-info">
-        {offersBlocks && (
-          <div className="transactions-item style2">
-            <div className="status-text">
-              {moment(chat.deal.created_at).calendar()}
-            </div>
-
-            <MessagesStartHero chat={chat} />
-
-            <div className="txt">
-              <div className="new">
-                <img src="/img/new-style.svg" alt="" />
-                <span>Новая</span>
-              </div>
-              <b>{chat.chat_name}</b>
-              <span>🌟 «Начни общение — создавай коллаборации!»</span>
-            </div>
-          </div>
-        )}
+        {offersBlock}
         <div className="sms-wrap">
-          {sortMessages.map((message) => (
-            <>
+          {sortMessages.map((messageGroup) => (
+            <div key={messageGroup.date}>
               <div className="status-text">
-                {moment(message.date).format("ll")}
+                {moment(messageGroup.date).format("ll")}
               </div>
 
-              {message.messages.map((message) =>
-                message.sender_id === session?.user.id ? (
-                  <MyMessage
-                    key={`my-message--${message.id}`}
-                    message={message}
-                    info={chat}
-                    onSelectMessage={onSelectMessage}
-                  />
-                ) : (
-                  <ClientMessage
-                    key={`my-message--${message.id}`}
-                    message={message}
-                    info={chat}
-                    onSelectMessage={onSelectMessage}
-                    chatType={chatType}
-                  />
-                ),
-              )}
-            </>
+              {messageGroup.messages.map(renderMessage)}
+            </div>
           ))}
 
           <div ref={messagesEndRef} />
@@ -97,6 +115,6 @@ function Messages({
       </div>
     </div>
   );
-}
+});
 
 export default Messages;

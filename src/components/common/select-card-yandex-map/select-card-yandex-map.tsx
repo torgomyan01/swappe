@@ -84,7 +84,7 @@ const SelectCardYandexMap = memo(function ({
       isInitialized.current = true;
 
       mapInstance.current = new window.ymaps.Map(mapRef.current, {
-        center: [40.1772, 44.5035],
+        center: [55.751244, 37.618423], // Moscow coordinates
         zoom: 12,
         controls: ["zoomControl", "fullscreenControl"],
       });
@@ -109,6 +109,8 @@ const SelectCardYandexMap = memo(function ({
 
   useEffect(() => {
     const yandexMapapiKey = process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY;
+
+    console.log(yandexMapapiKey);
 
     let pollId: number | null = null;
 
@@ -199,25 +201,73 @@ const SelectCardYandexMap = memo(function ({
           );
           return null;
         }
+
+        console.log("Using API key:", key.substring(0, 8) + "...");
+
+        console.log("Geocoding query:", text);
         const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${key}&format=json&lang=ru_RU&geocode=${encodeURIComponent(
           text,
         )}`;
+        console.log("Geocoding URL:", url);
+
         const res = await fetch(url);
+        console.log("Geocoding response status:", res.status);
+
         if (!res.ok) {
+          const errorText = await res.text();
+          console.error(
+            "Geocoding API error:",
+            res.status,
+            res.statusText,
+            errorText,
+          );
+
+          // Handle specific error cases
+          if (res.status === 403) {
+            console.error("API key is invalid or expired");
+            return null;
+          }
+
           return null;
         }
+
         const data = await res.json();
-        const member = data?.response?.GeoObjectCollection?.featureMember?.[0];
-        const pos: string | undefined = member?.GeoObject?.Point?.pos; // "lon lat"
-        if (!pos) {
+        console.log("Geocoding response data:", data);
+
+        // Check if response has the expected structure
+        if (!data?.response?.GeoObjectCollection?.featureMember) {
+          console.warn("Invalid geocoding response structure:", data);
           return null;
         }
+
+        const members = data.response.GeoObjectCollection.featureMember;
+        if (!members || members.length === 0) {
+          console.warn("No geocoding results found");
+          return null;
+        }
+
+        const member = members[0];
+        console.log("First member:", member);
+
+        const pos: string | undefined = member?.GeoObject?.Point?.pos; // "lon lat"
+        console.log("Position string:", pos);
+
+        if (!pos) {
+          console.warn("No position found in geocoding response");
+          return null;
+        }
+
         const [lonStr, latStr] = pos.split(" ");
         const lat = parseFloat(latStr);
         const lon = parseFloat(lonStr);
+
+        console.log("Parsed coordinates:", { lat, lon });
+
         if (Number.isNaN(lat) || Number.isNaN(lon)) {
+          console.warn("Invalid coordinates:", { lat, lon });
           return null;
         }
+
         return [lat, lon];
       } catch (e) {
         console.error("HTTP geocode error", e);
@@ -232,46 +282,71 @@ const SelectCardYandexMap = memo(function ({
     if (!q) {
       return;
     }
+
+    console.log("Starting geocoding for query:", q);
+    console.log(
+      "API Key available:",
+      !!process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY,
+    );
+
     try {
       setIsSearching(true);
+      setError(null); // Clear previous errors
       let coords: [number, number] | null = null;
 
       // 1) Try ymaps.geocode when available
       if (window.ymaps && typeof window.ymaps.geocode === "function") {
         try {
+          console.log("Trying ymaps.geocode for:", q);
           const res = await window.ymaps.geocode(q, { results: 1 });
+          console.log("ymaps.geocode response:", res);
           const obj = res?.geoObjects?.get?.(0);
+          console.log("First geo object:", obj);
           if (obj?.geometry?.getCoordinates) {
             coords = obj.geometry.getCoordinates();
+            console.log("ymaps.geocode coordinates:", coords);
           }
         } catch (err) {
           console.warn("ymaps.geocode failed, will try HTTP fallback", err);
         }
+      } else {
+        console.log("ymaps.geocode not available, using HTTP fallback");
       }
 
-      console.log("coords", coords);
+      console.log("coords after ymaps.geocode:", coords);
 
       // 2) HTTP fallback
       if (!coords) {
+        console.log("Trying HTTP fallback geocoding...");
         coords = await geocodeViaHttp(q);
       }
 
       if (!coords) {
-        setError("Адрес не найден");
+        console.error("No coordinates found for query:", q);
+        setError(
+          `Адрес "${q}" не найден. Возможно, проблема с API ключом или попробуйте другой запрос.`,
+        );
         return;
       }
 
       // Center the map and add marker
       try {
+        console.log("Centering map to coordinates:", coords);
         (mapInstance.current as any)?.setCenter(coords, 16, { duration: 300 });
       } catch (err) {
         console.warn("Failed to center map", err);
       }
+
+      console.log("Adding marker to coordinates:", coords);
       addMarker(coords);
       onCoordinateSelect?.(coords);
       setError(null);
-    } catch {
-      setError("Не удалось выполнить поиск адреса");
+      console.log("Geocoding completed successfully");
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      setError(
+        "Не удалось выполнить поиск адреса. Проверьте подключение к интернету.",
+      );
     } finally {
       setIsSearching(false);
     }

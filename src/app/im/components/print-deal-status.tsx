@@ -5,41 +5,44 @@ import Completed from "@/app/im/components/deal-statuses/client/completed";
 import SendReview from "@/app/im/components/deal-statuses/client/send-review";
 import { useSelector } from "react-redux";
 import { useSession } from "next-auth/react";
+import { memo, useMemo } from "react";
 
-function PrintDealStatus() {
+const PrintDealStatus = memo(function PrintDealStatus() {
   const { data: session }: any = useSession();
 
   const chatInfo = useSelector((state: IUserStore) => state.userInfo.chatInfo);
 
-  const PrintType =
-    chatInfo?.deal.owner.id === session?.user.id ? "owner" : "client";
+  // Memoize the print type to prevent unnecessary recalculations
+  const printType = useMemo(() => {
+    return chatInfo?.deal.owner.id === session?.user.id ? "owner" : "client";
+  }, [chatInfo?.deal.owner.id, session?.user.id]);
 
-  function PrintStatuses() {
-    if (chatInfo) {
-      const status =
-        PrintType === "owner"
-          ? chatInfo.deal.statue_owner
-          : chatInfo.deal.status_client;
+  // Memoize the status component to prevent unnecessary re-renders
+  const statusComponent = useMemo(() => {
+    if (!chatInfo) return null;
 
-      if (status === "wait-confirm") {
+    const status =
+      printType === "owner"
+        ? chatInfo.deal.statue_owner
+        : chatInfo.deal.status_client;
+
+    switch (status) {
+      case "wait-confirm":
         return <WaitConfirm />;
-      }
-      if (status === "wait-doc-confirm") {
+      case "wait-doc-confirm":
         return <WaitConfirmDoc />;
-      }
-      if (status === "doc-confirmed") {
+      case "doc-confirmed":
         return <Completed />;
-      }
-      if (status === "send-review") {
+      case "send-review":
         return <SendReview />;
-      }
-      if (status === "completed") {
+      case "completed":
         return <AllCompleted />;
-      }
+      default:
+        return null;
     }
-  }
+  }, [chatInfo, printType]);
 
-  return <PrintStatuses />;
-}
+  return statusComponent;
+});
 
 export default PrintDealStatus;

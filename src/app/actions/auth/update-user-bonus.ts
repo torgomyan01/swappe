@@ -8,7 +8,7 @@ export async function ActionUpdateUserBonus(
   type: "increment" | "decrement",
   amount: number,
   description: string,
-  order_id?: number,
+  user_id?: number,
 ) {
   try {
     const session: any = await getServerSession(authOptions);
@@ -17,8 +17,10 @@ export async function ActionUpdateUserBonus(
       return { status: "error", data: [], error: "logout" };
     }
 
+    const userId = user_id ? user_id : session.user.id;
+
     const updatedUser = await prisma.users.update({
-      where: { id: order_id ? order_id : session.user.id },
+      where: { id: userId },
       data: {
         bonus: { [type]: amount },
         referral_request_count: { increment: 1 },

@@ -1,15 +1,29 @@
 import clsx from "clsx";
-import { CreateObjectCols, CreateObjectGrid, RandomKey } from "@/utils/helpers";
+import { CreateObjectCols, CreateObjectGrid } from "@/utils/helpers";
 import { fileHost } from "@/utils/consts";
 import Image from "next/image";
 import { PhotoView } from "react-photo-view";
+import { memo, useMemo } from "react";
 
 interface IThisProps {
   message: IMessage;
   isMin?: boolean;
 }
 
-function MessageImagesBlock({ message, isMin = false }: IThisProps) {
+const MessageImagesBlock = memo(function MessageImagesBlock({
+  message,
+  isMin = false,
+}: IThisProps) {
+  // Memoize file paths to prevent unnecessary re-renders
+  const filePaths = useMemo(() => {
+    return message.file_paths || [];
+  }, [message.file_paths]);
+
+  // Memoize grid classes to prevent unnecessary recalculations
+  const gridClasses = useMemo(() => {
+    return CreateObjectGrid(filePaths);
+  }, [filePaths]);
+
   return (
     <div
       className={clsx(
@@ -17,13 +31,13 @@ function MessageImagesBlock({ message, isMin = false }: IThisProps) {
         {
           "!mb-2 !flex-js-s gap-4": isMin,
         },
-        CreateObjectGrid(message.file_paths || []),
+        gridClasses,
       )}
     >
-      {message.file_paths?.map((url: string, i: number) => (
-        <PhotoView key={RandomKey()} src={`${fileHost}${url}`}>
+      {filePaths.map((url: string, i: number) => (
+        <PhotoView key={`photo-${i}-${url}`} src={`${fileHost}${url}`}>
           <Image
-            key={RandomKey()}
+            key={`image-${i}-${url}`}
             src={`${fileHost}${url}`}
             alt="image"
             width={200}
@@ -33,13 +47,13 @@ function MessageImagesBlock({ message, isMin = false }: IThisProps) {
               {
                 "!w-[50px] !h-[50px]": isMin,
               },
-              CreateObjectCols(i, message.file_paths || []),
+              CreateObjectCols(i, filePaths),
             )}
           />
         </PhotoView>
       ))}
     </div>
   );
-}
+});
 
 export default MessageImagesBlock;

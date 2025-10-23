@@ -12,7 +12,9 @@ function Footer() {
           </Link>
           <div className="menu-wrap">
             <h4>Разделы</h4>
-            <Link href="#">Swappe Club: стать партнером</Link>
+            <Link href="mailto:partners@swappe.ru">
+              Swappe Club: стать партнером
+            </Link>
             <Link href={SITE_URL.ACCOUNT_TRANSACTIONS}>Сделки</Link>
             <Link href={SITE_URL.ACCOUNT_FAVORITES}>Избранное</Link>
             <Link href={SITE_URL.CHAT}>Чат</Link>

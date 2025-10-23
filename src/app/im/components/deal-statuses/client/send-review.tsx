@@ -112,6 +112,14 @@ function SendReview() {
     }
   }
 
+  function getCompanyName() {
+    if (chat) {
+      return PrintType === "owner"
+        ? chat.deal.client.company.name
+        : chat.deal.owner.company.name;
+    }
+  }
+
   return (
     <>
       {chat && (
@@ -179,7 +187,7 @@ function SendReview() {
           <Modal isOpen={modal} onClose={() => setModal(false)}>
             <ModalContent className="bg-[#fffcf5]">
               <ModalHeader className="flex flex-col gap-1">
-                {!success && "Как прошла сделка с Название компании?"}
+                {!success && `Как прошла сделка с ${getCompanyName()}?`}
               </ModalHeader>
               <ModalBody className="mb-6">
                 {success ? (
