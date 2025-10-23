@@ -45,16 +45,11 @@ export function useInstantActivityTracker(
     try {
       console.log(`⚡ INSTANT: Updating activity for user ${user.id}`);
 
-      const response = await fetch("/api/auth/update-last-seen", {
+      const response = await fetch("/api/auth/update-last-seen-simple", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: user.id,
-          timestamp: new Date().toISOString(),
-          instant: true,
-        }),
       });
 
       if (response.ok) {
