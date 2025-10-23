@@ -10,7 +10,7 @@ interface OnlineStatusMessage {
   userId: number;
   lastSeen?: Date;
   timestamp?: string;
-  instant?: boolean;
+  connectionId?: string;
 }
 
 interface OnlineStatusCallbacks {
@@ -19,30 +19,34 @@ interface OnlineStatusCallbacks {
   onStatusUpdate: (userId: number, lastSeen: Date) => void;
 }
 
-interface UseInstantOnlineStatusOptions {
+interface UseRealtimeStatusOptions {
   autoConnect?: boolean;
   reconnectInterval?: number;
   maxReconnectAttempts?: number;
+  connectionTimeout?: number;
 }
 
-export function useInstantOnlineStatus(
+export function useRealtimeStatus(
   callbacks: OnlineStatusCallbacks,
-  options: UseInstantOnlineStatusOptions = {},
+  options: UseRealtimeStatusOptions = {},
 ) {
   const { data: session }: any = useSession();
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const isConnectingRef = useRef(false);
+  const lastConnectionIdRef = useRef<string | null>(null);
 
   const {
     autoConnect = true,
-    reconnectInterval = 2000, // 2 seconds for instant reconnection
+    reconnectInterval = 3000, // 3 seconds
     maxReconnectAttempts = 10,
+    connectionTimeout = 30000, // 30 seconds
   } = options;
 
-  // INSTANT connection function
-  const connectInstant = useCallback(() => {
+  // Connection function with timeout
+  const connect = useCallback(() => {
     if (!session?.user?.id || isConnectingRef.current) return;
 
     const userId = session.user.id;
@@ -51,43 +55,54 @@ export function useInstantOnlineStatus(
         ? `wss://yourdomain.com:3001/ws-online-status?userId=${userId}`
         : `ws://localhost:3001/ws-online-status?userId=${userId}`;
 
-    console.log(`⚡ INSTANT: Connecting to WebSocket for user ${userId}`);
+    console.log(`🚀 REALTIME: Connecting to WebSocket for user ${userId}`);
     isConnectingRef.current = true;
+
+    // Set connection timeout
+    connectionTimeoutRef.current = setTimeout(() => {
+      console.log(`⏰ REALTIME: Connection timeout for user ${userId}`);
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+      isConnectingRef.current = false;
+    }, connectionTimeout);
 
     try {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log(`✅ INSTANT: WebSocket connected for user ${userId}`);
+        console.log(`✅ REALTIME: WebSocket connected for user ${userId}`);
         isConnectingRef.current = false;
         reconnectAttemptsRef.current = 0;
+
+        // Clear connection timeout
+        if (connectionTimeoutRef.current) {
+          clearTimeout(connectionTimeoutRef.current);
+        }
       };
 
       ws.onmessage = (event) => {
         try {
           const message: OnlineStatusMessage = JSON.parse(event.data);
-          console.log(`📨 INSTANT: Received message:`, message);
+          console.log(`📨 REALTIME: Received message:`, message);
 
-          // INSTANT message handling
           switch (message.type) {
             case "USER_ONLINE":
-              if (message.instant) {
-                console.log(`🟢 INSTANT: User ${message.userId} came ONLINE`);
-                callbacks.onUserOnline(message.userId);
-              }
+              console.log(`🟢 REALTIME: User ${message.userId} came ONLINE`);
+              callbacks.onUserOnline(message.userId);
               break;
 
             case "USER_OFFLINE":
-              if (message.instant) {
-                console.log(`🔴 INSTANT: User ${message.userId} went OFFLINE`);
-                callbacks.onUserOffline(message.userId);
-              }
+              console.log(`🔴 REALTIME: User ${message.userId} went OFFLINE`);
+              callbacks.onUserOffline(message.userId);
               break;
 
             case "STATUS_UPDATE":
               if (message.lastSeen) {
-                console.log(`🔄 INSTANT: User ${message.userId} status update`);
+                console.log(
+                  `🔄 REALTIME: User ${message.userId} status update`,
+                );
                 callbacks.onStatusUpdate(
                   message.userId,
                   new Date(message.lastSeen),
@@ -97,64 +112,86 @@ export function useInstantOnlineStatus(
 
             case "CONNECTION_ESTABLISHED":
               console.log(
-                `🎯 INSTANT: Connection established for user ${message.userId}`,
+                `🎯 REALTIME: Connection established for user ${message.userId}`,
               );
+              if (message.connectionId) {
+                lastConnectionIdRef.current = message.connectionId;
+              }
               break;
           }
         } catch (error) {
-          console.error("❌ INSTANT: Error parsing WebSocket message:", error);
+          console.error("❌ REALTIME: Error parsing WebSocket message:", error);
         }
       };
 
       ws.onclose = (event) => {
         console.log(
-          `🔌 INSTANT: WebSocket closed for user ${userId}:`,
+          `🔌 REALTIME: WebSocket closed for user ${userId}:`,
           event.code,
           event.reason,
         );
         isConnectingRef.current = false;
         wsRef.current = null;
 
-        // INSTANT reconnection - no delay
+        // Clear connection timeout
+        if (connectionTimeoutRef.current) {
+          clearTimeout(connectionTimeoutRef.current);
+        }
+
+        // Auto-reconnect
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           console.log(
-            `🔄 INSTANT: Attempting reconnection ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts}`,
+            `🔄 REALTIME: Attempting reconnection ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts}`,
           );
           reconnectAttemptsRef.current++;
 
           reconnectTimeoutRef.current = setTimeout(() => {
-            connectInstant();
+            connect();
           }, reconnectInterval);
         } else {
           console.error(
-            `❌ INSTANT: Max reconnection attempts reached for user ${userId}`,
+            `❌ REALTIME: Max reconnection attempts reached for user ${userId}`,
           );
         }
       };
 
       ws.onerror = (error) => {
-        console.error(`❌ INSTANT: WebSocket error for user ${userId}:`, error);
+        console.error(
+          `❌ REALTIME: WebSocket error for user ${userId}:`,
+          error,
+        );
         isConnectingRef.current = false;
       };
     } catch (error) {
       console.error(
-        `❌ INSTANT: Failed to create WebSocket for user ${userId}:`,
+        `❌ REALTIME: Failed to create WebSocket for user ${userId}:`,
         error,
       );
       isConnectingRef.current = false;
     }
-  }, [session?.user?.id, callbacks, reconnectInterval, maxReconnectAttempts]);
+  }, [
+    session?.user?.id,
+    callbacks,
+    reconnectInterval,
+    maxReconnectAttempts,
+    connectionTimeout,
+  ]);
 
-  // INSTANT disconnect function
-  const disconnectInstant = useCallback(() => {
+  // Disconnect function
+  const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
 
+    if (connectionTimeoutRef.current) {
+      clearTimeout(connectionTimeoutRef.current);
+      connectionTimeoutRef.current = null;
+    }
+
     if (wsRef.current) {
       console.log(
-        `🔌 INSTANT: Disconnecting WebSocket for user ${session?.user?.id}`,
+        `🔌 REALTIME: Disconnecting WebSocket for user ${session?.user?.id}`,
       );
       wsRef.current.close();
       wsRef.current = null;
@@ -167,25 +204,26 @@ export function useInstantOnlineStatus(
   // Auto-connect on mount and session change
   useEffect(() => {
     if (autoConnect && session?.user?.id) {
-      connectInstant();
+      connect();
     }
 
     return () => {
-      disconnectInstant();
+      disconnect();
     };
-  }, [autoConnect, session?.user?.id, connectInstant, disconnectInstant]);
+  }, [autoConnect, session?.user?.id, connect, disconnect]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      disconnectInstant();
+      disconnect();
     };
-  }, [disconnectInstant]);
+  }, [disconnect]);
 
   return {
-    connect: connectInstant,
-    disconnect: disconnectInstant,
+    connect,
+    disconnect,
     isConnected: wsRef.current?.readyState === WebSocket.OPEN,
     reconnectAttempts: reconnectAttemptsRef.current,
+    connectionId: lastConnectionIdRef.current,
   };
 }

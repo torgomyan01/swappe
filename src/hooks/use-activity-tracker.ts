@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
 
-interface UseInstantActivityTrackerOptions {
+interface UseActivityTrackerOptions {
   updateInterval?: number; // milliseconds
   debounceTime?: number; // milliseconds
   enableMouseTracking?: boolean;
@@ -10,8 +10,8 @@ interface UseInstantActivityTrackerOptions {
   enableFocusTracking?: boolean;
 }
 
-const DEFAULT_OPTIONS: UseInstantActivityTrackerOptions = {
-  updateInterval: 10000, // 10 seconds - more frequent for instant updates
+const DEFAULT_OPTIONS: UseActivityTrackerOptions = {
+  updateInterval: 10000, // 10 seconds
   debounceTime: 2000, // 2 seconds debounce
   enableMouseTracking: true,
   enableKeyboardTracking: true,
@@ -19,18 +19,15 @@ const DEFAULT_OPTIONS: UseInstantActivityTrackerOptions = {
   enableFocusTracking: true,
 };
 
-export function useInstantActivityTracker(
-  options: UseInstantActivityTrackerOptions = {},
-) {
+export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
   const { data: session } = useSession();
   const optionsRef = useRef({ ...DEFAULT_OPTIONS, ...options });
   const lastUpdateRef = useRef<number>(0);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // INSTANT activity update function
-  const updateActivityInstant = useCallback(async () => {
-    // Type assertion for session user
+  // Activity update function
+  const updateActivity = useCallback(async () => {
     const user = session?.user as any;
     if (!user?.id) return;
 
@@ -38,12 +35,12 @@ export function useInstantActivityTracker(
     const timeSinceLastUpdate = now - lastUpdateRef.current;
 
     // Only update if enough time has passed
-    if (timeSinceLastUpdate < (optionsRef.current.updateInterval || 5000)) {
+    if (timeSinceLastUpdate < (optionsRef.current.updateInterval || 10000)) {
       return;
     }
 
     try {
-      console.log(`⚡ INSTANT: Updating activity for user ${user.id}`);
+      console.log(`⚡ REALTIME: Updating activity for user ${user.id}`);
 
       const response = await fetch("/api/auth/update-last-seen-simple", {
         method: "POST",
@@ -54,15 +51,15 @@ export function useInstantActivityTracker(
 
       if (response.ok) {
         lastUpdateRef.current = now;
-        console.log(`✅ INSTANT: Activity updated for user ${user.id}`);
+        console.log(`✅ REALTIME: Activity updated for user ${user.id}`);
       } else {
         console.error(
-          `❌ INSTANT: Failed to update activity for user ${user.id}`,
+          `❌ REALTIME: Failed to update activity for user ${user.id}`,
         );
       }
     } catch (error) {
       console.error(
-        `❌ INSTANT: Error updating activity for user ${user.id}:`,
+        `❌ REALTIME: Error updating activity for user ${user.id}:`,
         error,
       );
     }
@@ -75,11 +72,11 @@ export function useInstantActivityTracker(
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      updateActivityInstant();
+      updateActivity();
     }, optionsRef.current.debounceTime || 2000);
-  }, [updateActivityInstant]);
+  }, [updateActivity]);
 
-  // INSTANT event handlers
+  // Event handlers
   const handleMouseMove = useCallback(() => {
     if (optionsRef.current.enableMouseTracking) {
       debouncedUpdateActivity();
@@ -100,24 +97,26 @@ export function useInstantActivityTracker(
 
   const handleFocus = useCallback(() => {
     if (optionsRef.current.enableFocusTracking) {
-      // INSTANT update on focus - no debounce
-      updateActivityInstant();
+      // Immediate update on focus
+      updateActivity();
     }
-  }, [updateActivityInstant]);
+  }, [updateActivity]);
 
   const handleVisibilityChange = useCallback(() => {
     if (!document.hidden) {
-      // INSTANT update when tab becomes visible
-      updateActivityInstant();
+      // Immediate update when tab becomes visible
+      updateActivity();
     }
-  }, [updateActivityInstant]);
+  }, [updateActivity]);
 
   // Setup event listeners
   useEffect(() => {
     const user = session?.user as any;
     if (!user?.id) return;
 
-    console.log(`⚡ INSTANT: Setting up activity tracking for user ${user.id}`);
+    console.log(
+      `⚡ REALTIME: Setting up activity tracking for user ${user.id}`,
+    );
 
     // Add event listeners
     document.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -127,12 +126,12 @@ export function useInstantActivityTracker(
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Initial activity update
-    updateActivityInstant();
+    updateActivity();
 
-    // Periodic updates for instant status
+    // Periodic updates
     intervalRef.current = setInterval(() => {
-      updateActivityInstant();
-    }, optionsRef.current.updateInterval || 5000);
+      updateActivity();
+    }, optionsRef.current.updateInterval || 10000);
 
     return () => {
       // Cleanup event listeners
@@ -157,13 +156,13 @@ export function useInstantActivityTracker(
     handleScroll,
     handleFocus,
     handleVisibilityChange,
-    updateActivityInstant,
+    updateActivity,
   ]);
 
   // Manual activity update function
   const triggerActivityUpdate = useCallback(() => {
-    updateActivityInstant();
-  }, [updateActivityInstant]);
+    updateActivity();
+  }, [updateActivity]);
 
   return {
     triggerActivityUpdate,

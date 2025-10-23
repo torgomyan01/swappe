@@ -7,8 +7,8 @@ import PrintDealStatus from "@/app/im/components/print-deal-status";
 // Removed server action import - using API route instead
 import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
-import { useUltraFastOnlineStatus } from "@/hooks/use-ultra-fast-online-status";
-import { useUltraFastActivityTracker } from "@/hooks/use-ultra-fast-activity-tracker";
+import { useRealtimeStatus } from "@/hooks/use-realtime-status";
+import { useActivityTracker } from "@/hooks/use-activity-tracker";
 
 interface ChatHeaderProps {
   chatInfo: IChatItems;
@@ -74,13 +74,18 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     [otherUserId, realTimeStatus?.lastSeen],
   );
 
-  // Initialize ULTRA-FAST real-time online status
-  useUltraFastOnlineStatus(onlineStatusCallbacks);
+  // Initialize real-time online status
+  useRealtimeStatus(onlineStatusCallbacks, {
+    autoConnect: true,
+    reconnectInterval: 3000, // 3 seconds
+    maxReconnectAttempts: 10,
+    connectionTimeout: 30000, // 30 seconds
+  });
 
-  // Initialize ULTRA-FAST activity tracking
-  useUltraFastActivityTracker({
-    updateInterval: 3000, // 3 seconds for ultra-fast updates
-    debounceTime: 500, // 0.5 second debounce
+  // Initialize activity tracking
+  useActivityTracker({
+    updateInterval: 10000, // 10 seconds
+    debounceTime: 2000, // 2 seconds debounce
     enableMouseTracking: true,
     enableKeyboardTracking: true,
     enableScrollTracking: true,
