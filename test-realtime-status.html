@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time Online Status Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      .online {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .offline {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .loading {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .connect {
+        background-color: #28a745;
+        color: white;
+      }
+      .disconnect {
+        background-color: #dc3545;
+        color: white;
+      }
+      .test {
+        background-color: #007bff;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Real-time Online Status Test</h1>
+
+    <div>
+      <label for="userId">User ID:</label>
+      <input type="number" id="userId" value="1" min="1" />
+      <button class="connect" onclick="connect()">Connect</button>
+      <button class="disconnect" onclick="disconnect()">Disconnect</button>
+    </div>
+
+    <div>
+      <h3>Connection Status:</h3>
+      <div id="connectionStatus" class="status loading">Disconnected</div>
+    </div>
+
+    <div>
+      <h3>Online Status Updates:</h3>
+      <div id="statusUpdates"></div>
+    </div>
+
+    <div>
+      <button class="test" onclick="testActivity()">Simulate Activity</button>
+      <button class="test" onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+      let ws = null;
+      let userId = 1;
+
+      function connect() {
+        userId = parseInt(document.getElementById("userId").value);
+        if (ws) disconnect();
+
+        const wsUrl = `ws://localhost:3001/ws-online-status?userId=${userId}`;
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+          updateConnectionStatus("Connected", "online");
+          addStatusUpdate(`Connected as User ${userId}`, "online");
+        };
+
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          handleStatusMessage(message);
+        };
+
+        ws.onclose = (event) => {
+          updateConnectionStatus("Disconnected", "offline");
+          addStatusUpdate(
+            `Disconnected: ${event.code} - ${event.reason}`,
+            "offline",
+          );
+        };
+
+        ws.onerror = (error) => {
+          updateConnectionStatus("Error", "offline");
+          addStatusUpdate(`Error: ${error}`, "offline");
+        };
+      }
+
+      function disconnect() {
+        if (ws) {
+          ws.close();
+          ws = null;
+        }
+      }
+
+      function handleStatusMessage(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        let statusClass = "offline";
+        let statusText = "";
+
+        switch (message.type) {
+          case "CONNECTION_ESTABLISHED":
+            statusText = `Connection established at ${timestamp}`;
+            statusClass = "online";
+            break;
+          case "USER_ONLINE":
+            statusText = `User ${message.userId} came online at ${timestamp}`;
+            statusClass = "online";
+            break;
+          case "USER_OFFLINE":
+            statusText = `User ${message.userId} went offline at ${timestamp}`;
+            statusClass = "offline";
+            break;
+          default:
+            statusText = `Unknown message: ${JSON.stringify(message)} at ${timestamp}`;
+        }
+
+        addStatusUpdate(statusText, statusClass);
+      }
+
+      function updateConnectionStatus(text, className) {
+        const statusEl = document.getElementById("connectionStatus");
+        statusEl.textContent = text;
+        statusEl.className = `status ${className}`;
+      }
+
+      function addStatusUpdate(text, className) {
+        const updatesEl = document.getElementById("statusUpdates");
+        const updateEl = document.createElement("div");
+        updateEl.className = `status ${className}`;
+        updateEl.textContent = text;
+        updatesEl.insertBefore(updateEl, updatesEl.firstChild);
+      }
+
+      function testActivity() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          // Simulate activity by sending a ping
+          ws.ping();
+          addStatusUpdate("Activity simulated", "online");
+        } else {
+          addStatusUpdate(
+            "Not connected - cannot simulate activity",
+            "offline",
+          );
+        }
+      }
+
+      function clearLog() {
+        document.getElementById("statusUpdates").innerHTML = "";
+      }
+
+      // Auto-connect on page load
+      window.onload = () => {
+        connect();
+      };
+    </script>
+  </body>
+</html>

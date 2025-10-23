@@ -7,6 +7,7 @@ import PrintDealStatus from "@/app/im/components/print-deal-status";
 // Removed server action import - using API route instead
 import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
+import { useRealtimeOnlineStatus } from "@/hooks/use-realtime-online-status";
 
 interface ChatHeaderProps {
   chatInfo: IChatItems;
@@ -21,6 +22,10 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     statusClass: "offline",
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [realTimeStatus, setRealTimeStatus] = useState<{
+    isOnline: boolean;
+    lastSeen?: Date;
+  } | null>(null);
 
   // Determine which user is the "other" user in the chat
   const otherUserId = useMemo(() => {
@@ -33,6 +38,39 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     // If current user is the owner, show client's info
     return chatInfo.deal.client_id;
   }, [session?.user?.id, chatInfo?.deal]);
+
+  // Real-time online status callbacks
+  const onlineStatusCallbacks = useMemo(
+    () => ({
+      onUserOnline: (userId: number) => {
+        if (userId === otherUserId) {
+          setRealTimeStatus({ isOnline: true });
+          const status = getOnlineStatus(new Date());
+          setOnlineStatus(status);
+        }
+      },
+      onUserOffline: (userId: number) => {
+        if (userId === otherUserId) {
+          setRealTimeStatus({ isOnline: false });
+          const status = getOnlineStatus(
+            realTimeStatus?.lastSeen || new Date(),
+          );
+          setOnlineStatus(status);
+        }
+      },
+      onStatusUpdate: (userId: number, lastSeen: Date) => {
+        if (userId === otherUserId) {
+          setRealTimeStatus({ isOnline: true, lastSeen });
+          const status = getOnlineStatus(lastSeen);
+          setOnlineStatus(status);
+        }
+      },
+    }),
+    [otherUserId, realTimeStatus?.lastSeen],
+  );
+
+  // Initialize real-time online status
+  useRealtimeOnlineStatus(onlineStatusCallbacks);
 
   // Fetch other user's last seen information
   useEffect(() => {
