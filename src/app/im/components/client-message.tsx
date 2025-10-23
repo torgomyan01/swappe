@@ -104,7 +104,41 @@ const ClientMessage = memo(function ClientMessage({
                 <FeedbackBlock message={message} chatInfo={info} isReadOnly />
               )}
 
-              <p dangerouslySetInnerHTML={{ __html: message.content }} />
+              {(() => {
+                // Simple regex for URLs
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const content = message.content || "";
+
+                // If the content contains a URL, replace it with a clickable link (opens in new tab)
+                if (urlRegex.test(content)) {
+                  const parts = content.split(urlRegex);
+                  return (
+                    <p>
+                      {parts.map((part, i) =>
+                        urlRegex.test(part) ? (
+                          <a
+                            key={`url-${i}-${part}`}
+                            href={part}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline break-all"
+                          >
+                            {part}
+                          </a>
+                        ) : (
+                          <span
+                            key={i}
+                            dangerouslySetInnerHTML={{ __html: part }}
+                          />
+                        ),
+                      )}
+                    </p>
+                  );
+                } else {
+                  // Otherwise, just render the content as before
+                  return <p dangerouslySetInnerHTML={{ __html: content }} />;
+                }
+              })()}
             </div>
           </DropdownTrigger>
           <DropdownMenu aria-label="menu message" variant="faded">

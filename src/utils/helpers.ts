@@ -289,3 +289,51 @@ export const passwordChangedText = (session: any) =>
     if (isNaN(d.getTime())) return "Еще не изменялся";
     return `Был изменен ${formatTimeAgo(d)} назад`;
   })();
+
+// Online status utilities
+export const getOnlineStatus = (
+  lastSeen: Date | string | null,
+): {
+  isOnline: boolean;
+  statusText: string;
+  statusClass: string;
+} => {
+  if (!lastSeen) {
+    return {
+      isOnline: false,
+      statusText: "Недавно не был в сети",
+      statusClass: "offline",
+    };
+  }
+
+  const lastSeenDate =
+    typeof lastSeen === "string" ? new Date(lastSeen) : lastSeen;
+  const now = new Date();
+  const diffMs = now.getTime() - lastSeenDate.getTime();
+  const diffMinutes = Math.floor(diffMs / 60000);
+
+  // Consider user online if they were active within last 5 minutes
+  if (diffMinutes <= 5) {
+    return {
+      isOnline: true,
+      statusText: "В сети",
+      statusClass: "online",
+    };
+  }
+
+  // Show "last seen" time
+  const timeAgo = formatTimeAgo(lastSeenDate);
+  return {
+    isOnline: false,
+    statusText: `Был в сети ${timeAgo} назад`,
+    statusClass: "offline",
+  };
+};
+
+export const formatLastSeenTime = (lastSeen: Date | string | null): string => {
+  if (!lastSeen) return "Недавно не был в сети";
+
+  const lastSeenDate =
+    typeof lastSeen === "string" ? new Date(lastSeen) : lastSeen;
+  return formatTimeAgo(lastSeenDate);
+};

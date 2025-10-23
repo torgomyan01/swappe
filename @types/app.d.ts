@@ -232,6 +232,7 @@ declare interface IUserCompany {
   user: IUserProfile;
   reviews: IReview[];
   is_self_employed: boolean;
+  last_seen?: Date;
 }
 
 declare interface IUserFavorite {
@@ -261,6 +262,7 @@ declare interface IUserProfile {
   tariff_end_date: Date;
   created_at: Date;
   updated_at: Date;
+  last_seen: Date;
 }
 
 declare interface IUserOffer {

@@ -51,7 +51,7 @@ function CompanyPageReviews({ company }: IThisProps) {
                     ))}
                   </div>
                 ) : (
-                  <EmptyRes title="Пока нет никакого отзывов" />
+                  <EmptyRes title="Пока нет никаких отзывов" />
                 )
               ) : (
                 <div className="w-full h-[400px] flex-jc-c">

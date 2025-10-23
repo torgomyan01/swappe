@@ -25,6 +25,7 @@ model users {
   tariff_end_date        DateTime
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
+  last_seen              DateTime @default(now())
 
   role                   Json
   inviting_user_id       Int?

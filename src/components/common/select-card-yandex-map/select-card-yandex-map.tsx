@@ -110,8 +110,6 @@ const SelectCardYandexMap = memo(function ({
   useEffect(() => {
     const yandexMapapiKey = process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY;
 
-    console.log(yandexMapapiKey);
-
     let pollId: number | null = null;
 
     const loadYandexMap = () => {

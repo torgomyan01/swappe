@@ -101,7 +101,7 @@ const Messages = memo(function Messages({
         {offersBlock}
         <div className="sms-wrap">
           {sortMessages.map((messageGroup) => (
-            <div key={messageGroup.date}>
+            <div key={messageGroup.date} className="">
               <div className="status-text">
                 {moment(messageGroup.date).format("ll")}
               </div>
