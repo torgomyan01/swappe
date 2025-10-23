@@ -4,7 +4,11 @@ import { useEffect, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 
 interface OnlineStatusMessage {
-  type: "USER_ONLINE" | "USER_OFFLINE" | "STATUS_UPDATE";
+  type:
+    | "USER_ONLINE"
+    | "USER_OFFLINE"
+    | "STATUS_UPDATE"
+    | "CONNECTION_ESTABLISHED";
   userId: number;
   lastSeen?: Date;
   isOnline?: boolean;
@@ -37,7 +41,7 @@ export const useRealtimeOnlineStatus = (callbacks: OnlineStatusCallback) => {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("Connected to online status WebSocket");
+        console.log("🔗 Connected to online status WebSocket");
         isConnectingRef.current = false;
 
         // Clear any pending reconnect
@@ -50,15 +54,25 @@ export const useRealtimeOnlineStatus = (callbacks: OnlineStatusCallback) => {
       ws.onmessage = (event) => {
         try {
           const message: OnlineStatusMessage = JSON.parse(event.data);
+          console.log("📨 Received WebSocket message:", message);
 
           switch (message.type) {
             case "USER_ONLINE":
+              console.log(
+                `🟢 Processing USER_ONLINE for user ${message.userId}`,
+              );
               callbacks.onUserOnline(message.userId);
               break;
             case "USER_OFFLINE":
+              console.log(
+                `🔴 Processing USER_OFFLINE for user ${message.userId}`,
+              );
               callbacks.onUserOffline(message.userId);
               break;
             case "STATUS_UPDATE":
+              console.log(
+                `🔄 Processing STATUS_UPDATE for user ${message.userId}`,
+              );
               if (message.lastSeen) {
                 callbacks.onStatusUpdate(
                   message.userId,
@@ -66,9 +80,14 @@ export const useRealtimeOnlineStatus = (callbacks: OnlineStatusCallback) => {
                 );
               }
               break;
+            case "CONNECTION_ESTABLISHED":
+              console.log(
+                `✅ Connection established for user ${message.userId}`,
+              );
+              break;
           }
         } catch (error) {
-          console.error("Error parsing WebSocket message:", error);
+          console.error("❌ Error parsing WebSocket message:", error);
         }
       };
 

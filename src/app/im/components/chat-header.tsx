@@ -50,19 +50,23 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
         }
       },
       onUserOffline: (userId: number) => {
+        console.log(`🔴 Real-time: User ${userId} went OFFLINE`);
         if (userId === otherUserId) {
           setRealTimeStatus({ isOnline: false });
           const status = getOnlineStatus(
             realTimeStatus?.lastSeen || new Date(),
           );
           setOnlineStatus(status);
+          console.log(`✅ Updated status for user ${userId}:`, status);
         }
       },
       onStatusUpdate: (userId: number, lastSeen: Date) => {
+        console.log(`🔄 Real-time: User ${userId} status update:`, lastSeen);
         if (userId === otherUserId) {
           setRealTimeStatus({ isOnline: true, lastSeen });
           const status = getOnlineStatus(lastSeen);
           setOnlineStatus(status);
+          console.log(`✅ Updated status for user ${userId}:`, status);
         }
       },
     }),
