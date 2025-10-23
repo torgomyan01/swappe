@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
+import { ActionUpdateLastSeen } from "@/app/actions/auth/update-last-seen";
 
-interface UseActivityTrackerOptions {
+interface UseSimpleActivityOptions {
   updateInterval?: number; // milliseconds
   debounceTime?: number; // milliseconds
   enableMouseTracking?: boolean;
@@ -10,23 +11,23 @@ interface UseActivityTrackerOptions {
   enableFocusTracking?: boolean;
 }
 
-const DEFAULT_OPTIONS: UseActivityTrackerOptions = {
-  updateInterval: 10000, // 10 seconds
-  debounceTime: 2000, // 2 seconds debounce
+const DEFAULT_OPTIONS: UseSimpleActivityOptions = {
+  updateInterval: 30000, // 30 seconds
+  debounceTime: 5000, // 5 seconds debounce
   enableMouseTracking: true,
   enableKeyboardTracking: true,
   enableScrollTracking: true,
   enableFocusTracking: true,
 };
 
-export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
+export function useSimpleActivity(options: UseSimpleActivityOptions = {}) {
   const { data: session } = useSession();
   const optionsRef = useRef({ ...DEFAULT_OPTIONS, ...options });
   const lastUpdateRef = useRef<number>(0);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Activity update function
+  // Activity update function using server action
   const updateActivity = useCallback(async () => {
     const user = session?.user as any;
     if (!user?.id) return;
@@ -35,31 +36,26 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
     const timeSinceLastUpdate = now - lastUpdateRef.current;
 
     // Only update if enough time has passed
-    if (timeSinceLastUpdate < (optionsRef.current.updateInterval || 10000)) {
+    if (timeSinceLastUpdate < (optionsRef.current.updateInterval || 30000)) {
       return;
     }
 
     try {
-      console.log(`⚡ REALTIME: Updating activity for user ${user.id}`);
+      console.log(`⚡ SIMPLE: Updating activity for user ${user.id}`);
 
-      const response = await fetch("/api/auth/update-last-seen-simple", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const { data, error } = await ActionUpdateLastSeen();
 
-      if (response.ok) {
+      if (data && !error) {
         lastUpdateRef.current = now;
-        console.log(`✅ REALTIME: Activity updated for user ${user.id}`);
+        console.log(`✅ SIMPLE: Activity updated for user ${user.id}`);
       } else {
         console.error(
-          `❌ REALTIME: Failed to update activity for user ${user.id}`,
+          `❌ SIMPLE: Failed to update activity for user ${user.id}`,
         );
       }
     } catch (error) {
       console.error(
-        `❌ REALTIME: Error updating activity for user ${user.id}:`,
+        `❌ SIMPLE: Error updating activity for user ${user.id}:`,
         error,
       );
     }
@@ -73,7 +69,7 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
 
     debounceTimeoutRef.current = setTimeout(() => {
       updateActivity();
-    }, optionsRef.current.debounceTime || 2000);
+    }, optionsRef.current.debounceTime || 5000);
   }, [updateActivity]);
 
   // Event handlers
@@ -114,9 +110,7 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
     const user = session?.user as any;
     if (!user?.id) return;
 
-    console.log(
-      `⚡ REALTIME: Setting up activity tracking for user ${user.id}`,
-    );
+    console.log(`⚡ SIMPLE: Setting up activity tracking for user ${user.id}`);
 
     // Add event listeners
     document.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -131,7 +125,7 @@ export function useActivityTracker(options: UseActivityTrackerOptions = {}) {
     // Periodic updates
     intervalRef.current = setInterval(() => {
       updateActivity();
-    }, optionsRef.current.updateInterval || 10000);
+    }, optionsRef.current.updateInterval || 30000);
 
     return () => {
       // Cleanup event listeners

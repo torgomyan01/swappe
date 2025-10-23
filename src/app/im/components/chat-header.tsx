@@ -7,8 +7,8 @@ import PrintDealStatus from "@/app/im/components/print-deal-status";
 // Removed server action import - using API route instead
 import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
-import { useRealtimeStatus } from "@/hooks/use-realtime-status";
-import { useActivityTracker } from "@/hooks/use-activity-tracker";
+import { useSimpleStatus } from "@/hooks/use-simple-status";
+import { useSimpleActivity } from "@/hooks/use-simple-activity";
 
 interface ChatHeaderProps {
   chatInfo: IChatItems;
@@ -17,16 +17,6 @@ interface ChatHeaderProps {
 const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
   const { data: session }: any = useSession<any>();
   const [otherUserInfo, setOtherUserInfo] = useState<any>(null);
-  const [onlineStatus, setOnlineStatus] = useState({
-    isOnline: false,
-    statusText: "Загрузка...",
-    statusClass: "offline",
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [realTimeStatus, setRealTimeStatus] = useState<{
-    isOnline: boolean;
-    lastSeen?: Date;
-  } | null>(null);
 
   // Determine which user is the "other" user in the chat
   const otherUserId = useMemo(() => {
@@ -40,102 +30,43 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     return chatInfo.deal.client_id;
   }, [session?.user?.id, chatInfo?.deal]);
 
-  // Real-time online status callbacks
-  const onlineStatusCallbacks = useMemo(
-    () => ({
-      onUserOnline: (userId: number) => {
-        if (userId === otherUserId) {
-          setRealTimeStatus({ isOnline: true });
-          const status = getOnlineStatus(new Date());
-          setOnlineStatus(status);
-        }
-      },
-      onUserOffline: (userId: number) => {
-        console.log(`🔴 Real-time: User ${userId} went OFFLINE`);
-        if (userId === otherUserId) {
-          setRealTimeStatus({ isOnline: false });
-          const status = getOnlineStatus(
-            realTimeStatus?.lastSeen || new Date(),
-          );
-          setOnlineStatus(status);
-          console.log(`✅ Updated status for user ${userId}:`, status);
-        }
-      },
-      onStatusUpdate: (userId: number, lastSeen: Date) => {
-        console.log(`🔄 Real-time: User ${userId} status update:`, lastSeen);
-        if (userId === otherUserId) {
-          setRealTimeStatus({ isOnline: true, lastSeen });
-          const status = getOnlineStatus(lastSeen);
-          setOnlineStatus(status);
-          console.log(`✅ Updated status for user ${userId}:`, status);
-        }
-      },
-    }),
-    [otherUserId, realTimeStatus?.lastSeen],
-  );
-
-  // Initialize real-time online status
-  useRealtimeStatus(onlineStatusCallbacks, {
-    autoConnect: true,
-    reconnectInterval: 3000, // 3 seconds
-    maxReconnectAttempts: 10,
-    connectionTimeout: 30000, // 30 seconds
+  // Use simple status hook
+  const { status, isLoading } = useSimpleStatus(otherUserId || 0, {
+    updateInterval: 10000, // 10 seconds
+    enablePolling: true,
   });
 
-  // Initialize activity tracking
-  useActivityTracker({
-    updateInterval: 10000, // 10 seconds
-    debounceTime: 2000, // 2 seconds debounce
+  // Use simple activity tracking
+  useSimpleActivity({
+    updateInterval: 30000, // 30 seconds
+    debounceTime: 5000, // 5 seconds debounce
     enableMouseTracking: true,
     enableKeyboardTracking: true,
     enableScrollTracking: true,
     enableFocusTracking: true,
   });
 
-  // Fetch other user's last seen information
+  // Fetch other user's information
   useEffect(() => {
     if (otherUserId) {
-      fetch(`/api/chat/get-user-last-seen?userId=${otherUserId}`)
-        .then((response) => response.json())
-        .then(({ data, error }) => {
-          console.log(data, error, "User last seen data");
-
-          if (data && !error) {
-            setOtherUserInfo(data);
-            const status = getOnlineStatus((data as any).last_seen);
-            setOnlineStatus(status);
-          } else {
-            setOnlineStatus({
-              isOnline: false,
-              statusText: "Ошибка загрузки",
-              statusClass: "offline",
-            });
-          }
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Failed to get user last seen:", error);
-          setOnlineStatus({
-            isOnline: false,
-            statusText: "Ошибка загрузки",
-            statusClass: "offline",
-          });
-          setIsLoading(false);
-        });
+      // This will be handled by the useSimpleStatus hook
+      // We just need to fetch the user info for display
+      setOtherUserInfo({
+        id: otherUserId,
+        name:
+          chatInfo.deal?.client_id === session?.user?.id
+            ? chatInfo.deal?.owner?.name
+            : chatInfo.deal?.client?.name,
+      });
     }
-  }, [otherUserId]);
+  }, [otherUserId, chatInfo, session?.user?.id]);
 
-  // Update online status every minute
-  useEffect(() => {
-    if (!otherUserInfo) return;
-
-    const interval = setInterval(() => {
-      const status = getOnlineStatus((otherUserInfo as any).last_seen);
-      setOnlineStatus(status);
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, [otherUserInfo]);
+  // Status display logic
+  const displayStatus = status || {
+    isOnline: false,
+    statusText: "Загрузка...",
+    statusClass: "offline",
+  };
 
   return (
     <div className="top-info">
@@ -172,12 +103,12 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
               <img src="/img/chat/dots-menu.svg" alt="" className="opacity-0" />
             </div>
           </div>
-          <span className={`status ${onlineStatus.statusClass}`}>
+          <span className={`status ${displayStatus.statusClass}`}>
             {isLoading && <span className="loading-indicator">⟳</span>}
-            {!isLoading && onlineStatus.isOnline && (
+            {!isLoading && displayStatus.isOnline && (
               <span className="online-indicator"></span>
             )}
-            {onlineStatus.statusText}
+            {displayStatus.statusText}
           </span>
         </div>
       </div>

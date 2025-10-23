@@ -1,12 +1,15 @@
 const { WebSocketServer } = require("ws");
 const { createServer } = require("http");
+const { PrismaClient } = require("@prisma/client");
 
-// Optimized in-memory storage
+// Initialize Prisma client
+const prisma = new PrismaClient();
+
+// Simple in-memory storage
 const connectedUsers = new Map();
 const userSessions = new Map();
-const connectionTimeouts = new Map();
 
-class OptimizedRealtimeServer {
+class SimpleWebSocketServer {
   constructor(port = 3001) {
     this.port = port;
     this.server = createServer();
@@ -17,7 +20,6 @@ class OptimizedRealtimeServer {
 
     this.setupWebSocketServer();
     this.startHeartbeat();
-    this.startConnectionTimeout();
   }
 
   setupWebSocketServer() {
@@ -31,7 +33,7 @@ class OptimizedRealtimeServer {
       }
 
       const userIdNum = parseInt(userId);
-      console.log(`🚀 REALTIME: User ${userIdNum} connected`);
+      console.log(`🚀 WS: User ${userIdNum} connected`);
 
       // Store user connection
       if (!connectedUsers.has(userIdNum)) {
@@ -44,31 +46,85 @@ class OptimizedRealtimeServer {
         lastSeen: new Date(),
         isOnline: true,
         connectedAt: new Date(),
-        connectionId: Math.random().toString(36).substr(2, 9),
       });
-
-      // Set connection timeout (5 minutes)
-      this.setConnectionTimeout(userIdNum);
 
       // Notify all other users
       this.broadcastUserStatus(userIdNum, true);
 
       ws.on("pong", () => {
         ws.isAlive = true;
-        // Reset timeout on pong
-        this.setConnectionTimeout(userIdNum);
+      });
+
+      // Handle incoming messages (chat messages, support messages)
+      ws.on("message", async (message) => {
+        try {
+          const data = JSON.parse(message);
+          console.log(
+            `📨 WS: Received message from user ${userIdNum}:`,
+            data.type,
+          );
+
+          // Handle regular chat messages
+          if (data.type === "NEW_MESSAGE" && data.sender_id) {
+            const newMessage = await prisma.messages.create({
+              data: {
+                chat_id: data.chat_id,
+                sender_id: data.sender_id,
+                content: data.content,
+                file_type: data.file_type || null,
+                file_paths: data.file_paths || null,
+                selected_chat_id: data.selected_chat_id || null,
+                created_at: new Date(),
+              },
+            });
+
+            console.log(`💬 WS: New message created with ID: ${newMessage.id}`);
+
+            // Broadcast message to all connected users
+            this.broadcastToAllClients({
+              type: "MESSAGE",
+              payload: newMessage,
+            });
+          }
+
+          // Handle support messages
+          if (data.type === "NEW_SUPPORT_MESSAGE" && data.sender_id) {
+            const newSupportMessage = await prisma.support_messages.create({
+              data: {
+                support_chat_id: data.support_chat_id,
+                sender_id: data.sender_id,
+                content: data.content,
+                file_type: data.file_type || null,
+                file_paths: data.file_paths || null,
+                created_at: new Date(),
+              },
+            });
+
+            console.log(
+              `🆘 WS: New support message created with ID: ${newSupportMessage.id}`,
+            );
+
+            // Broadcast support message to all connected users
+            this.broadcastToAllClients({
+              type: "SUPPORT_MESSAGE",
+              payload: newSupportMessage,
+            });
+          }
+        } catch (error) {
+          console.error(
+            `❌ WS: Error handling message from user ${userIdNum}:`,
+            error,
+          );
+        }
       });
 
       ws.on("close", () => {
-        console.log(`🔌 REALTIME: User ${userIdNum} disconnected`);
+        console.log(`🔌 WS: User ${userIdNum} disconnected`);
         this.handleUserDisconnect(userIdNum);
       });
 
       ws.on("error", (error) => {
-        console.error(
-          `❌ REALTIME: WebSocket error for user ${userIdNum}:`,
-          error,
-        );
+        console.error(`❌ WS: WebSocket error for user ${userIdNum}:`, error);
         this.handleUserDisconnect(userIdNum);
       });
 
@@ -78,28 +134,9 @@ class OptimizedRealtimeServer {
           type: "CONNECTION_ESTABLISHED",
           userId: userIdNum,
           timestamp: new Date().toISOString(),
-          connectionId: userSessions.get(userIdNum).connectionId,
         }),
       );
     });
-  }
-
-  setConnectionTimeout(userId) {
-    // Clear existing timeout
-    if (connectionTimeouts.has(userId)) {
-      clearTimeout(connectionTimeouts.get(userId));
-    }
-
-    // Set new timeout (5 minutes)
-    const timeout = setTimeout(
-      () => {
-        console.log(`⏰ REALTIME: Connection timeout for user ${userId}`);
-        this.handleUserDisconnect(userId);
-      },
-      5 * 60 * 1000,
-    ); // 5 minutes
-
-    connectionTimeouts.set(userId, timeout);
   }
 
   broadcastUserStatus(userId, isOnline) {
@@ -109,9 +146,7 @@ class OptimizedRealtimeServer {
       timestamp: new Date().toISOString(),
     };
 
-    console.log(
-      `📡 REALTIME: User ${userId} is ${isOnline ? "ONLINE" : "OFFLINE"}`,
-    );
+    console.log(`📡 WS: User ${userId} is ${isOnline ? "ONLINE" : "OFFLINE"}`);
 
     // Broadcast to all connected users except the user themselves
     let broadcastCount = 0;
@@ -130,7 +165,29 @@ class OptimizedRealtimeServer {
       }
     });
 
-    console.log(`📡 REALTIME: Broadcast sent to ${broadcastCount} users`);
+    console.log(`📡 WS: Broadcast sent to ${broadcastCount} users`);
+  }
+
+  // Broadcast message to all connected clients
+  broadcastToAllClients(message) {
+    let broadcastCount = 0;
+    connectedUsers.forEach((userClients, clientUserId) => {
+      userClients.forEach((client) => {
+        if (client.readyState === 1) {
+          try {
+            client.send(JSON.stringify(message));
+            broadcastCount++;
+          } catch (error) {
+            console.error(
+              `Failed to send message to user ${clientUserId}:`,
+              error,
+            );
+          }
+        }
+      });
+    });
+
+    console.log(`📡 WS: Message broadcast sent to ${broadcastCount} users`);
   }
 
   handleUserDisconnect(userId) {
@@ -138,12 +195,6 @@ class OptimizedRealtimeServer {
     if (userClients) {
       userClients.clear();
       connectedUsers.delete(userId);
-    }
-
-    // Clear connection timeout
-    if (connectionTimeouts.has(userId)) {
-      clearTimeout(connectionTimeouts.get(userId));
-      connectionTimeouts.delete(userId);
     }
 
     // Update session info
@@ -166,7 +217,7 @@ class OptimizedRealtimeServer {
         userClients.forEach((client) => {
           if (!client.isAlive) {
             console.log(
-              `💔 REALTIME: User ${userId} heartbeat failed - disconnecting`,
+              `💔 WS: User ${userId} heartbeat failed - disconnecting`,
             );
             client.terminate();
             this.handleUserDisconnect(userId);
@@ -179,26 +230,6 @@ class OptimizedRealtimeServer {
     }, 30000); // 30 seconds heartbeat
   }
 
-  startConnectionTimeout() {
-    // Check for stale connections every minute
-    setInterval(() => {
-      const now = Date.now();
-      connectedUsers.forEach((userClients, userId) => {
-        const session = userSessions.get(userId);
-        if (session && session.connectedAt) {
-          const connectionAge = now - session.connectedAt.getTime();
-          if (connectionAge > 10 * 60 * 1000) {
-            // 10 minutes
-            console.log(
-              `⏰ REALTIME: Stale connection for user ${userId} - disconnecting`,
-            );
-            this.handleUserDisconnect(userId);
-          }
-        }
-      });
-    }, 60000); // Check every minute
-  }
-
   getStats() {
     return {
       connectedUsers: connectedUsers.size,
@@ -207,13 +238,12 @@ class OptimizedRealtimeServer {
         0,
       ),
       userSessions: userSessions.size,
-      activeTimeouts: connectionTimeouts.size,
     };
   }
 
   start() {
     this.server.listen(this.port, () => {
-      console.log(`🚀 REALTIME: WebSocket server running on port ${this.port}`);
+      console.log(`🚀 WS: WebSocket server running on port ${this.port}`);
       console.log(`⚡ Real-time online status enabled`);
       console.log(
         `📡 WebSocket URL: ws://localhost:${this.port}/ws-online-status`,
@@ -223,7 +253,7 @@ class OptimizedRealtimeServer {
       setInterval(() => {
         const stats = this.getStats();
         console.log(
-          `📊 REALTIME Stats: ${stats.connectedUsers} users, ${stats.totalConnections} connections, ${stats.activeTimeouts} timeouts`,
+          `📊 WS Stats: ${stats.connectedUsers} users, ${stats.totalConnections} connections`,
         );
       }, 30000);
     });
@@ -234,15 +264,24 @@ class OptimizedRealtimeServer {
   }
 }
 
-// Start the optimized server
-const realtimeServer = new OptimizedRealtimeServer();
-realtimeServer.start();
+// Start the simple server
+const wsServer = new SimpleWebSocketServer();
+wsServer.start();
 
 // Graceful shutdown
-process.on("SIGINT", () => {
-  console.log("🛑 Shutting down REALTIME WebSocket server...");
-  realtimeServer.stop();
+process.on("SIGINT", async () => {
+  console.log("🛑 Shutting down WS server...");
+  wsServer.stop();
+
+  // Disconnect Prisma client
+  try {
+    await prisma.$disconnect();
+    console.log("✅ Prisma client disconnected");
+  } catch (error) {
+    console.error("❌ Error disconnecting Prisma:", error);
+  }
+
   process.exit(0);
 });
 
-module.exports = OptimizedRealtimeServer;
+module.exports = SimpleWebSocketServer;

@@ -6,14 +6,10 @@
     "node": ">=20.13.1"
   },
   "scripts": {
-    "dev": "concurrently \"next dev --turbopack\" \"node src/lib/optimized-realtime-server.js\"",
-    "dev:next": "next dev --turbopack",
-    "dev:ws": "node src/lib/optimized-realtime-server.js",
+    "dev": "next dev --turbopack",
     "socket": "node ws-server.js",
     "build": "prisma generate && next build",
-    "start": "concurrently \"next start -p 3003\" \"node src/lib/optimized-realtime-server.js\"",
-    "start:next": "next start -p 3003",
-    "start:ws": "node src/lib/optimized-realtime-server.js",
+    "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
