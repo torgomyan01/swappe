@@ -13,7 +13,6 @@ import { UpdateChatInfo } from "@/utils/helpers";
 import Messages from "@/app/im/components/messages";
 import ChatHeader from "@/app/im/components/chat-header";
 import MessageInput from "@/app/im/components/message-input";
-import { useOnlineStatus } from "@/hooks/use-online-status";
 
 const ChatInfo = memo(function ChatInfo() {
   const dispatch: any = useDispatch();
@@ -25,9 +24,6 @@ const ChatInfo = memo(function ChatInfo() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [sendLoading, setSendLoading] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<number>(0);
-
-  // Initialize online status tracking
-  useOnlineStatus();
 
   // Memoized callback for getting old messages
   const getOldMessages = useCallback(() => {
