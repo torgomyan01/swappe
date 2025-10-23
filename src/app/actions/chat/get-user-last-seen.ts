@@ -32,7 +32,7 @@ export async function ActionGetUserLastSeen(userId: number) {
 
     return { status: "ok", data: user, error: null };
   } catch (error) {
-    console.error("Error getting user last seen:", error);
+    console.error("Error getting user last seen: 6666666666666666666", error);
     return {
       status: "error",
       data: null,

@@ -1,7 +1,9 @@
+@use "sass:color";
+
 .pagination {
-  @include flex;
-  @include justify-center;
-  @include align-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 32px;
   span {
     font-size: 14px;
@@ -14,14 +16,14 @@
     }
   }
   button {
-    @include flex;
+    display: flex;
     width: 40px;
     height: 40px;
     min-width: 40px;
     border-radius: 16px;
     background: #f8f2ea;
     &:hover {
-      background: darken(#f8f2ea, 5%);
+      background: color.adjust(#f8f2ea, $lightness: -5%);
     }
     img {
       margin: auto;
@@ -38,10 +40,10 @@
     padding: 24px 0;
   }
   .wrapper {
-    @include flex;
+    display: flex;
     align-items: flex-start;
     @media (max-width: 767px) {
-      @include dir-col;
+      flex-direction: column;
     }
     .search-info-block {
       flex-grow: 1;
@@ -49,15 +51,15 @@
         width: 100%;
       }
       .info-top {
-        @include flex;
-        @include align-center;
-        @include justify-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         margin-bottom: 30px;
         @media (max-width: 767px) {
           margin-bottom: 16px;
         }
         .texts {
-          @include flex;
+          display: flex;
           b {
             font-size: 16px;
             font-weight: bold;
@@ -80,7 +82,7 @@
           font-size: 16px;
           font-weight: 500;
           color: #36393a;
-          @include placeholder {
+          &::-webkit-input-placeholder {
             color: #252525;
             font-size: 14px;
           }

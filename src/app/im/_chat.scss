@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .chat-wrap {
   min-height: calc(100vh - 96px);
   padding: 50px 0;
@@ -6,7 +8,7 @@
   }
 
   .wrapper {
-    @include flex;
+    display: flex;
   }
 
   .dialogues {
@@ -29,9 +31,9 @@
     }
 
     > .top {
-      @include flex;
-      @include align-center;
-      @include justify-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 16px;
 
       b {
@@ -41,7 +43,7 @@
       }
 
       .filter-btn {
-        @include flex;
+        display: flex;
         border-radius: 16px;
         background: #f1eae4;
         width: 44px;
@@ -50,7 +52,7 @@
         transition: 0.3s;
 
         &:hover {
-          background: darken(#f1eae4, 6%);
+          background: color.adjust(#f1eae4, $lightness: -6%);
         }
 
         img {
@@ -69,32 +71,32 @@
 
   .chat-info {
     flex-grow: 1;
-    @include flex;
-    @include dir-col;
-    @include justify-between;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     .top-info {
       padding-bottom: 16px;
       border-bottom: 1px solid #f8f2ea;
 
       .top-line {
-        @include flex;
-        @include align-center;
-        @include justify-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .left-inf {
-          @include flex;
-          @include align-center;
+          display: flex;
+          align-items: center;
           @media (max-width: 767px) {
-            @include dir-col;
+            flex-direction: column;
             align-items: flex-start;
           }
 
           .images {
             position: relative;
             z-index: 0;
-            @include flex;
-            @include align-center;
+            display: flex;
+            align-items: center;
             margin-right: 10px;
             @media (max-width: 767px) {
               margin-right: 0;
@@ -102,7 +104,7 @@
             }
 
             .img-b {
-              @include flex;
+              display: flex;
               width: 46px;
               height: 46px;
               border-radius: 16px;
@@ -116,7 +118,7 @@
             }
 
             .img-s {
-              @include flex;
+              display: flex;
               border-radius: 50%;
               width: 40px;
               height: 40px;
@@ -132,8 +134,8 @@
           }
 
           .texts {
-            @include flex;
-            @include dir-col;
+            display: flex;
+            flex-direction: column;
 
             b {
               display: block;
@@ -152,8 +154,8 @@
         }
 
         .right-inf {
-          @include flex;
-          @include dir-col;
+          display: flex;
+          flex-direction: column;
 
           .status {
             font-size: 14px;
@@ -178,6 +180,13 @@
               background-color: #4ade80;
               animation: pulse 2s infinite;
             }
+
+            .loading-indicator {
+              display: inline-block;
+              animation: spin 1s linear infinite;
+              font-size: 12px;
+              color: #bbb8b0;
+            }
           }
 
           @keyframes pulse {
@@ -192,11 +201,20 @@
             }
           }
 
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+
           .dots-wrap {
             margin-left: auto;
 
             .dots-icon {
-              @include flex;
+              display: flex;
               cursor: pointer;
             }
           }
@@ -204,8 +222,8 @@
       }
 
       .top-item {
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         border-radius: 20px;
         border-bottom: 1px solid #f8f2ea;
         background: #f8f2ea;
@@ -213,13 +231,13 @@
         padding: 8px;
 
         .imgs {
-          @include flex;
+          display: flex;
           @media (max-width: 767px) {
             display: none;
           }
 
           .img {
-            @include flex;
+            display: flex;
             overflow: hidden;
             width: 60px;
             height: 60px;
@@ -235,8 +253,8 @@
         }
 
         .txts {
-          @include flex;
-          @include dir-col;
+          display: flex;
+          flex-direction: column;
           margin-left: 12px;
 
           b {
@@ -250,13 +268,13 @@
           }
 
           .inf-texts {
-            @include flex;
+            display: flex;
             @media (max-width: 1300px) {
-              @include dir-col;
+              flex-direction: column;
             }
 
             .download {
-              @include flex;
+              display: flex;
               margin: 0 4px;
               font-size: 14px;
               font-weight: 600;
@@ -287,10 +305,10 @@
         }
 
         .btns {
-          @include flex;
+          display: flex;
           margin-left: auto;
           @media (max-width: 1300px) {
-            @include dir-col;
+            flex-direction: column;
             margin-left: 8px;
           }
 
@@ -341,12 +359,12 @@
 
     .bottom-info {
       margin-top: auto;
-      @include flex;
+      display: flex;
       align-items: flex-end;
       margin-top: 10px;
 
       .plus {
-        @include flex;
+        display: flex;
         width: 48px;
         min-width: 48px;
         height: 48px;
@@ -382,7 +400,7 @@
           font-size: 16px;
           color: #252525;
           border-radius: 16px;
-          @include placeholder {
+          &::-webkit-input-placeholder {
             font-size: 16px;
             color: rgba(128, 128, 128, 0.55);
           }
@@ -521,11 +539,11 @@
 
 .sms-wrap {
   margin: 10px 0;
-  @include flex;
-  @include dir-col;
+  display: flex;
+  flex-direction: column;
 
   .right-sms-wrap {
-    @include flex;
+    display: flex;
     justify-content: flex-end;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -550,8 +568,8 @@
     .right-sms {
       max-width: 440px;
       width: 100%;
-      @include flex;
-      @include dir-col;
+      display: flex;
+      flex-direction: column;
 
       .style {
         padding: 12px;
@@ -564,16 +582,16 @@
 
       .time {
         margin: 4px 0;
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         color: #bbb8b0;
         font-size: 14px;
         font-weight: 600;
         margin-left: auto;
 
         .not {
-          @include flex;
-          @include align-center;
+          display: flex;
+          align-items: center;
           margin-right: 10px;
           font-size: 14px;
           font-weight: 600;
@@ -597,7 +615,7 @@
         gap: 4px;
 
         .small-img {
-          @include flex;
+          display: flex;
 
           img {
             width: 100%;
@@ -609,7 +627,7 @@
 
       .big-img {
         width: 100%;
-        @include flex;
+        display: flex;
         margin-top: 4px;
         margin-bottom: 12px;
 
@@ -621,7 +639,7 @@
   }
 
   .left-sms-wrap {
-    @include flex;
+    display: flex;
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -629,7 +647,7 @@
     .image-wrap {
       border-radius: 16px;
       overflow: hidden;
-      @include flex;
+      display: flex;
       max-width: 500px;
 
       img {
@@ -657,8 +675,8 @@
     .left-sms {
       max-width: 440px;
       width: 100%;
-      @include flex;
-      @include dir-col;
+      display: flex;
+      flex-direction: column;
 
       .style {
         padding: 12px;
@@ -690,8 +708,8 @@
 
       .time {
         margin: 4px 0;
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         color: #bbb8b0;
         font-size: 14px;
         font-weight: 600;
@@ -727,9 +745,9 @@
   }
 
   .dialogues-item {
-    @include flex;
+    display: flex;
     cursor: pointer;
-    @include align-center;
+    align-items: center;
     margin-bottom: 8px;
     border-radius: 16px;
     padding: 12px;
@@ -753,7 +771,7 @@
       margin-right: 24px;
 
       .big-img {
-        @include flex;
+        display: flex;
         width: 94px;
         height: 76px;
         border-radius: 8px;
@@ -766,7 +784,7 @@
       }
 
       .small-img {
-        @include flex;
+        display: flex;
         border-radius: 50%;
         overflow: hidden;
         width: 45px;
@@ -785,8 +803,8 @@
     }
 
     .texts {
-      @include flex;
-      @include dir-col;
+      display: flex;
+      flex-direction: column;
 
       b {
         font-size: 16px;
@@ -819,7 +837,7 @@
   .close {
     width: 20px;
     margin-left: auto;
-    @include flex;
+    display: flex;
 
     img {
       width: 1005px;
@@ -827,8 +845,8 @@
   }
 
   .texts {
-    @include flex;
-    @include dir-col;
+    display: flex;
+    flex-direction: column;
     margin-right: 20px;
 
     span {
@@ -857,7 +875,7 @@
   }
 
   .img-wrapper {
-    @include flex;
+    display: flex;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 12px;

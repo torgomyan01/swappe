@@ -20,7 +20,7 @@
     }
   }
   .info-btns {
-    @include flex;
+    display: flex;
     padding-bottom: 30px;
     margin-bottom: 30px;
     border-bottom: 1px solid rgba(99, 103, 104, 0.16);
@@ -29,7 +29,7 @@
       margin-bottom: 20px;
     }
     .heart-btn {
-      @include flex;
+      display: flex;
       margin-left: 12px;
       width: 44px;
       height: 44px;
@@ -43,7 +43,7 @@
     .dots-wrap {
       .dots {
         cursor: pointer;
-        @include flex;
+        display: flex;
         margin-left: 12px;
         width: 44px;
         height: 44px;
@@ -57,8 +57,8 @@
     }
   }
   .title-wrap {
-    @include flex;
-    @include justify-between;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 32px;
     @media (max-width: 767px) {
       margin-bottom: 24px;
@@ -69,10 +69,10 @@
       color: #252525;
     }
     .stars-info {
-      @include flex;
-      @include align-center;
+      display: flex;
+      align-items: center;
       .images {
-        @include flex;
+        display: flex;
         img {
           margin-right: 8px;
           @media (max-width: 767px) {
@@ -239,7 +239,7 @@
         }
       }
       .img-wrap {
-        @include flex;
+        display: flex;
         border-radius: 20px;
         margin-bottom: 16px;
         overflow: hidden;

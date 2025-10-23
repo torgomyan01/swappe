@@ -34,8 +34,8 @@
     }
     ul {
       li {
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         margin-bottom: 12px;
         img {
           margin-right: 10px;
@@ -55,21 +55,21 @@
       margin-top: 16px;
       font-size: 14px;
       font-weight: 600;
-      @include inline-flex;
+      display: inline-flex;
       color: #fffcf5;
     }
   }
   .buttons {
     padding: 24px 12px;
     background: #fffcf5;
-    @include flex;
+    display: flex;
     justify-content: flex-end;
     a {
       padding: 12px 14px;
       border-radius: 16px;
       border: 1px solid #1e4a2f;
       margin-left: 8px;
-      @include inline-flex;
+      display: inline-flex;
       font-size: 14px;
       font-weight: 600;
       color: #1e4a2f;
@@ -128,10 +128,10 @@
   .wrapper {
     padding: 40px 20px 80px;
     height: 100vh;
-    @include flex;
+    display: flex;
     overflow-y: auto;
-    @include dir-col;
-    @include justify-between;
+    flex-direction: column;
+    justify-content: space-between;
     @media (max-width: 767px) {
       padding: 30px 15px 50px;
     }
@@ -145,9 +145,9 @@
       margin: 20px auto;
       max-width: 570px;
       width: 100%;
-      @include flex;
-      @include dir-col;
-      @include align-center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       @media (max-width: 767px) {
         padding: 34px 24px;
       }
@@ -173,8 +173,8 @@
       }
     }
     .bottom-texts {
-      @include flex;
-      @include justify-center;
+      display: flex;
+      justify-content: center;
       margin-top: 15px;
       span {
         color: #858c95;
@@ -226,8 +226,8 @@
     }
     ul {
       li {
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         margin-bottom: 12px;
         img {
           margin-right: 10px;
@@ -255,8 +255,8 @@
     padding: 0;
     background: none;
     box-shadow: none;
-    @include flex;
-    @include align-center;
+    display: flex;
+    align-items: center;
     margin-bottom: 16px;
     height: inherit;
     > span {
@@ -269,9 +269,9 @@
   .prices {
     margin-bottom: 16px;
     .top-prices {
-      @include flex;
-      @include align-center;
-      @include justify-center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 4px;
       span {
         font-weight: bold;
@@ -300,9 +300,9 @@
     margin-bottom: 24px;
   }
   .back {
-    @include flex;
-    @include align-center;
-    @include justify-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 14px;
     font-weight: 600;
     color: #1e4a2f;
@@ -314,8 +314,8 @@
     padding: 16px;
     border-radius: 24px;
     background: #f8f2ea;
-    @include flex;
-    @include justify-center;
+    display: flex;
+    justify-content: center;
     margin-bottom: 24px;
   }
   .payment-method {
@@ -334,14 +334,14 @@
       padding: 16px;
       border-radius: 24px;
       background: #f8f2ea;
-      @include flex;
-      @include align-center;
+      display: flex;
+      align-items: center;
       .icon {
         width: 44px;
         height: 44px;
         border-radius: 50%;
         overflow: hidden;
-        @include flex;
+        display: flex;
         margin-right: 24px;
         img {
           width: 1005px;
@@ -376,14 +376,14 @@
   padding: 16px;
   border-radius: 24px;
   background: #f8f2ea;
-  @include flex;
-  @include align-center;
+  display: flex;
+  align-items: center;
   .icon {
     width: 44px;
     height: 44px;
     border-radius: 50%;
     overflow: hidden;
-    @include flex;
+    display: flex;
     margin-right: 24px;
     img {
       width: 1005px;

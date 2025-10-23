@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .creating-proposal {
   padding-bottom: 140px;
   padding-top: 20px;
@@ -37,9 +39,9 @@
   }
 
   .top-info {
-    @include flex;
-    @include align-center;
-    @include justify-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 40px;
     @media (max-width: 767px) {
       margin-bottom: 24px;
@@ -57,7 +59,7 @@
     .close {
       cursor: pointer;
       border-radius: 16px;
-      @include flex;
+      display: flex;
       width: 44px;
       height: 44px;
       min-width: 44px;
@@ -70,13 +72,13 @@
   }
 
   .info-texts {
-    @include flex;
-    @include flex-wrap;
+    display: flex;
+    flex-wrap: wrap;
     margin-bottom: 40px;
 
     .texts {
-      @include flex;
-      @include align-center;
+      display: flex;
+      align-items: center;
       margin-right: 32px;
       margin-bottom: 10px;
 
@@ -86,9 +88,9 @@
 
       .num {
         border-radius: 50%;
-        @include flex;
-        @include align-center;
-        @include justify-center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 32px;
         height: 32px;
         min-width: 32px;
@@ -141,7 +143,7 @@
       }
 
       .radios {
-        @include flex;
+        display: flex;
         margin-bottom: 24px;
 
         .radio-wrap {
@@ -165,7 +167,7 @@
         background: #f8f2ea;
         font-size: 14px;
         color: #252525;
-        @include placeholder {
+        &::-webkit-input-placeholder {
           color: #68727d;
           font-size: 14px;
         }
@@ -187,8 +189,8 @@
       }
 
       .tags {
-        @include flex;
-        @include flex-wrap;
+        display: flex;
+        flex-wrap: wrap;
         margin-right: -8px;
         max-width: 850px;
         width: 100%;
@@ -203,9 +205,9 @@
           font-size: 15px;
           font-weight: 500;
           color: #252525;
-          @include flex;
-          @include align-center;
-          @include justify-center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
           img {
             width: 12px;
@@ -222,10 +224,10 @@
 
       .area {
         margin-bottom: 24px;
-        @include flex;
-        @include justify-center;
-        @include align-center;
-        @include dir-col;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         border: 1px dashed #68727d;
         height: 200px;
         border-radius: 16px;
@@ -243,7 +245,7 @@
         }
 
         .icon {
-          @include flex;
+          display: flex;
           border-radius: 50%;
           margin-bottom: 4px;
           width: 36px;
@@ -267,7 +269,7 @@
         font-size: 14px;
         color: #252525;
         resize: none;
-        @include placeholder {
+        &::-webkit-input-placeholder {
           color: #68727d;
           font-size: 14px;
         }
@@ -277,8 +279,8 @@
       }
 
       .title-nums {
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         margin-bottom: 14px;
 
         .text {
@@ -299,7 +301,7 @@
       }
 
       .info-block {
-        @include flex;
+        display: flex;
         margin-bottom: 12px;
         padding: 16px;
         border-radius: 16px;
@@ -309,7 +311,7 @@
         .icon {
           width: 20px;
           height: 20px;
-          @include flex;
+          display: flex;
           margin-right: 15px;
 
           img {
@@ -337,8 +339,8 @@
   }
 
   .buttons {
-    @include flex;
-    @include justify-center;
+    display: flex;
+    justify-content: center;
     margin-top: 30px;
 
     .grey-btn {
@@ -351,7 +353,7 @@
       margin-right: 16px;
 
       &:hover {
-        background: darken(#f8f2ea, 3%);
+        background: color.adjust(#f8f2ea, $lightness: -3%);
       }
     }
   }
@@ -383,7 +385,7 @@
       margin-top: 20px;
 
       .swiper-slide {
-        @include flex;
+        display: flex;
         height: 130px;
         border-radius: 16px;
         position: relative;
@@ -396,7 +398,7 @@
           bottom: 15px;
           left: 15px;
           z-index: 10;
-          @include flex;
+          display: flex;
         }
 
         > img {
@@ -425,7 +427,7 @@
 
     .main-slider {
       .swiper-slide {
-        @include flex;
+        display: flex;
         height: 410px;
         border-radius: 20px;
         @media (max-width: 1024px) {
@@ -453,8 +455,8 @@
 
     .rate {
       margin-bottom: 16px;
-      @include flex;
-      @include align-center;
+      display: flex;
+      align-items: center;
 
       b,
       span {
@@ -466,8 +468,8 @@
 
       .rate-text {
         margin-right: 8px;
-        @include flex;
-        @include align-center;
+        display: flex;
+        align-items: center;
         font-size: 14px;
         font-weight: 600;
         color: #edb53e;
@@ -488,8 +490,8 @@
     }
 
     .links {
-      @include flex;
-      @include flex-wrap;
+      display: flex;
+      flex-wrap: wrap;
       padding-bottom: 15px;
       border-bottom: 1px solid rgba(99, 103, 104, 0.16);
       margin-bottom: 30px;
@@ -505,18 +507,18 @@
         margin-bottom: 12px;
 
         &:hover {
-          background: darken(#f8f2ea, 3%);
+          background: color.adjust(#f8f2ea, $lightness: -3%);
         }
       }
     }
 
     .list {
       li {
-        @include flex;
-        @include justify-between;
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 16px;
         @media (max-width: 767px) {
-          @include dir-col;
+          flex-direction: column;
         }
 
         b {
@@ -547,7 +549,7 @@
     .map {
       max-width: 320px;
       width: 100%;
-      @include flex;
+      display: flex;
       margin-bottom: 30px;
 
       img {
@@ -597,7 +599,7 @@
     }
 
     &:hover {
-      background: darken(#f8f2ea, 2%);
+      background: color.adjust(#f8f2ea, $lightness: -2%);
     }
 
     &.active {
@@ -712,7 +714,7 @@
     }
 
     &:hover {
-      background: darken(#f8f2ea, 2%);
+      background: color.adjust(#f8f2ea, $lightness: -2%);
     }
 
     &.active {

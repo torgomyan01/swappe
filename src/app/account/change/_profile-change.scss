@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .users {
   text-align: left;
   margin-bottom: 30px;
@@ -12,11 +14,11 @@
     border-radius: 16px;
     background: #f8f2ea;
     padding: 16px;
-    @include flex;
-    @include align-center;
+    display: flex;
+    align-items: center;
     position: relative;
     .icons {
-      @include flex;
+      display: flex;
       position: absolute;
       top: 16px;
       right: 16px;
@@ -25,7 +27,7 @@
         margin-left: 16px;
         width: 16px;
         height: 16px;
-        @include flex;
+        display: flex;
         img {
           margin: auto;
         }
@@ -48,7 +50,7 @@
       }
     }
     .img-wrap {
-      @include flex;
+      display: flex;
       width: 54px;
       height: 54px;
       border-radius: 50%;
@@ -65,10 +67,10 @@
     border-radius: 16px;
     background: #f8f2ea;
     padding: 16px;
-    @include flex;
-    @include align-center;
+    display: flex;
+    align-items: center;
     &:hover {
-      background: darken(#f8f2ea, 5%);
+      background: color.adjust(#f8f2ea, $lightness: -5%);
     }
     .icon {
       width: 54px;
@@ -76,7 +78,7 @@
       border-radius: 50%;
       background: #fffcf5;
       margin-right: 16px;
-      @include flex;
+      display: flex;
       img {
         margin: auto;
       }
@@ -100,12 +102,12 @@
   }
   .label-wrap {
     .btns {
-      @include flex;
-      @include flex-wrap;
+      display: flex;
+      flex-wrap: wrap;
       .add {
         width: 33px;
         height: 33px;
-        @include flex;
+        display: flex;
         img {
           margin: auto;
         }
@@ -137,7 +139,7 @@
       width: 100%;
       font-size: 14px;
       color: #252525;
-      @include placeholder {
+      &::-webkit-input-placeholder {
         color: #252525;
         font-size: 14px;
       }
@@ -151,7 +153,7 @@
       width: 100%;
       font-size: 14px;
       color: #252525;
-      @include placeholder {
+      &::-webkit-input-placeholder {
         color: #252525;
         font-size: 14px;
       }
@@ -165,9 +167,9 @@
       padding: 12px;
       margin-bottom: 12px;
       width: 100%;
-      @include flex;
-      @include align-center;
-      @include justify-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       height: 46px;
       span {
         font-size: 14px;
@@ -180,8 +182,8 @@
       padding: 12px;
       margin-bottom: 12px;
       width: 100%;
-      @include flex;
-      @include align-center;
+      display: flex;
+      align-items: center;
       font-size: 14px;
       color: #68727d;
       height: 46px;

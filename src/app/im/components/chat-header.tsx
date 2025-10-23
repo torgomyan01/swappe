@@ -4,7 +4,7 @@ import { memo, useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { fileHost } from "@/utils/consts";
 import PrintDealStatus from "@/app/im/components/print-deal-status";
-import { ActionGetUserLastSeen } from "@/app/actions/chat/get-user-last-seen";
+// Removed server action import - using API route instead
 import { getOnlineStatus } from "@/utils/helpers";
 import { useSession } from "next-auth/react";
 
@@ -20,6 +20,7 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
     statusText: "Загрузка...",
     statusClass: "offline",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   // Determine which user is the "other" user in the chat
   const otherUserId = useMemo(() => {
@@ -36,13 +37,33 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
   // Fetch other user's last seen information
   useEffect(() => {
     if (otherUserId) {
-      ActionGetUserLastSeen(otherUserId).then(({ data, status }) => {
-        if (status === "ok" && data) {
-          setOtherUserInfo(data);
-          const status = getOnlineStatus((data as any).last_seen);
-          setOnlineStatus(status);
-        }
-      });
+      fetch(`/api/chat/get-user-last-seen?userId=${otherUserId}`)
+        .then((response) => response.json())
+        .then(({ data, error }) => {
+          console.log(data, error, "User last seen data");
+
+          if (data && !error) {
+            setOtherUserInfo(data);
+            const status = getOnlineStatus((data as any).last_seen);
+            setOnlineStatus(status);
+          } else {
+            setOnlineStatus({
+              isOnline: false,
+              statusText: "Ошибка загрузки",
+              statusClass: "offline",
+            });
+          }
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Failed to get user last seen:", error);
+          setOnlineStatus({
+            isOnline: false,
+            statusText: "Ошибка загрузки",
+            statusClass: "offline",
+          });
+          setIsLoading(false);
+        });
     }
   }, [otherUserId]);
 
@@ -94,7 +115,8 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
             </div>
           </div>
           <span className={`status ${onlineStatus.statusClass}`}>
-            {onlineStatus.isOnline && (
+            {isLoading && <span className="loading-indicator">⟳</span>}
+            {!isLoading && onlineStatus.isOnline && (
               <span className="online-indicator"></span>
             )}
             {onlineStatus.statusText}

@@ -14,9 +14,6 @@ const nextConfig = {
   sassOptions: {
     additionalData: ``,
     includePaths: [path.join(__dirname, "src/access/css")],
-    prependData: `
-      @use "mixins" as *;
-    `,
   },
   images: {
     remotePatterns: [

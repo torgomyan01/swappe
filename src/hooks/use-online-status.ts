@@ -1,12 +1,32 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
-import { ActionUpdateLastSeen } from "@/app/actions/auth/update-last-seen";
+import { useEffect, useCallback, useRef } from "react";
 
 export const useOnlineStatus = () => {
+  const lastUpdateRef = useRef<number>(0);
+  const DEBOUNCE_TIME = 30000; // 30 seconds
+
   const updateLastSeen = useCallback(async () => {
+    const now = Date.now();
+
+    // Debounce: only update if enough time has passed
+    if (now - lastUpdateRef.current < DEBOUNCE_TIME) {
+      return;
+    }
+
     try {
-      await ActionUpdateLastSeen();
+      const response = await fetch("/api/auth/update-last-seen", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update last seen");
+      }
+
+      lastUpdateRef.current = now;
     } catch (error) {
       console.error("Failed to update last seen:", error);
     }
@@ -16,8 +36,8 @@ export const useOnlineStatus = () => {
     // Update last seen on mount
     updateLastSeen();
 
-    // Set up interval to update every 2 minutes
-    const interval = setInterval(updateLastSeen, 2 * 60 * 1000);
+    // Set up interval to update every 5 minutes
+    const interval = setInterval(updateLastSeen, 5 * 60 * 1000);
 
     // Update on user activity
     const handleActivity = () => {
