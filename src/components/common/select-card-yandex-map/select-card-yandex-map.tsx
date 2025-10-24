@@ -200,10 +200,8 @@ const SelectCardYandexMap = memo(function ({
           return null;
         }
 
-        console.log("Using API key:", key.substring(0, 8) + "...");
-
         console.log("Geocoding query:", text);
-        const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${key}&format=json&lang=ru_RU&geocode=${encodeURIComponent(
+        const url = `https://geocode-maps.yandex.ru/v1/?apikey=${key}&format=json&lang=ru_RU&geocode=${encodeURIComponent(
           text,
         )}`;
         console.log("Geocoding URL:", url);
@@ -284,7 +282,7 @@ const SelectCardYandexMap = memo(function ({
     console.log("Starting geocoding for query:", q);
     console.log(
       "API Key available:",
-      !!process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY,
+      process.env.NEXT_PUBLIC_YANDEX_MAP_API_KEY,
     );
 
     try {

@@ -107,7 +107,7 @@ function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
             height={400}
           />
         </Link>
-        {checkMyOffer ? (
+        {checkMyOffer && offer.status !== "archive" ? (
           <Dropdown className="min-w-0 w-fit">
             <DropdownTrigger className="absolute top-4 sm:top-6 right-4 sm:right-6">
               <Button className="min-w-[40px]">

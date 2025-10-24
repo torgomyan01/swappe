@@ -44,7 +44,7 @@ function SendReview() {
   function CreateReview() {
     if (rating && chat) {
       addToast({
-        description: "Ждите )",
+        description: "Ждите",
         color: "default",
       });
 

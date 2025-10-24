@@ -228,7 +228,9 @@ model messages {
   file_type        String?
   file_paths       Json?
   selected_chat_id Int?
+  viewed           Boolean @default(false)
   created_at       DateTime
+
 
   chats chats? @relation(fields: [chat_id], references: [id])
 }

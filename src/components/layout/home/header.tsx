@@ -104,15 +104,15 @@ function HomeHeader() {
             </ul>
 
             {session ? (
-              <Link href={SITE_URL.ACCOUNT} className="login-btn-mob">
+              <a href={SITE_URL.ACCOUNT} className="login-btn-mob">
                 <i className="fa-solid fa-user mr-2"></i>
                 {session.user?.name}
-              </Link>
+              </a>
             ) : (
-              <Link href={SITE_URL.LOGIN} className="login-btn-mob">
+              <a href={SITE_URL.LOGIN} className="login-btn-mob">
                 <img src="/img/subtract.svg" alt="" />
                 Войти в сервис
-              </Link>
+              </a>
             )}
           </div>
         </div>

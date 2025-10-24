@@ -11,7 +11,6 @@ import { ActionGetUserFavorites } from "@/app/actions/favorites/get-user-favorit
 import CookieComponent from "@/components/common/main-template/cookie";
 import { Spinner } from "@heroui/react";
 import { ActionUpdateLastSeen } from "@/app/actions/auth/update-last-seen";
-import { getOnlineStatus } from "@/utils/helpers";
 import { useIntervalManager } from "@/hooks/use-interval-manager";
 
 interface IThisProps {

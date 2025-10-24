@@ -8,7 +8,7 @@ import clsx from "clsx";
 
 const menuItems = [
   {
-    name: "Политика в отношении",
+    name: "Политика конфиденциальности",
     url: SITE_URL.PRIVACY_POLICY_REGARDING,
   },
   {

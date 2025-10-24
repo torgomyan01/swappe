@@ -13,15 +13,21 @@ import FeedbackBlock from "@/app/im/components/feedback-block";
 import { ActionGetOrCreateSupportChat } from "@/app/actions/support/get-or-create-support-chat";
 import { ActionGetSupportMessages } from "@/app/actions/support/get-support-messages";
 import { useSelector } from "react-redux";
+import { useWebSocket } from "@/contexts/websocket-context";
 
 function SupportChatInfo() {
   const { data: session }: any = useSession<any>();
+  const {
+    sendMessage: globalSendMessage,
+    onMessage,
+    offMessage,
+    isConnected,
+  } = useWebSocket();
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
   const [supportChatId, setSupportChatId] = useState<number | null>(null);
   const [chatInfo, setChatInfo] = useState<any | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [ws, setWs] = useState<WebSocket | null>(null);
   const [sendLoading, setSendLoading] = useState(false);
 
   const [selectedMessage, setSelectedMessage] = useState<number>(0);
@@ -82,18 +88,11 @@ function SupportChatInfo() {
     })();
   }, []);
 
-  const wsUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return process.env.NODE_ENV === "production"
-      ? `wss://${window.location.host}/ws`
-      : "ws://localhost:3004";
-  }, []);
-
+  // Handle WebSocket messages for support chat
   useEffect(() => {
     if (!supportChatId) return;
-    const wsClient = new WebSocket(wsUrl);
-    wsClient.onmessage = (event: any) => {
-      const data = JSON.parse(event.data);
+
+    const handleWebSocketMessage = (data: any) => {
       if (
         data.type === "SUPPORT_MESSAGE" &&
         data.payload.support_chat_id === supportChatId
@@ -113,9 +112,13 @@ function SupportChatInfo() {
         setMessages((prev) => [...prev, mapped]);
       }
     };
-    setWs(wsClient);
-    return () => wsClient.close();
-  }, [supportChatId, wsUrl]);
+
+    onMessage(handleWebSocketMessage);
+
+    return () => {
+      offMessage(handleWebSocketMessage);
+    };
+  }, [supportChatId, onMessage, offMessage]);
 
   const [text, setText] = useState("");
 
@@ -124,7 +127,7 @@ function SupportChatInfo() {
   );
 
   const sendMessage = () => {
-    if (ws && ws.readyState === WebSocket.OPEN && supportChatId && chatInfo) {
+    if (isConnected && supportChatId && chatInfo && session?.user?.id) {
       setSendLoading(true);
       setText("");
 
@@ -138,7 +141,7 @@ function SupportChatInfo() {
           file_paths: null,
           selected_chat_id: selectedMessage,
         } as any;
-        ws.send(JSON.stringify(messageData));
+        globalSendMessage(messageData);
         setSelectedMessage(0);
       }
     }

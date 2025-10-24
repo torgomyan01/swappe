@@ -7,18 +7,23 @@ import { ActionAdminGetSupportChat } from "@/app/actions/support/admin-list-chat
 import AdminMainTemplate from "@/components/layout/admin/admin-main-template";
 import { SITE_URL } from "@/utils/consts";
 import { useSession } from "next-auth/react";
+import { useWebSocket } from "@/contexts/websocket-context";
 
 export default function AdminSupportChatPage() {
   const { id }: any = useParams();
   const chatId = Number(id);
   const { data: session }: any = useSession();
+  const {
+    sendMessage: globalSendMessage,
+    onMessage,
+    offMessage,
+    isConnected,
+  } = useWebSocket();
   const [loading, setLoading] = useState(true);
   const [chat, setChat] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
-  const [wsClient, setWsClient] = useState<WebSocket | null>(null);
   const [sending, setSending] = useState(false);
-  const [isWsOpen, setIsWsOpen] = useState(false);
   const messagesEndRef = useState<HTMLDivElement | null>(null)[0];
   const [messagesContainer, setMessagesContainer] =
     useState<HTMLDivElement | null>(null);
@@ -34,19 +39,11 @@ export default function AdminSupportChatPage() {
     })();
   }, [chatId]);
 
-  const wsUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return process.env.NODE_ENV === "production"
-      ? `wss://${window.location.host}/ws`
-      : "ws://localhost:3004";
-  }, []);
-
+  // Handle WebSocket messages for admin support chat
   useEffect(() => {
     if (!chatId) return;
-    const ws = new WebSocket(wsUrl);
-    ws.onopen = () => setIsWsOpen(true);
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
+
+    const handleWebSocketMessage = (data: any) => {
       if (
         data.type === "SUPPORT_MESSAGE" &&
         data.payload.support_chat_id === chatId
@@ -55,25 +52,26 @@ export default function AdminSupportChatPage() {
         setMessages((prev) => [...prev, data.payload as any]);
       }
     };
-    ws.onclose = () => setIsWsOpen(false);
-    setWsClient(ws);
-    return () => ws.close();
-  }, [chatId, wsUrl]);
+
+    onMessage(handleWebSocketMessage);
+
+    return () => {
+      offMessage(handleWebSocketMessage);
+    };
+  }, [chatId, onMessage, offMessage]);
 
   const send = () => {
-    if (!wsClient || wsClient.readyState !== WebSocket.OPEN) return;
+    if (!isConnected) return;
     if (!text.trim() || !chatId || !session?.user?.id) return;
     setSending(true);
-    wsClient.send(
-      JSON.stringify({
-        type: "NEW_SUPPORT_MESSAGE",
-        support_chat_id: chatId,
-        sender_id: session.user.id,
-        content: text.trim(),
-        file_type: null,
-        file_paths: null,
-      }),
-    );
+    globalSendMessage({
+      type: "NEW_SUPPORT_MESSAGE",
+      support_chat_id: chatId,
+      sender_id: session.user.id,
+      content: text.trim(),
+      file_type: null,
+      file_paths: null,
+    });
     setText("");
   };
 
@@ -109,8 +107,8 @@ export default function AdminSupportChatPage() {
               Чат с пользователем #{chat?.user_id}
             </h1>
             <div className="text-xs text-default-500 flex items-center gap-2">
-              <span className={isWsOpen ? "text-success" : "text-danger"}>
-                {isWsOpen ? "Онлайн" : "Офлайн"}
+              <span className={isConnected ? "text-success" : "text-danger"}>
+                {isConnected ? "Онлайн" : "Офлайн"}
               </span>
               <span>•</span>
               <span>{messages.length} сообщений</span>
@@ -128,14 +126,9 @@ export default function AdminSupportChatPage() {
               size="sm"
               variant="flat"
               color="secondary"
-              isDisabled={!isWsOpen}
-              onPress={() => {
-                if (!isWsOpen && wsClient) {
-                  wsClient.close();
-                }
-              }}
+              isDisabled={!isConnected}
             >
-              {isWsOpen ? "Подключено" : "Отключено"}
+              {isConnected ? "Подключено" : "Отключено"}
             </Button>
           </div>
 

@@ -28,7 +28,7 @@ function WaitConfirmDoc() {
       setLoading(true);
 
       addToast({
-        description: "Ждите )",
+        description: "Ждите",
         color: "default",
       });
 

@@ -164,7 +164,7 @@ export async function ActionAdminChangeOfferStatus(
       try {
         await ActionCreatePushNotification(
           userId,
-          "Ваш предложение опубликован",
+          "Ваше предложение опубликовано",
           "success",
           updated.name,
           `${SITE_URL.OFFER}/${updated.id}`,

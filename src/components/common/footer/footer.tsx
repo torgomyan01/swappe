@@ -22,7 +22,7 @@ function Footer() {
           <div className="menu-wrap">
             <h4>О Свопи</h4>
             <Link href="#">Про Swappe</Link>
-            <Link href="#">FAQ</Link>
+            <Link href="#faq">FAQ</Link>
             <Link href={SITE_URL.SUPPORT}>Поддержка</Link>
             <Link href={SITE_URL.ARTICLES}>Советы и статьи</Link>
           </div>

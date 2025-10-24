@@ -3,40 +3,31 @@ import { WebSocketServer, WebSocket } from "ws";
 
 const prisma = new PrismaClient();
 
-// Simple in-memory storage for online status
-const connectedUsers = new Map();
-const userSessions = new Map();
-
 const wss = new WebSocketServer({ port: 3004 });
 
-wss.on("connection", (ws, req) => {
-  // Extract userId from query parameters
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const userId = url.searchParams.get("userId");
+// Keep track of connected clients
+const clients = new Set();
 
-  if (!userId) {
-    ws.close(1008, "User ID required");
-    return;
-  }
-
-  const userIdNum = parseInt(userId);
-  console.log(`🚀 WS: User ${userIdNum} connected`);
-
-  // Store user connection for online status
-  if (!connectedUsers.has(userIdNum)) {
-    connectedUsers.set(userIdNum, new Set());
-  }
-  connectedUsers.get(userIdNum).add(ws);
-
-  // Update session info
-  userSessions.set(userIdNum, {
-    lastSeen: new Date(),
-    isOnline: true,
-    connectedAt: new Date(),
+// Ping clients every 30 seconds to keep connection alive
+setInterval(() => {
+  clients.forEach((ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.ping();
+    }
   });
+}, 30000);
 
-  // Notify all other users that this user is online
-  broadcastUserStatus(userIdNum, true);
+wss.on("connection", (ws) => {
+  console.log("Client connected");
+  clients.add(ws);
+
+  // Send a welcome message to confirm connection
+  ws.send(
+    JSON.stringify({
+      type: "CONNECTION_ESTABLISHED",
+      message: "Connected to WebSocket server",
+    }),
+  );
 
   ws.on("message", async (message) => {
     try {
@@ -93,27 +84,12 @@ wss.on("connection", (ws, req) => {
     }
   });
 
-  // Handle heartbeat for online status
-  ws.on("pong", () => {
-    ws.isAlive = true;
-  });
-
-  ws.on("close", () => {
-    console.log(`🔌 WS: User ${userIdNum} disconnected`);
-    handleUserDisconnect(userIdNum);
+  ws.on("close", (code, reason) => {
+    console.log(`Client disconnected. Code: ${code}, Reason: ${reason}`);
+    clients.delete(ws);
   });
 
   ws.on("error", (error) => {
-    console.error(`❌ WS: WebSocket error for user ${userIdNum}:`, error);
-    handleUserDisconnect(userIdNum);
+    console.error("WebSocket error:", error);
   });
-
-  // Send connection confirmation
-  ws.send(
-    JSON.stringify({
-      type: "CONNECTION_ESTABLISHED",
-      userId: userIdNum,
-      timestamp: new Date().toISOString(),
-    }),
-  );
 });

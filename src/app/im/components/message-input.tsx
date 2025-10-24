@@ -229,7 +229,7 @@ const MessageInput = memo(function MessageInput({
         accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, .odt"
       />
 
-      <div className="bottom-info z-[1000]">
+      <div className="bottom-info z-[10]">
         <Dropdown>
           <DropdownTrigger>
             <button className="plus cursor-pointer">

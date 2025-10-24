@@ -7,6 +7,7 @@ import ClientMessage from "@/app/im/components/client-message";
 import { useEffect, useRef, useState, memo, useMemo, useCallback } from "react";
 import "react-photo-view/dist/react-photo-view.css";
 import { groupMessagesByDate } from "@/utils/helpers";
+import { localStorageKeys } from "@/utils/consts";
 
 moment().locale("ru");
 

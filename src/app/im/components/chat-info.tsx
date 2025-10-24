@@ -4,6 +4,7 @@ import { Spinner } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { ActionGetMessages } from "@/app/actions/chat/get-messages";
+import { ActionMarkMessagesAsRead } from "@/app/actions/chat/mark-messages-read";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 import { PhotoProvider } from "react-photo-view";
@@ -13,15 +14,16 @@ import { UpdateChatInfo } from "@/utils/helpers";
 import Messages from "@/app/im/components/messages";
 import ChatHeader from "@/app/im/components/chat-header";
 import MessageInput from "@/app/im/components/message-input";
+import { useWebSocket } from "@/contexts/websocket-context";
 
 const ChatInfo = memo(function ChatInfo() {
   const dispatch: any = useDispatch();
   const { id }: { id: string } = useParams();
   const { data: session }: any = useSession<any>();
   const chatInfo = useSelector((state: IUserStore) => state.userInfo.chatInfo);
+  const { sendMessage, onMessage, offMessage, isConnected } = useWebSocket();
 
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [ws, setWs] = useState<WebSocket | null>(null);
   const [sendLoading, setSendLoading] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<number>(0);
 
@@ -30,6 +32,8 @@ const ChatInfo = memo(function ChatInfo() {
     if (id) {
       ActionGetMessages(+id).then(({ data }) => {
         setMessages(data as IMessage[]);
+        // Mark messages as read when chat is opened
+        ActionMarkMessagesAsRead(+id);
       });
     }
   }, [id]);
@@ -37,19 +41,20 @@ const ChatInfo = memo(function ChatInfo() {
   // Memoized callback for sending messages
   const handleSendMessage = useCallback(
     (messageData: any) => {
-      if (ws && ws.readyState === WebSocket.OPEN && id && chatInfo) {
+      if (isConnected && id && chatInfo && session?.user?.id) {
         setSendLoading(true);
 
         const fullMessageData = {
           ...messageData,
+          type: "NEW_MESSAGE",
           chat_id: +id,
           sender_id: session.user.id,
         };
 
-        ws.send(JSON.stringify(fullMessageData));
+        sendMessage(fullMessageData);
       }
     },
-    [ws, id, chatInfo, session?.user.id],
+    [isConnected, id, chatInfo, session?.user.id, sendMessage],
   );
 
   // Memoized callback for selecting messages
@@ -74,40 +79,37 @@ const ChatInfo = memo(function ChatInfo() {
     }
   }, [id, dispatch]);
 
-  // Initialize WebSocket and get messages
+  // Initialize messages and WebSocket message handling
   useEffect(() => {
     getOldMessages();
+  }, [id, getOldMessages]);
 
-    const wsUrl =
-      process.env.NODE_ENV === "production"
-        ? `wss://${window.location.host}/ws`
-        : "ws://localhost:3004";
-
-    const wsClient = new WebSocket(wsUrl);
-
-    wsClient.onopen = () => console.log("Connected to WebSocket server");
-
-    wsClient.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+  // Handle WebSocket messages
+  useEffect(() => {
+    const handleWebSocketMessage = (data: any) => {
       if (data.type === "MESSAGE") {
         if (id && data.payload.chat_id === +id) {
           setSendLoading(false);
-          setMessages((prev) => [...prev, data.payload]);
+          setMessages((prev) => {
+            // Check if message already exists to prevent duplicates
+            const messageExists = prev.some(
+              (msg) => msg.id === data.payload.id,
+            );
+            if (messageExists) {
+              return prev;
+            }
+            return [...prev, data.payload];
+          });
         }
       }
     };
 
-    wsClient.onclose = () => console.log("Disconnected from WebSocket server");
-    wsClient.onerror = (error) => console.error("WebSocket error:", error);
-
-    setWs(wsClient);
+    onMessage(handleWebSocketMessage);
 
     return () => {
-      if (wsClient) {
-        wsClient.close();
-      }
+      offMessage(handleWebSocketMessage);
     };
-  }, [id, getOldMessages]);
+  }, [id, onMessage, offMessage]);
 
   return (
     <PhotoProvider>

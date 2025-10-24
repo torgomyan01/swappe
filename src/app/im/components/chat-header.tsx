@@ -35,7 +35,6 @@ const ChatHeader = memo(function ChatHeader({ chatInfo }: ChatHeaderProps) {
   const getStatus = useCallback((userId: number) => {
     ActionGetLastSeenUser(userId).then(({ data }) => {
       const date = getOnlineStatus(data?.last_seen as Date);
-      console.log(date);
       setStatus(date);
     });
   }, []);

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import { calcReviews } from "@/utils/helpers";
 
 export async function ActionCGetUserCompany() {
   try {
@@ -20,9 +21,21 @@ export async function ActionCGetUserCompany() {
       },
     });
 
+    const companyReviews: any = await prisma.company_reviews.findMany({
+      where: {
+        company_id: existingCompany?.id,
+      },
+    });
+
+    const OfferReviews = calcReviews(companyReviews || []);
+
     return {
       status: "ok",
-      data: existingCompany,
+      data: {
+        ...existingCompany,
+        reviews_calc: OfferReviews,
+        reviews_count: companyReviews.length,
+      },
       error: "",
     };
   } catch (error: any) {

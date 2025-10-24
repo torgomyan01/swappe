@@ -13,10 +13,6 @@ export async function ActionUpdateUserBonus(
   try {
     const session: any = await getServerSession(authOptions);
 
-    if (!session) {
-      return { status: "error", data: [], error: "logout" };
-    }
-
     const userId = user_id ? user_id : session.user.id;
 
     const updatedUser = await prisma.users.update({

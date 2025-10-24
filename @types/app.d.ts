@@ -232,7 +232,8 @@ declare interface IUserCompany {
   user: IUserProfile;
   reviews: IReview[];
   is_self_employed: boolean;
-  last_seen?: Date;
+  reviews_calc: number;
+  reviews_count: number;
 }
 
 declare interface IUserFavorite {

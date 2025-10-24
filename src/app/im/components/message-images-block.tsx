@@ -34,16 +34,16 @@ const MessageImagesBlock = memo(function MessageImagesBlock({
         gridClasses,
       )}
     >
-      {filePaths.map((url: string, i: number) => (
-        <PhotoView key={`photo-${i}-${url}`} src={`${fileHost}${url}`}>
+      {filePaths.map((url: { url: string }, i: number) => (
+        <PhotoView key={`photo-${i}-${url.url}`} src={`${fileHost}${url.url}`}>
           <Image
-            key={`image-${i}-${url}`}
-            src={`${fileHost}${url}`}
+            key={`image-${i}-${url.url}`}
+            src={`${fileHost}${url.url}`}
             alt="image"
             width={200}
             height={200}
             className={clsx(
-              "rounded-[8px] object-cover cursor-pointer w-full",
+              "rounded-[8px] object-cover cursor-pointer w-full bg-white/60",
               {
                 "!w-[50px] !h-[50px]": isMin,
               },

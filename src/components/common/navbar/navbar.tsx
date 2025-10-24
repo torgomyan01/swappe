@@ -22,6 +22,8 @@ import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { ActionGetMyPushNotifications } from "@/app/actions/push-notification/get-my-notofication";
 import { ActionChangeWritedPushNotification } from "@/app/actions/push-notification/change-writed";
+import { ActionGetUnreadMessageCount } from "@/app/actions/chat/get-unread-count";
+import { useWebSocket } from "@/contexts/websocket-context";
 import EmptyRes from "../empty-res/empty-res";
 
 function Navbar() {
@@ -30,40 +32,51 @@ function Navbar() {
   const searchParams = useSearchParams();
   const search = searchParams.get("value");
   const [notifications, setNotifications] = useState<boolean>(false);
-
-  const [showMobileIcons, setShowMobileIcons] = useState(true);
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      if (window.scrollY < lastScrollY) {
-        setShowMobileIcons(true);
-      } else {
-        setShowMobileIcons(false);
-      }
-      lastScrollY = window.scrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const { onMessage, offMessage } = useWebSocket();
 
   const [notificationsData, setNotificationsData] = useState<
     IPushNotification[]
   >([]);
+  const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
 
   useEffect(() => {
     getNotificationColor();
+    getUnreadMessageCount();
     setInterval(getNotificationColor, 10000);
+    setInterval(getUnreadMessageCount, 60000); // Check every 60 seconds
   }, []);
+
+  // Handle WebSocket messages to update unread count
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleWebSocketMessage = (data: any) => {
+      if (data.type === "MESSAGE") {
+        // Debounce the unread count refresh to prevent too many API calls
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          getUnreadMessageCount();
+        }, 1000); // Wait 1 second before refreshing
+      }
+    };
+
+    onMessage(handleWebSocketMessage);
+
+    return () => {
+      offMessage(handleWebSocketMessage);
+      clearTimeout(timeoutId);
+    };
+  }, [onMessage, offMessage]);
 
   function getNotificationColor() {
     ActionGetMyPushNotifications().then(({ data }) => {
       setNotificationsData(data as IPushNotification[]);
+    });
+  }
+
+  function getUnreadMessageCount() {
+    ActionGetUnreadMessageCount().then(({ data }) => {
+      setUnreadMessageCount(data as number);
     });
   }
 
@@ -111,7 +124,7 @@ function Navbar() {
     <>
       <div className="header-profile">
         <div className="wrapper">
-          <Link href={SITE_URL.SEARCH} className="logo">
+          <Link href={SITE_URL.HOME} className="logo">
             <img src="/img/black-logo.svg" alt="" />
           </Link>
           <form className="search" action={SITE_URL.SEARCH}>
@@ -150,7 +163,7 @@ function Navbar() {
                 <img src="/img/menu-icon3.svg" alt="" />
               </Link>
             </Tooltip>
-            <Tooltip content="Транзакции">
+            <Tooltip content="Сделки">
               <Link
                 href={SITE_URL.ACCOUNT_TRANSACTIONS}
                 className="icon cursor-pointer"
@@ -160,7 +173,9 @@ function Navbar() {
             </Tooltip>
             <Tooltip content="Сообщения">
               <Link href={SITE_URL.CHAT} className="icon cursor-pointer">
-                {/*<span className="count">+9</span>*/}
+                {unreadMessageCount > 0 && (
+                  <span className="count">+{unreadMessageCount}</span>
+                )}
                 <img src="/img/menu-icon5.svg" alt="" />
               </Link>
             </Tooltip>
@@ -200,11 +215,7 @@ function Navbar() {
       </div>
 
       <div className="wrapper">
-        <div
-          className={clsx("mobile-icons", {
-            "hide-on-scroll": !showMobileIcons,
-          })}
-        >
+        <div className="mobile-icons">
           <Link href={SITE_URL.ACCOUNT_OFFER_CREATE} className="icon">
             <img src="/img/menu-icon1.svg" alt="" />
           </Link>
@@ -221,6 +232,9 @@ function Navbar() {
             <img src="/img/menu-icon4.svg" alt="" />
           </Link>
           <Link href={SITE_URL.CHAT} className="icon">
+            {unreadMessageCount > 0 && (
+              <span className="count text-[11px]">+{unreadMessageCount}</span>
+            )}
             <img src="/img/menu-icon5.svg" alt="" />
           </Link>
         </div>
@@ -297,95 +311,6 @@ function Navbar() {
               <EmptyRes title="Уведомлений нет" />
             )}
           </div>
-
-          {/* <a href="#" className="notifications-item">
-            <div className="icon">
-              <img src="/img/search/notifications-icon1.svg" alt="" />
-            </div>
-            <div className="texts">
-              <b>Новое предложение</b>
-              <span>Diamond кейтеринг предлагает сделку</span>
-            </div>
-            <div className="circle"></div>
-          </a>
-          <a href="#" className="notifications-item">
-            <div className="icon">
-              <img src="/img/search/notifications-icon2.svg" alt="" />
-            </div>
-            <div className="texts">
-              <b>Cтатус сделки</b>
-              <span>Diamond кейтеринг принял предложение</span>
-            </div>
-            <div className="circle"></div>
-          </a>
-          <div className="border"></div>
-          <div className="notifications-items">
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon3.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Cтатус сделки</b>
-                <span>Diamond кейтеринг принял предложение</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon4.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Предложение прошло модерацию</b>
-                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-            <a href="#" className="notifications-item">
-              <div className="icon">
-                <img src="/img/search/notifications-icon5.svg" alt="" />
-              </div>
-              <div className="texts">
-                <b>Предложение не прошло модерацию</b>
-                <span>Кейтеринг в день мероприятия с выездом на площадку</span>
-              </div>
-              <div className="arrow">
-                <img src="/img/arr-r.svg" alt="" />
-              </div>
-            </a>
-          </div> */}
-          {/* <div className="border"></div> */}
-          {/* <div className="not-info">
-            <div className="head">
-              <b>Как все прошло?</b>
-              <button className="close" type="button">
-                <img src="/img/close-pop.svg" alt="" />
-              </button>
-            </div>
-            <p>
-              Ваша сделка с Dостаевский завершена. Поделись отзывом и помоги
-              другим найти ту самую коллаборацию!
-            </p>
-            <div className="info">
-              <div className="text-wrap">
-                <div className="texts">
-                  <b>Кейтеринг для мероприятия</b>
-                  <span>Dостаевский</span>
-                </div>
-                <span>26 Nov 2021</span>
-              </div>
-              <div className="img-wrap">
-                <img src="/img/search/not-info-icon.png" alt="" />
-              </div>
-            </div>
-          </div>
-          <a href="#" className="leave-feedback">
-            <img src="/img/search/rew-icon.svg" alt="" />
-            <b>Оставить отзыв</b>
-          </a> */}
         </div>
       </div>
     </>

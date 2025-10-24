@@ -205,12 +205,12 @@ function Preview({ onGoBack, offerId }: IThisProps) {
         <div className="right-info">
           <h3>{offerData.name}</h3>
           <div className="rate">
-            <b>ВкусВилл Праздник</b>
+            <b>{company?.name}</b>
             <div className="rate-text">
-              4.5
+              {company?.reviews_calc}
               <img src="/img/star.svg" alt="" />
             </div>
-            <span>(34)</span>
+            <span>({company?.reviews_count})</span>
           </div>
           <b className="price">{formatPrice(+offerData.price)}</b>
           <div className="links">

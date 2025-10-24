@@ -1,3 +1,5 @@
+import { SITE_URL } from "@/utils/consts";
+import Link from "next/link";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -50,9 +52,9 @@ function BussinesBlock() {
 
         <div className="swiper-pagination"></div>
 
-        <a href="#" className="green-btn">
+        <Link href={SITE_URL.REGISTER} className="green-btn">
           Присоединиться
-        </a>
+        </Link>
       </div>
     </div>
   );

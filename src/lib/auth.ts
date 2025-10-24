@@ -47,8 +47,6 @@ export const authOptions: NextAuthOptions = {
         // Remove sensitive fields
         const { password: _pw, ...userSafe } = user;
 
-        console.log(_pw, 55555);
-
         // Normalize role/roles for downstream usage
         const roles = userSafe.role;
 

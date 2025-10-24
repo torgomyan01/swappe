@@ -69,6 +69,7 @@ export const localStorageKeys = {
   userAdmin: "userAdmin",
   languages: "languages",
   cookieComplete: "cookieComplete",
+  lastMessageTime: "lastMessageTime",
 };
 
 export const motionOptionText = {
