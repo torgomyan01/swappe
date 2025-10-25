@@ -122,15 +122,16 @@ export const authOptions: NextAuthOptions = {
       type: "oauth",
       wellKnown: undefined,
       authorization: {
-        url: "https://oauth.yandex.com/authorize",
+        url: "https://oauth.yandex.ru/authorize",
         params: { scope: "login:email login:info" },
       },
-      token: "https://oauth.yandex.com/token",
+      token: "https://oauth.yandex.ru/token",
       userinfo: "https://login.yandex.ru/info?format=json",
       clientId: process.env.YANDEX_CLIENT_ID,
       clientSecret: process.env.YANDEX_CLIENT_SECRET,
-      // Explicitly set the redirect URI to match what you configure in Yandex OAuth
-      redirectUri: `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/callback/yandex`,
+      // The redirect URI should match exactly what you configure in Yandex OAuth app
+      // For NextAuth.js, the callback URL should be: https://yourdomain.com/api/auth/callback/yandex
+      // For local development: http://localhost:3000/api/auth/callback/yandex
       profile(profile: any) {
         // Yandex returns fields like: id, login, default_email/email, display_name, default_avatar_id
         const email = profile.default_email || profile.email || "";

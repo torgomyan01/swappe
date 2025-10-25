@@ -60,6 +60,15 @@ function Register() {
       return;
     }
 
+    if (!subscribeGetNews) {
+      addToast({
+        title: "Вы должны согласиться с политикой конфиденциальности.",
+        color: "danger",
+      });
+
+      return;
+    }
+
     if (name && email && password) {
       setLoading(true);
 

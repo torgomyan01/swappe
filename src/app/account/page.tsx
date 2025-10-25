@@ -87,20 +87,28 @@ function Profile() {
                 <div className="item ">
                   <b>Пользователи</b>
                   {helperPeople ? (
-                    <AvatarGroup isBordered max={5}>
-                      {helperPeople.map((item) => (
-                        <Tooltip
-                          key={`helper-people-${item.id}`}
-                          content={item.name}
-                        >
-                          <Avatar
-                            src={`${fileHost}${item.image_path}`}
-                            name={item.name}
-                            color="secondary"
-                          />
-                        </Tooltip>
-                      ))}
-                    </AvatarGroup>
+                    <>
+                      {helperPeople.length > 0 ? (
+                        <AvatarGroup isBordered max={5}>
+                          {helperPeople.map((item) => (
+                            <Tooltip
+                              key={`helper-people-${item.id}`}
+                              content={item.name}
+                            >
+                              <Avatar
+                                src={`${fileHost}${item.image_path}`}
+                                name={item.name}
+                                color="secondary"
+                              />
+                            </Tooltip>
+                          ))}
+                        </AvatarGroup>
+                      ) : (
+                        <span className="text-gray-500">
+                          Пользователи пока нет
+                        </span>
+                      )}
+                    </>
                   ) : (
                     <div className="w-full h-[40px] flex-js-c">
                       <Skeleton className="w-10 h-10 rounded-full" />
