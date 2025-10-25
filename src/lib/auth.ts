@@ -24,37 +24,95 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Fetch full user record; we'll remove password before returning
+        // First try to find main user
         const user: any = await prisma.users.findFirst({
           where: { email },
         });
-        if (!user) {
-          return null;
+
+        if (user) {
+          const ok = await bcrypt.compare(password, user.password ?? "");
+          if (!ok) {
+            return null;
+          }
+
+          if (user.status === "archive") {
+            throw new Error("ARCHIVED_ACCOUNT");
+          }
+          if (user.status !== "verified") {
+            throw new Error("NOT_VERIFIED");
+          }
+
+          // Remove sensitive fields
+          const { password: _pw, ...userSafe } = user;
+
+          // Normalize role/roles for downstream usage
+          const roles = userSafe.role;
+
+          return {
+            ...userSafe,
+            name: userSafe.name ?? userSafe.email,
+            role: roles,
+            isHelper: false, // Main user
+          } as any;
         }
 
-        const ok = await bcrypt.compare(password, user.password ?? "");
-        if (!ok) {
-          return null;
+        // If not main user, try helper people
+        const helperPeople = await prisma.helper_people.findFirst({
+          where: { email },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                status: true,
+                role: true,
+                tariff: true,
+                balance: true,
+                bonus: true,
+                tariff_start_date: true,
+                tariff_end_date: true,
+                created_at: true,
+                updated_at: true,
+              },
+            },
+          },
+        });
+
+        if (helperPeople) {
+          const ok = await bcrypt.compare(password, helperPeople.password);
+          if (!ok) {
+            return null;
+          }
+
+          return {
+            id: helperPeople.user_id,
+            name: helperPeople.name,
+            email: helperPeople.email,
+            role: helperPeople.role,
+            image_path: helperPeople.image_path,
+            user_id: helperPeople.user_id,
+            isHelper: true, // Helper user
+            helper_role: helperPeople.role,
+            // Main user data for context
+            main_user: {
+              id: helperPeople.user.id,
+              name: helperPeople.user.name,
+              email: helperPeople.user.email,
+              status: helperPeople.user.status,
+              role: helperPeople.user.role,
+              tariff: helperPeople.user.tariff,
+              balance: helperPeople.user.balance,
+              bonus: helperPeople.user.bonus,
+              tariff_start_date: helperPeople.user.tariff_start_date,
+              tariff_end_date: helperPeople.user.tariff_end_date,
+              created_at: helperPeople.user.created_at,
+              updated_at: helperPeople.user.updated_at,
+            },
+          } as any;
         }
 
-        if (user.status === "archive") {
-          throw new Error("ARCHIVED_ACCOUNT");
-        }
-        if (user.status !== "verified") {
-          throw new Error("NOT_VERIFIED");
-        }
-
-        // Remove sensitive fields
-        const { password: _pw, ...userSafe } = user;
-
-        // Normalize role/roles for downstream usage
-        const roles = userSafe.role;
-
-        return {
-          ...userSafe,
-          name: userSafe.name ?? userSafe.email,
-          role: roles,
-        } as any;
+        return null;
       },
     }),
     // Yandex OAuth provider (custom object)
@@ -169,6 +227,19 @@ export const authOptions: NextAuthOptions = {
           (token as any).role = (user as any).role;
         }
         (token as any).passwordResetToken = (user as any).password_reset_token;
+
+        // Handle helper people authentication
+        if ((user as any).isHelper) {
+          (token as any).isHelper = true;
+          (token as any).helper_role = (user as any).helper_role;
+          (token as any).user_id = (user as any).user_id;
+          (token as any).main_user = (user as any).main_user;
+          // For helper people, use main user's ID as the primary identifier
+          token.sub = String((user as any).user_id);
+        } else {
+          (token as any).isHelper = false;
+        }
+
         // Attach full user payload (without password) for session consumption
         (token as any).user = user as any;
       }
@@ -237,6 +308,35 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).passwordResetToken = (
           token as any
         ).passwordResetToken;
+
+        // Handle helper people session data
+        if ((token as any).isHelper) {
+          (session.user as any).isHelper = true;
+          (session.user as any).helper_role = (token as any).helper_role;
+          (session.user as any).user_id = (token as any).user_id;
+          (session.user as any).main_user = (token as any).main_user;
+          // For helper people, use main user's data for most fields
+          if ((token as any).main_user) {
+            (session.user as any).main_user_id = (token as any).main_user.id;
+            (session.user as any).main_user_name = (
+              token as any
+            ).main_user.name;
+            (session.user as any).main_user_email = (
+              token as any
+            ).main_user.email;
+            (session.user as any).tariff = (token as any).main_user.tariff;
+            (session.user as any).balance = (token as any).main_user.balance;
+            (session.user as any).bonus = (token as any).main_user.bonus;
+            (session.user as any).tariff_start_date = (
+              token as any
+            ).main_user.tariff_start_date;
+            (session.user as any).tariff_end_date = (
+              token as any
+            ).main_user.tariff_end_date;
+          }
+        } else {
+          (session.user as any).isHelper = false;
+        }
 
         // Merge all user fields (sans password) into session.user
         if ((token as any).user) {

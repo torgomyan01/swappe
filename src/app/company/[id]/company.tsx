@@ -88,7 +88,7 @@ function CompanyPage({ company }: IThisProps) {
                   <div className="social">
                     <div className="links">
                       <div className="flex-js-s flex-col gap-2">
-                        {company.sites.map((item, i) => (
+                        {company?.sites?.map((item, i) => (
                           <Button
                             key={`link_compnay-${i}`}
                             as={Link}

@@ -266,6 +266,15 @@ declare interface IUserProfile {
   last_seen: Date;
 }
 
+declare interface IHelperPeople {
+  id: number;
+  user_id: number;
+  name: string;
+  email: string;
+  role: string;
+  image_path: string;
+}
+
 declare interface IUserOffer {
   type: string;
   vid: string;

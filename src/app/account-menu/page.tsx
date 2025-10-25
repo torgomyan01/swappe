@@ -10,18 +10,12 @@ function Profile() {
     <MainTemplate>
       <div className="profile-wrap">
         <div className="wrapper">
-          <div className="breadcrumbs hide-mobile">
+          <div className="breadcrumbs">
             <Link href={SITE_URL.HOME}>
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </Link>
             <span>Профиль</span>
-          </div>
-          <div className="top-mob-line opacity-0 !py-0">
-            <span className="back">
-              <img src="/img/back-icon.svg" alt="" />
-            </span>
-            <b>Профиль</b>
           </div>
           <div className="info">
             <LeftMenu isMobile />

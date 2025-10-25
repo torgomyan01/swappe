@@ -227,7 +227,7 @@ function DefInput({
           {errors.map((msg, i) => (
             <p
               key={i}
-              className="!text-left !text-red-600 leading-[15px] !text-[14px]"
+              className="!text-left !text-red-600 leading-[15px] !text-[13px] !mb-1"
             >
               {msg}
             </p>

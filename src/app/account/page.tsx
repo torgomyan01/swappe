@@ -3,18 +3,38 @@
 import MainTemplate from "@/components/common/main-template/main-template";
 import LeftMenu from "@/components/layout/accout/left-menu";
 import { useSession } from "next-auth/react";
-import { SITE_URL } from "@/utils/consts";
-import { Link, Button, Tooltip } from "@heroui/react";
+import { fileHost, SITE_URL } from "@/utils/consts";
+import {
+  Link,
+  Button,
+  Tooltip,
+  AvatarGroup,
+  Avatar,
+  Spinner,
+  Skeleton,
+} from "@heroui/react";
 
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { passwordChangedText, sliceText } from "@/utils/helpers";
+import { useEffect, useState } from "react";
+import { ActionGetMyHelperPeople } from "../actions/helper-people/get-my";
 
 function Profile() {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const router = useRouter();
 
   const company = useSelector((state: IUserStore) => state.userInfo.company);
+
+  const [helperPeople, setHelperPeople] = useState<IHelperPeople[] | null>(
+    null,
+  );
+
+  useEffect(() => {
+    ActionGetMyHelperPeople().then(({ data }) => {
+      setHelperPeople(data as IHelperPeople[]);
+    });
+  }, []);
 
   return (
     <MainTemplate>
@@ -64,12 +84,32 @@ function Profile() {
                   <b>Пароль</b>
                   <span>{passwordChangedText(session)}</span>
                 </div>
-                <Tooltip content="Скоро :)">
-                  <div className="item opacity-50">
-                    <b>Пользователи</b>
-                    <img src="img/avatars.png" alt="avatars" />
-                  </div>
-                </Tooltip>
+                <div className="item ">
+                  <b>Пользователи</b>
+                  {helperPeople ? (
+                    <AvatarGroup isBordered max={5}>
+                      {helperPeople.map((item) => (
+                        <Tooltip
+                          key={`helper-people-${item.id}`}
+                          content={item.name}
+                        >
+                          <Avatar
+                            src={`${fileHost}${item.image_path}`}
+                            name={item.name}
+                            color="secondary"
+                          />
+                        </Tooltip>
+                      ))}
+                    </AvatarGroup>
+                  ) : (
+                    <div className="w-full h-[40px] flex-js-c">
+                      <Skeleton className="w-10 h-10 rounded-full" />
+                      <Skeleton className="w-10 h-10 rounded-full ml-[-15px] shadow" />
+                      <Skeleton className="w-10 h-10 rounded-full ml-[-15px] shadow" />
+                      <Skeleton className="w-10 h-10 rounded-full ml-[-15px] shadow" />
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="border"></div>
 
@@ -107,7 +147,7 @@ function Profile() {
                       <div className="social">
                         <div className="links">
                           <div className="flex-js-s flex-col gap-2">
-                            {company.sites.map((item, i) => (
+                            {company?.sites?.map((item, i) => (
                               <Button
                                 key={`link_compnay-${i}`}
                                 showAnchorIcon
@@ -120,16 +160,6 @@ function Profile() {
                               </Button>
                             ))}
                           </div>
-
-                          {/*<a href="#">*/}
-                          {/*  <img src="/img/soc-icon1.svg" alt="soc-icon" />*/}
-                          {/*</a>*/}
-                          {/*<a href="#">*/}
-                          {/*  <img src="/img/soc-icon2.svg" alt="soc-icon" />*/}
-                          {/*</a>*/}
-                          {/*<a href="#">*/}
-                          {/*  <img src="/img/soc-icon3.svg" alt="soc-icon" />*/}
-                          {/*</a>*/}
                         </div>
                       </div>
                     </div>
@@ -147,13 +177,15 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <Link
-                    href={SITE_URL.ACCOUNT_CHANGE}
-                    className="green-btn read mt-10"
-                  >
-                    <img src="/img/edit-menu.svg" alt="edit-menu." />
-                    Редактировать
-                  </Link>
+                  {session?.user?.helper_role !== "manager" && (
+                    <Link
+                      href={SITE_URL.ACCOUNT_CHANGE}
+                      className="green-btn read mt-10"
+                    >
+                      <img src="/img/edit-menu.svg" alt="edit-menu." />
+                      Редактировать
+                    </Link>
+                  )}
                 </>
               ) : (
                 <div className="w-full">

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Tooltip } from "@heroui/react";
 import ChangeCompany from "@/app/account/change/componenets/change-company";
 import { passwordChangedText } from "@/utils/helpers";
+import CreateHelperPeople from "./componenets/create-helper-people";
 
 function Profile() {
   const { data: session }: any = useSession();
@@ -86,36 +87,7 @@ function Profile() {
                 </div>
               </div>
               <h5>Пользователи</h5>
-              <Tooltip content="Скоро :)">
-                <div className="users opacity-30 !cursor-default">
-                  <div className="user-item">
-                    <div className="img-wrap">
-                      <img src="/img/avatar.png" alt="" />
-                    </div>
-                    <div className="texts">
-                      <b className="name">Николай</b>
-                      <span>Менеджер</span>
-                      <a href="mailto:emailplaceholder@mail.com">
-                        emailplaceholder@mail.com
-                      </a>
-                    </div>
-                    <div className="icons">
-                      <a href="#" className="read-icon">
-                        <img src="/img/edit_menu.svg" alt="" />
-                      </a>
-                      <a href="#" className="delete-icon">
-                        <img src="/img/delete-Icon-grey.svg" alt="" />
-                      </a>
-                    </div>
-                  </div>
-                  <a href="#" className="user-add">
-                    <span className="icon">
-                      <img src="/img/plus-green.svg" alt="" />
-                    </span>
-                    <span className="text">Добавить</span>
-                  </a>
-                </div>
-              </Tooltip>
+              <CreateHelperPeople />
               <div className="border opacity-10"></div>
 
               <ChangeCompany />

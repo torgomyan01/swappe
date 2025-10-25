@@ -232,14 +232,16 @@ function LeftMenu({ isMobile = false }: IThisProps) {
         <img src="/img/close-Icon.svg" alt="close-Icon" />
         Выйти
       </span>
-      <button
-        type="button"
-        className="delete cursor-pointer"
-        onClick={() => setConfirmOpen(true)}
-      >
-        <img src="/img/delete-Icon.svg" alt="delete-Icon" />
-        Удалить профиль
-      </button>
+      {session?.user?.helper_role !== "manager" && (
+        <button
+          type="button"
+          className="delete cursor-pointer"
+          onClick={() => setConfirmOpen(true)}
+        >
+          <img src="/img/delete-Icon.svg" alt="delete-Icon" />
+          Удалить профиль
+        </button>
+      )}
       <Modal
         size="xl"
         isOpen={confirmOpen}

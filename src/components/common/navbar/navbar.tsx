@@ -27,7 +27,7 @@ import { useWebSocket } from "@/contexts/websocket-context";
 import EmptyRes from "../empty-res/empty-res";
 
 function Navbar() {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const company = useSelector((state: IUserStore) => state.userInfo.company);
   const searchParams = useSearchParams();
   const search = searchParams.get("value");
@@ -127,16 +127,25 @@ function Navbar() {
           <Link href={SITE_URL.HOME} className="logo">
             <img src="/img/black-logo.svg" alt="" />
           </Link>
-          <form className="search" action={SITE_URL.SEARCH}>
+          <form className="search relative" action={SITE_URL.SEARCH}>
             <input
               type="text"
               placeholder="Введи запрос"
               name="value"
               defaultValue={search || ""}
             />
-            <button type="button">
+            <button type="submit">
               <img src="/img/search-icon.svg" alt="" />
             </button>
+            <Button
+              as={Link}
+              href={SITE_URL.SEARCH}
+              type="submit"
+              className="!flex-jc-c absolute rounded-[12px] !left-[unset] !right-2 w-fit h-[calc(100%-10px)] top-[5px]"
+              color="secondary"
+            >
+              Каталог
+            </Button>
           </form>
           <div className="icons">
             <Tooltip content="Создать предложение">
@@ -183,12 +192,23 @@ function Navbar() {
           {session ? (
             <Dropdown>
               <DropdownTrigger>
-                <div className="user-in cursor-pointer">
+                <div className="user-in cursor-pointer relative">
                   <span>{sliceText(session.user?.name || "", 10, ".")}</span>
                   {company && (
                     <div className="avatar">
-                      <img src={`${fileHost}${company.image_path}`} alt="" />
+                      <img
+                        src={`${fileHost}${session.user?.helper_role ? session.user?.image_path : company.image_path}`}
+                        alt=""
+                      />
                     </div>
+                  )}
+
+                  {session.user?.helper_role && (
+                    <span className="bg-green !text-white !text-[10px] px-2 rounded-full absolute bottom-[-5px] right-[-20px] font-light">
+                      {session.user?.helper_role === "manager"
+                        ? "Менеджер"
+                        : ""}
+                    </span>
                   )}
                 </div>
               </DropdownTrigger>

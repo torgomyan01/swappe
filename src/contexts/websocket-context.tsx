@@ -48,13 +48,11 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
           ? `wss://${window.location.host}/ws`
           : "ws://localhost:3004";
 
-      console.log("Attempting to connect to WebSocket:", wsUrl);
       const wsClient = new WebSocket(wsUrl);
 
       wsClient.onopen = () => {
-        console.log("Connected to WebSocket server");
         setIsConnected(true);
-        reconnectAttemptsRef.current = 0; // Reset reconnect attempts on successful connection
+        reconnectAttemptsRef.current = 0;
       };
 
       wsClient.onmessage = (event) => {
@@ -74,11 +72,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       };
 
       wsClient.onclose = (event) => {
-        console.log(
-          "Disconnected from WebSocket server",
-          event.code,
-          event.reason,
-        );
         setIsConnected(false);
         setWs(null);
 
@@ -88,9 +81,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             1000 * Math.pow(2, reconnectAttemptsRef.current),
             30000,
           ); // Exponential backoff, max 30s
-          console.log(
-            `Attempting to reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`,
-          );
 
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttemptsRef.current++;
