@@ -26,6 +26,9 @@ const ChatInfo = memo(function ChatInfo() {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [sendLoading, setSendLoading] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<number>(0);
+  const [subscriptionError, setSubscriptionError] = useState<string | null>(
+    null,
+  );
 
   // Memoized callback for getting old messages
   const getOldMessages = useCallback(() => {
@@ -102,6 +105,16 @@ const ChatInfo = memo(function ChatInfo() {
           });
         }
       }
+
+      // Handle subscription required error
+      if (data.type === "SUBSCRIPTION_REQUIRED") {
+        setSendLoading(false);
+        setSubscriptionError(
+          data.message ||
+            "Для отправки сообщений необходимо активировать тарифный план",
+        );
+        setTimeout(() => setSubscriptionError(null), 5000);
+      }
     };
 
     onMessage(handleWebSocketMessage);
@@ -141,6 +154,7 @@ const ChatInfo = memo(function ChatInfo() {
               sendLoading={sendLoading}
               selectedMessage={selectedMessage}
               onSelectMessage={handleSelectMessage}
+              subscriptionError={subscriptionError}
             />
           </div>
         ) : (

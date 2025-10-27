@@ -24,6 +24,7 @@ interface MessageInputProps {
   sendLoading: boolean;
   selectedMessage: number;
   onSelectMessage: (id: number) => void;
+  subscriptionError?: string | null;
 }
 
 const MessageInput = memo(function MessageInput({
@@ -31,6 +32,7 @@ const MessageInput = memo(function MessageInput({
   sendLoading,
   selectedMessage,
   onSelectMessage,
+  subscriptionError,
 }: MessageInputProps) {
   const [text, setText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -300,6 +302,18 @@ const MessageInput = memo(function MessageInput({
               ))}
             </div>
           ) : null}
+
+          {subscriptionError && (
+            <div className="w-full px-4 py-2 mb-2 bg-warning/20 border border-warning rounded-[6px] text-[14px] flex-jsb-c gap-2">
+              <span className="text-warning">{subscriptionError}</span>
+              <a
+                href="/account/tariffs-bonuses"
+                className="text-green underline font-semibold"
+              >
+                Активировать план
+              </a>
+            </div>
+          )}
 
           <form action="#" className="relative !z-[100]">
             <InputEmoji

@@ -34,6 +34,35 @@ wss.on("connection", (ws) => {
       const data = JSON.parse(message);
 
       if (data.type === "NEW_MESSAGE" && data.sender_id) {
+        // Check user subscription status before allowing message
+        const user = await prisma.users.findUnique({
+          where: { id: data.sender_id },
+          select: {
+            tariff: true,
+            tariff_end_date: true,
+          },
+        });
+
+        // Check if user has active paid subscription
+        const hasActiveSubscription =
+          user &&
+          user.tariff !== "free" &&
+          user.tariff_end_date &&
+          new Date(user.tariff_end_date) > new Date();
+
+        if (!hasActiveSubscription) {
+          // Notify sender that they need to upgrade
+          ws.send(
+            JSON.stringify({
+              type: "SUBSCRIPTION_REQUIRED",
+              message:
+                "Для отправки сообщений необходимо активировать тарифный план",
+              link: "/account/tariffs-bonuses",
+            }),
+          );
+          return;
+        }
+
         const newMessage = await prisma.messages.create({
           data: {
             chat_id: data.chat_id,
