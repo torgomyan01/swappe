@@ -14,7 +14,6 @@ export default function YandexTokenPage() {
         window.close();
         return;
       }
-
       if (accessToken) {
         // Send the token to the parent window (login page)
         if (window.opener) {
