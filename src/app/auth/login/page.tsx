@@ -51,7 +51,7 @@ function Register() {
   }
 
   useLayoutEffect(() => {
-    // Listen for messages from popup window
+    // Listen for messages from popup window (keeping for future popup implementation)
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) {
         return;
@@ -65,67 +65,9 @@ function Register() {
 
     window.addEventListener("message", handleMessage);
 
-    // Function to initialize Yandex SDK with retry limit
-    let retryCount = 0;
-    const MAX_RETRIES = 10;
-    let timeoutId: NodeJS.Timeout | null = null;
-
-    const initYandexAuth = () => {
-      // Check if SDK is loaded
-      if (typeof window !== "undefined" && window.YaAuthSuggest) {
-        console.log("Initializing Yandex SDK...");
-
-        window.YaAuthSuggest.init(
-          {
-            client_id: "14ce52305b2c4418a05a9be702d41ad3",
-            response_type: "token",
-            redirect_uri: `${window.location.origin}/auth/verify-yandex`,
-          },
-          window.location.origin,
-          {
-            view: "button",
-            parentId: "yandex-button-container",
-            buttonView: "main",
-            buttonTheme: "light",
-            buttonSize: "m",
-            buttonBorderRadius: 20,
-          },
-        )
-          .then(function (result: any) {
-            console.log("Yandex SDK initialized successfully");
-            return result.handler();
-          })
-          .then(function (data: any) {
-            console.log("Сообщение с токеном: ", data);
-          })
-          .catch(function (error: any) {
-            console.error("Yandex SDK error: ", error);
-          });
-      } else {
-        if (retryCount < MAX_RETRIES) {
-          retryCount++;
-          console.warn(
-            `YaAuthSuggest SDK not loaded yet, retrying... (${retryCount}/${MAX_RETRIES})`,
-          );
-          // Retry after a delay if SDK not loaded
-          timeoutId = setTimeout(initYandexAuth, 1000);
-        } else {
-          console.error(
-            "YaAuthSuggest SDK failed to load after maximum retries",
-          );
-        }
-      }
-    };
-
-    // Start initialization
-    timeoutId = setTimeout(initYandexAuth, 100);
-
     // Cleanup listener on unmount
     return () => {
       window.removeEventListener("message", handleMessage);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
     };
   }, [router]);
 
@@ -169,22 +111,19 @@ function Register() {
             </Button>
             <div className="account">
               <b>или</b>
-              {/*<a href="#" className="google">*/}
-              {/*  <img src="/img/google-icon.png" alt="" />*/}
-              {/*  Вход с аккаунтом Google*/}
-              {/*</a>*/}
-              {/* <a
+              <a
                 href="#"
                 className="yandex"
                 onClick={(e) => {
                   e.preventDefault();
-                  signIn("yandex", { callbackUrl: SITE_URL.ACCOUNT });
+                  // Use Yandex OAuth direct link for production
+                  const authUrl = `https://oauth.yandex.ru/authorize?response_type=token&client_id=14ce52305b2c4418a05a9be702d41ad3&redirect_uri=${encodeURIComponent(window.location.origin + "/auth/verify-yandex")}`;
+                  window.location.href = authUrl;
                 }}
               >
                 <img src="/img/yandex.png" alt="" />
                 Вход с аккаунтом Yandex
-              </a> */}
-              <div id="yandex-button-container"></div>
+              </a>
               <div className="bottom">
                 <span>Еще нет аккаунта?</span>
                 <Link href={SITE_URL.REGISTER}>Присоединяйся</Link>

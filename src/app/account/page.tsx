@@ -140,7 +140,11 @@ function Profile() {
                         ИНН компании{" "}
                         <img src="/img/check-Icon.svg" alt="check-Icon" />
                       </b>
-                      <span>{company?.inn}</span>
+                      <span>
+                        {company?.is_self_employed
+                          ? "Зарегистрирован как самозанятый"
+                          : company?.inn}
+                      </span>
                     </div>
                     <div className="item">
                       <b>Город</b>

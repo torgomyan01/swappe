@@ -27,8 +27,6 @@ function Profile() {
 
   const [offerStatus, setOfferStatus] = useState<OfferStatus>("active");
 
-  console.log(offerStatus);
-
   useEffect(() => {
     setOffers([]);
     setLoading(true);
