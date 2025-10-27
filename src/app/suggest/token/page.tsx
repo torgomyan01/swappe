@@ -9,7 +9,6 @@ export default function YandexTokenPage() {
       const urlParams = new URLSearchParams(window.location.hash.substring(1));
       const accessToken = urlParams.get("access_token");
       const error = urlParams.get("error");
-
       if (error) {
         console.error("Yandex OAuth error:", error);
         window.close();
