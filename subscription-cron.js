@@ -15,11 +15,17 @@
 const https = require("https");
 const http = require("http");
 
-const isHttps = process.env.SITE_URL?.startsWith("https");
 const url = "https://swappe.ru";
 const endpoint = `${url}/api/cron/subscription-management`;
 
+// Check if URL is HTTPS or HTTP
+const isHttps = url.startsWith("https://");
+const urlObj = new URL(endpoint);
+
 const options = {
+  hostname: urlObj.hostname,
+  port: urlObj.port || (isHttps ? 443 : 80),
+  path: urlObj.pathname + urlObj.search,
   method: "GET",
   headers: {
     Authorization: `Bearer ${process.env.CRON_SECRET || "cron_secret_key"}`,
@@ -33,7 +39,7 @@ console.log(`📍 Calling: ${endpoint}`);
 
 const request = isHttps ? https.request : http.request;
 
-const req = request(endpoint, options, (res) => {
+const req = request(options, (res) => {
   let data = "";
 
   res.on("data", (chunk) => {
