@@ -22,12 +22,12 @@ export async function hasActivePaidSubscription(
     const hasPaidTariff = user.tariff && user.tariff !== "free";
 
     // Check if subscription hasn't expired
-    if (!user.tariff_end_date) return hasPaidTariff;
+    if (!user.tariff_end_date) return Boolean(hasPaidTariff);
 
     const now = new Date();
     const isNotExpired = new Date(user.tariff_end_date) > now;
 
-    return hasPaidTariff && isNotExpired;
+    return Boolean(hasPaidTariff && isNotExpired);
   } catch (error) {
     console.error("Error checking user subscription:", error);
     return false;
