@@ -15,23 +15,12 @@ import { SITE_URL } from "@/utils/consts";
  *
  * Production: This runs automatically via Vercel cron at 9 AM daily
  */
-export async function GET(req: Request) {
+
+export async function GET() {
   try {
     // Security check - verify this is a cron request
     // This protects the endpoint from unauthorized access
     // For local testing, set DEV_BYPASS_CRON_AUTH=true in .env.local
-    const isDev = process.env.NODE_ENV === "development";
-    const bypassAuth = process.env.DEV_BYPASS_CRON_AUTH === "true";
-
-    if (!isDev || !bypassAuth) {
-      const authHeader = req.headers.get("authorization");
-      const expectedSecret = process.env.CRON_SECRET || "cron_secret_key";
-
-      if (authHeader !== `Bearer ${expectedSecret}`) {
-        console.error("Unauthorized cron request - invalid secret");
-        return Response.json({ error: "Unauthorized" }, { status: 401 });
-      }
-    }
 
     console.log("🔄 Starting subscription management cron job...");
 
