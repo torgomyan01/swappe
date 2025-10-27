@@ -1,11 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { motionOptionText, SITE_URL } from "@/utils/consts";
+import { fileHost, motionOptionText, SITE_URL } from "@/utils/consts";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import {
+  Drawer,
+  DrawerHeader,
+  DrawerContent,
+  DrawerBody,
+  DrawerFooter,
+  User,
+  ListboxItem,
+  Listbox,
+} from "@heroui/react";
+import { Button } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const images = [
   "img/banner-img1.png",
@@ -16,19 +28,38 @@ const images = [
 ];
 
 function HomeHeader() {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
+
+  const company = useSelector((state: IUserStore) => state.userInfo.company);
+
+  const menuItems = [
+    {
+      name: "Тарифы",
+      url: "#service",
+    },
+    {
+      name: "Для кого",
+      url: "#business-size",
+    },
+    {
+      name: "Почему Swappe",
+      url: "#why-are",
+    },
+    {
+      name: "FAQ",
+      url: "#faq",
+    },
+    ...(!session
+      ? [
+          {
+            name: "Хочу участвовать",
+            url: SITE_URL.REGISTER,
+          },
+        ]
+      : []),
+  ];
 
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (menuMobile) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
-    }
-  }, [menuMobile]);
 
   return (
     <>
@@ -73,7 +104,7 @@ function HomeHeader() {
             </Link>
           )}
 
-          <div
+          {/* <div
             className={clsx("menu-wrap-main", {
               open: menuMobile,
             })}
@@ -114,7 +145,7 @@ function HomeHeader() {
                 Войти в сервис
               </a>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="home-banner">
@@ -195,6 +226,66 @@ function HomeHeader() {
           </div>
         </div>
       </div>
+
+      <Drawer
+        isOpen={menuMobile}
+        onOpenChange={setMenuMobile}
+        placement="right"
+      >
+        <DrawerContent className="rounded-none">
+          {(onClose) => (
+            <>
+              <DrawerHeader className="flex flex-col gap-1">Меню</DrawerHeader>
+              <DrawerBody>
+                <ul className="flex flex-col gap-4 w-full">
+                  {menuItems.map((item: any) => (
+                    <li
+                      key={item.name}
+                      className="w-full"
+                      onClick={() => onClose()}
+                    >
+                      <Link
+                        href={item.url}
+                        className="text-base w-full border-b border-gray-200 pb-2 !flex-jsb-c"
+                      >
+                        {item.name}
+                        <i className="fa-solid fa-chevron-right text-gray-300 text-[12px]"></i>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </DrawerBody>
+              <DrawerFooter className="justify-center">
+                {session ? (
+                  <Link
+                    href={SITE_URL.ACCOUNT}
+                    className="block !shadow-inner px-5 py-2 pt-3 rounded-[20px]"
+                  >
+                    <User
+                      avatarProps={{
+                        src: `${fileHost}${session.user?.helper_role ? session.user?.image_path : company?.image_path || ""}`,
+                      }}
+                      name={
+                        session.user?.helper_role
+                          ? session.user?.name
+                          : company?.name
+                      }
+                      description={
+                        session.user?.helper_role ? "Менеджер" : "Администратор"
+                      }
+                    />
+                  </Link>
+                ) : (
+                  <a href={SITE_URL.LOGIN} className="login-btn-mob">
+                    <img src="/img/subtract.svg" alt="" />
+                    Войти в сервис
+                  </a>
+                )}
+              </DrawerFooter>
+            </>
+          )}
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

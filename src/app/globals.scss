@@ -1010,26 +1010,7 @@ textarea {
             }
           }
         }
-        .login-btn-mob {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          align-self: center;
-          border-radius: 16px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #343330;
-          background: #f8f2ea;
-          box-shadow: 3px 3px 13px 0px rgba(16, 24, 40, 0.12);
-          padding: 15px;
-          margin-top: auto;
-          &:hover {
-            background: #f1d087;
-          }
-          img {
-            margin-right: 8px;
-          }
-        }
+
         .close-menu {
           width: 24px;
           margin-bottom: 10px;
@@ -1052,6 +1033,27 @@ textarea {
         }
       }
     }
+  }
+}
+
+.login-btn-mob {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #343330;
+  background: #f8f2ea;
+  box-shadow: 3px 3px 13px 0px rgba(16, 24, 40, 0.12);
+  padding: 15px;
+  margin-top: auto;
+  &:hover {
+    background: #f1d087;
+  }
+  img {
+    margin-right: 8px;
   }
 }
 

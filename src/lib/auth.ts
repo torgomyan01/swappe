@@ -1,6 +1,7 @@
 // src/lib/auth.ts
 import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Yandex from "next-auth/providers/yandex";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
@@ -11,6 +12,10 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/login",
   },
   providers: [
+    Yandex({
+      clientId: process.env.YANDEX_CLIENT_ID!,
+      clientSecret: process.env.YANDEX_CLIENT_SECRET!,
+    }),
     Credentials({
       name: "Email & Password",
       credentials: {
@@ -115,36 +120,6 @@ export const authOptions: NextAuthOptions = {
         return null;
       },
     }),
-    // Yandex OAuth provider (custom object)
-    {
-      id: "yandex",
-      name: "Yandex",
-      type: "oauth",
-      wellKnown: undefined,
-      authorization: {
-        url: "https://oauth.yandex.ru/authorize",
-        params: { scope: "login:email login:info" },
-      },
-      token: "https://oauth.yandex.ru/token",
-      userinfo: "https://login.yandex.ru/info?format=json",
-      clientId: process.env.YANDEX_CLIENT_ID,
-      clientSecret: process.env.YANDEX_CLIENT_SECRET,
-      // The redirect URI should match exactly what you configure in Yandex OAuth app
-      // For NextAuth.js, the callback URL should be: https://yourdomain.com/api/auth/callback/yandex
-      // For local development: http://localhost:3000/api/auth/callback/yandex
-      profile(profile: any) {
-        // Yandex returns fields like: id, login, default_email/email, display_name, default_avatar_id
-        const email = profile.default_email || profile.email || "";
-        const name =
-          profile.display_name || profile.real_name || profile.login || email;
-        return {
-          id: String(profile.id || profile.psuid || profile.uuid || email),
-          name,
-          email,
-          image: undefined,
-        } as any;
-      },
-    } as any,
   ],
   callbacks: {
     async jwt({ token, user, trigger, session, account, profile }) {

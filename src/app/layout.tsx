@@ -14,15 +14,17 @@ import { UiProviders } from "@/components/common/UIProvider/ui-provider";
 import { SesProviders } from "@/components/common/session-provider/session-provider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import Head from "next/head";
+import Script from "next/script";
 
 export async function generateMetadata() {
   return {
     title: "Swappe - Обменивайтесь услугами, а не деньгами",
     description: "",
     keywords: [],
-    // alternates: {
-    //   canonical: "https://galamat.kz",
-    // },
+    alternates: {
+      canonical: "https://swappe.ru",
+    },
     // openGraph: {
     //   title: data.data.name,
     //   description: data.data.description?.slice(0, 140),
@@ -39,6 +41,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="ru" suppressHydrationWarning={true}>
+      <Script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></Script>
       <body>
         <SesProviders session={session}>
           <NextTopLoader />
