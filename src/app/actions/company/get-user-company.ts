@@ -21,6 +21,14 @@ export async function ActionCGetUserCompany() {
       },
     });
 
+    if (!existingCompany) {
+      return {
+        status: "error",
+        data: null,
+        error: "Company not found",
+      };
+    }
+
     const companyReviews: any = await prisma.company_reviews.findMany({
       where: {
         company_id: existingCompany?.id,

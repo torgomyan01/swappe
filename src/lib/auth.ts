@@ -1,7 +1,6 @@
 // src/lib/auth.ts
 import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Yandex from "next-auth/providers/yandex";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
@@ -12,10 +11,6 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/login",
   },
   providers: [
-    Yandex({
-      clientId: process.env.YANDEX_CLIENT_ID!,
-      clientSecret: process.env.YANDEX_CLIENT_SECRET!,
-    }),
     Credentials({
       name: "Email & Password",
       credentials: {

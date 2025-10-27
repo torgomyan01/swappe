@@ -197,3 +197,89 @@ export async function ActionCreateUser(
     };
   }
 }
+
+export async function ActionCreateUserByYandex(
+  name: string,
+  password: string,
+  email: string,
+) {
+  try {
+    const existingUser = await prisma.users.findFirst({
+      where: { email: email },
+      select: { id: true, status: true, email: true, name: true },
+    });
+
+    // If user exists, update their password to enable Yandex login
+    if (existingUser) {
+      const passwordHash = await hashPassword(password);
+
+      await prisma.users.update({
+        where: { id: existingUser.id },
+        data: {
+          password: passwordHash,
+          updated_at: new Date(),
+        },
+      });
+
+      return {
+        status: "ok",
+        data: existingUser,
+        error: "",
+      };
+    }
+
+    const getFirst100users = await prisma.users.findMany({
+      take: 111,
+    });
+
+    const now = new Date();
+    const oneYear = 30 * 24 * 60 * 60 * 1000 * 12;
+
+    const tariff_end_date =
+      getFirst100users.length < 109
+        ? new Date(now.getTime() + oneYear)
+        : new Date();
+
+    const tariff = getFirst100users.length < 109 ? "advanced" : "free";
+
+    const passwordHash = await hashPassword(password);
+
+    const code = Math.floor(1000 + Math.random() * 9000);
+
+    const newUser = await prisma.users.create({
+      data: {
+        name: name,
+        email: email,
+        password: passwordHash,
+        status: "verified",
+        verification_code: code,
+        password_reset_token: crypto.randomUUID(),
+        password_reset_expires: "",
+        balance: 0,
+        bonus: 0,
+        referral_code: crypto.randomUUID(),
+        referral_request_count: 0,
+        tariff,
+        tariff_start_date: new Date(),
+        tariff_end_date,
+        role: ["user"],
+        created_at: new Date(),
+        updated_at: new Date(),
+        inviting_user_id: null,
+        subscribe_get_news: true,
+      } as any,
+    });
+
+    return {
+      status: "ok",
+      data: newUser,
+      error: "",
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: null,
+      error: "Не удалось выполнить операцию. Повторите попытку позже",
+    };
+  }
+}

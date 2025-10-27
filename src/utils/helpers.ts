@@ -353,3 +353,97 @@ export const formatLastSeenTime = (lastSeen: Date | string | null): string => {
     typeof lastSeen === "string" ? new Date(lastSeen) : lastSeen;
   return formatTimeAgo(lastSeenDate);
 };
+
+// Maximum secret logic string encoding/decoding algorithm
+
+/**
+ * SuperSecret string encoder/decoder (strong obfuscation, non-cryptographic!)
+ *
+ * Encodes a string with random salt, shifting, substitution, and per-character hashing.
+ * Generates a base64 output which can be decoded only with decodeSecretString.
+ *
+ * This is not secure for cryptography but highly obfuscated and hard to reverse casually.
+ */
+
+function getDeterministicSalt(input: string, length: number = 6): string {
+  // Generate a deterministic salt based on input
+  const chars =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let salt = "";
+  for (let i = 0; i < length; ++i) {
+    // Use input charcodes to create deterministic salt
+    const seed = (input.charCodeAt(i % input.length) + i * 31) % chars.length;
+    salt += chars[Math.abs(seed)];
+  }
+  return salt;
+}
+
+// A prime number table to add hard-to-reverse confusion
+const PRIME_TABLE = [
+  47, 89, 71, 59, 97, 53, 83, 61, 73, 67, 79, 41, 43, 101, 109, 113, 127, 131,
+];
+
+/**
+ * Encode a string with a "maximum secret" custom algorithm.
+ * @param input string to encode
+ * @returns encoded string (base64)
+ */
+export function encodeSecretString(input: string): string {
+  // Step 1: Deterministic salt based on input
+  const salt = getDeterministicSalt(input, 8);
+  // Step 2: Shift salt-key based charcodes, prime table, xor, and reverse
+  const arr: number[] = [];
+  // Hidden sausage: combine with salt, length and prime permutations
+  for (let i = 0; i < input.length; ++i) {
+    let code = input.charCodeAt(i);
+    // First, xor with salt charcode and prime table
+    code ^= salt.charCodeAt(i % salt.length);
+    code ^= PRIME_TABLE[i % PRIME_TABLE.length];
+    // Next, add shifting based on position and salt
+    code = (code + (3 * i + salt.charCodeAt(i % salt.length))) & 0xff;
+    arr.push(code);
+  }
+  // Extra reverse for confusion
+  arr.reverse();
+
+  // Attach salt, input length for length restoration
+  const dataBin = [
+    salt.length,
+    input.length,
+    ...salt.split("").map((s) => s.charCodeAt(0)),
+    ...arr,
+  ];
+  // base64 encode
+  const binstr = String.fromCharCode(...dataBin);
+  return btoa(binstr);
+}
+
+/**
+ * Decode a string encoded by encodeSecretString
+ * @param enc Encoded string (base64)
+ * @returns Decoded plain string
+ */
+export function decodeSecretString(enc: string): string {
+  const binstr = atob(enc);
+  const data = Array.from(binstr).map((ch) => ch.charCodeAt(0));
+
+  const saltLength = data[0];
+  const origLength = data[1];
+  const salt = String.fromCharCode(...data.slice(2, 2 + saltLength));
+  const arr = data.slice(2 + saltLength);
+
+  // Reverse array to restore original order
+  arr.reverse();
+
+  let plain = "";
+  for (let i = 0; i < arr.length && plain.length < origLength; ++i) {
+    let code = arr[i];
+    // Undo shifting
+    code = (code - (3 * i + salt.charCodeAt(i % salt.length)) + 256) & 0xff;
+    // Undo xor
+    code ^= PRIME_TABLE[i % PRIME_TABLE.length];
+    code ^= salt.charCodeAt(i % salt.length);
+    plain += String.fromCharCode(code);
+  }
+  return plain;
+}

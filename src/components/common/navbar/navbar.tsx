@@ -189,7 +189,7 @@ function Navbar() {
               </Link>
             </Tooltip>
           </div>
-          {session ? (
+          {session?.user ? (
             <Dropdown>
               <DropdownTrigger>
                 <div className="user-in cursor-pointer relative">
@@ -197,7 +197,7 @@ function Navbar() {
                   {company && (
                     <div className="avatar">
                       <img
-                        src={`${fileHost}${session.user?.helper_role ? session.user?.image_path : company.image_path}`}
+                        src={`${fileHost}${session.user?.helper_role ? session.user?.image_path : company.image_path || ""}`}
                         alt=""
                       />
                     </div>

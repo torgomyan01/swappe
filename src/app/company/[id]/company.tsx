@@ -116,7 +116,7 @@ function CompanyPage({ company }: IThisProps) {
                 <div className="item">
                   <b>Интересующие категории</b>
                   <div className="buttons !gap-2 !flex-js-s flex-wrap">
-                    {company?.interest_categories.map((item, index) => (
+                    {company?.interest_categories?.map((item, index) => (
                       <button
                         key={`interest_categories-${index}`}
                         className="green-btn"
