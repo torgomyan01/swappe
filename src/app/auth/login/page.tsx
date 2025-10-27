@@ -75,7 +75,6 @@ function Register() {
       if (typeof window !== "undefined" && window.YaAuthSuggest) {
         console.log("Initializing Yandex SDK...");
 
-        // Initialize Yandex SDK and render the button
         window.YaAuthSuggest.init(
           {
             client_id: "14ce52305b2c4418a05a9be702d41ad3",
@@ -91,13 +90,17 @@ function Register() {
             buttonSize: "m",
             buttonBorderRadius: 20,
           },
-        ).catch((error: any) => {
-          console.error("Yandex SDK error: ", error);
-        });
-
-        console.log(
-          "Yandex SDK initialized successfully - button should render",
-        );
+        )
+          .then(function (result: any) {
+            console.log("Yandex SDK initialized successfully");
+            return result.handler();
+          })
+          .then(function (data: any) {
+            console.log("Сообщение с токеном: ", data);
+          })
+          .catch(function (error: any) {
+            console.error("Yandex SDK error: ", error);
+          });
       } else {
         if (retryCount < MAX_RETRIES) {
           retryCount++;
