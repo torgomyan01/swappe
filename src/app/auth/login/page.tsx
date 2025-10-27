@@ -91,7 +91,7 @@ function Register() {
         .catch(function (error: any) {
           console.log("Что-то пошло не так: ", error);
         });
-    }, 1000);
+    }, 2000);
 
     // Cleanup listener on unmount
     return () => {
