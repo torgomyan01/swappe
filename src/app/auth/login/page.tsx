@@ -70,7 +70,7 @@ function Register() {
         {
           client_id: "14ce52305b2c4418a05a9be702d41ad3",
           response_type: "token",
-          redirect_uri: `${window.location.origin}/auth/verify-yandex`,
+          redirect_uri: "https://swappe.ru/auth/verify-yandex",
         },
         window.location.origin,
         {
