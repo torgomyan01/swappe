@@ -65,37 +65,67 @@ function Register() {
 
     window.addEventListener("message", handleMessage);
 
-    setTimeout(() => {
-      (window as any).YaAuthSuggest?.init?.(
-        {
-          client_id: "14ce52305b2c4418a05a9be702d41ad3",
-          response_type: "token",
-          redirect_uri: "https://swappe.ru/auth/verify-yandex",
-        },
-        window.location.origin,
-        {
-          view: "button",
-          parentId: "yandex-button-container",
-          buttonView: "main",
-          buttonTheme: "light",
-          buttonSize: "m",
-          buttonBorderRadius: 20,
-        },
-      )
-        .then(function (result: any) {
-          return result.handler();
-        })
-        .then(function (data: any) {
-          console.log("Сообщение с токеном: ", data);
-        })
-        .catch(function (error: any) {
-          console.log("Что-то пошло не так: ", error);
-        });
-    }, 2000);
+    // Function to initialize Yandex SDK with retry limit
+    let retryCount = 0;
+    const MAX_RETRIES = 10;
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    const initYandexAuth = () => {
+      // Check if SDK is loaded
+      if (typeof window !== "undefined" && window.YaAuthSuggest) {
+        console.log("Initializing Yandex SDK...");
+
+        window.YaAuthSuggest.init(
+          {
+            client_id: "14ce52305b2c4418a05a9be702d41ad3",
+            response_type: "token",
+            redirect_uri: `${window.location.origin}/auth/verify-yandex`,
+          },
+          window.location.origin,
+          {
+            view: "button",
+            parentId: "yandex-button-container",
+            buttonView: "main",
+            buttonTheme: "light",
+            buttonSize: "m",
+            buttonBorderRadius: 20,
+          },
+        )
+          .then(function (result: any) {
+            console.log("Yandex SDK initialized successfully");
+            return result.handler();
+          })
+          .then(function (data: any) {
+            console.log("Сообщение с токеном: ", data);
+          })
+          .catch(function (error: any) {
+            console.error("Yandex SDK error: ", error);
+          });
+      } else {
+        if (retryCount < MAX_RETRIES) {
+          retryCount++;
+          console.warn(
+            `YaAuthSuggest SDK not loaded yet, retrying... (${retryCount}/${MAX_RETRIES})`,
+          );
+          // Retry after a delay if SDK not loaded
+          timeoutId = setTimeout(initYandexAuth, 1000);
+        } else {
+          console.error(
+            "YaAuthSuggest SDK failed to load after maximum retries",
+          );
+        }
+      }
+    };
+
+    // Start initialization
+    timeoutId = setTimeout(initYandexAuth, 100);
 
     // Cleanup listener on unmount
     return () => {
       window.removeEventListener("message", handleMessage);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
   }, [router]);
 

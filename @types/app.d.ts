@@ -1,3 +1,18 @@
+// Yandex Auth SDK declarations
+declare interface Window {
+  YaAuthSuggest?: {
+    init: (
+      config: {
+        client_id: string;
+        response_type: string;
+        redirect_uri: string;
+      },
+      origin: string,
+      options: any,
+    ) => Promise<any>;
+  };
+}
+
 declare interface IUserData {
   projectId: number;
   houseId: number;
