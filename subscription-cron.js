@@ -16,7 +16,7 @@ const https = require("https");
 const http = require("http");
 
 const isHttps = process.env.SITE_URL?.startsWith("https");
-const url = process.env.SITE_URL || "http://localhost:3003";
+const url = "https://swappe.ru";
 const endpoint = `${url}/api/cron/subscription-management`;
 
 const options = {
