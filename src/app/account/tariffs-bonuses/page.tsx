@@ -14,6 +14,10 @@ import {
   ModalBody,
   ModalContent,
   Modal,
+  Tooltip,
+  ModalHeader,
+  ModalFooter,
+  Input,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,6 +26,7 @@ import ModalAddBlance from "@/components/common/modals/modal-add-blance";
 import { useSession } from "next-auth/react";
 import { ActionCancelUserPlan } from "@/app/actions/auth/cancel-user-plan";
 import HistoryInvatingUsers from "./components/history-invating-users";
+import { ActionConvertBonusToBalance } from "@/app/actions/auth/convert-bonus-to-balance";
 
 function Profile() {
   const router = useRouter();
@@ -70,6 +75,52 @@ function Profile() {
 
   const [loading, setLoading] = useState(false);
   const [moadlCloseTriff, setMoadlCloseTriff] = useState(false);
+
+  // Convert Bonus -> Balance modal state
+  const [convertOpen, setConvertOpen] = useState(false);
+  const [convertAmount, setConvertAmount] = useState<string>("");
+  const [convertLoading, setConvertLoading] = useState(false);
+
+  async function handleConvert() {
+    try {
+      const amount = Number(convertAmount);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        addToast({ title: "Введите корректную сумму", color: "danger" });
+        return;
+      }
+      if (!userBalance) {
+        addToast({ title: "Не удалось получить баланс", color: "danger" });
+        return;
+      }
+      if (amount > userBalance.bonus) {
+        addToast({ title: "Недостаточно бонусов", color: "danger" });
+        return;
+      }
+
+      setConvertLoading(true);
+      const res = await ActionConvertBonusToBalance(Math.floor(amount));
+      if (res.status === "ok") {
+        addToast({ title: "Конвертация выполнена", color: "success" });
+        await ActionGetUserBalance().then((r) => {
+          if (r.status === "ok") {
+            setUserBalance(
+              r.data as unknown as { balance: number; bonus: number },
+            );
+          }
+        });
+        setConvertOpen(false);
+      } else {
+        addToast({ title: res.error, color: "danger" });
+      }
+    } catch (e) {
+      addToast({
+        title: "Не удалось выполнить операцию. Повторите позже",
+        color: "danger",
+      });
+    } finally {
+      setConvertLoading(false);
+    }
+  }
 
   async function handleCancel() {
     setLoading(true);
@@ -153,13 +204,26 @@ function Profile() {
                         <b>{userBalance?.bonus}</b>
                       </div>
                     </div>
-                    <Link
-                      href={SITE_URL.ACCOUNT_TARIFFS_BONUSES_HISTORY}
-                      className="yellow-btn"
-                    >
-                      <img src="/img/gift-icon.svg" alt="" />
-                      История
-                    </Link>
+                    <div className="flex-jsb-c">
+                      <Link
+                        href={SITE_URL.ACCOUNT_TARIFFS_BONUSES_HISTORY}
+                        className="yellow-btn"
+                      >
+                        <img src="/img/gift-icon.svg" alt="" />
+                        История
+                      </Link>
+                      <Tooltip content="Конвертировать бонусы в деньги">
+                        <Button
+                          className="green-btn min-w-4 h-[48px]"
+                          onPress={() => {
+                            setConvertAmount("");
+                            setConvertOpen(true);
+                          }}
+                        >
+                          <i className="fa-solid fa-exchange"></i>
+                        </Button>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -231,7 +295,9 @@ function Profile() {
               </p>
               <div className="referral-link-wrap">
                 <span>Твоя реферальная ссылка</span>
-                <Snippet>{referralLink}</Snippet>
+                <div className="w-full overflow-x-auto max-sm:max-w-[calc(100vw-30px)] ">
+                  <Snippet>{referralLink}</Snippet>
+                </div>
               </div>
               <HistoryInvatingUsers />
             </div>
@@ -240,6 +306,52 @@ function Profile() {
       </div>
 
       <ModalAddBlance show={modalState} onClose={() => setModalState(false)} />
+
+      {/* Convert Bonus -> Balance (1:1) */}
+      <Modal
+        isOpen={convertOpen}
+        onOpenChange={setConvertOpen}
+        size="lg"
+        backdrop="blur"
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader>Конвертация бонусов в баланс (1:1)</ModalHeader>
+              <ModalBody>
+                <p className="mb-2">
+                  Конвертация осуществляется по правилу 1 бонус = 1 ₽ на
+                  балансе.
+                </p>
+                <p className="text-sm text-default-500 mb-4">
+                  Доступно для конвертации: {userBalance?.bonus ?? 0} бонусов.
+                </p>
+                <Input
+                  type="number"
+                  label="Сумма для конвертации"
+                  placeholder="Введите сумму"
+                  min={1}
+                  value={convertAmount}
+                  onChange={(e) => setConvertAmount(e.target.value)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="light" onPress={() => setConvertOpen(false)}>
+                  Отмена
+                </Button>
+                <Button
+                  className="green-btn"
+                  isLoading={convertLoading}
+                  onPress={handleConvert}
+                >
+                  Конвертировать
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       <Modal
         size="xl"

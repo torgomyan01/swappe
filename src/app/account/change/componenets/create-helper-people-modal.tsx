@@ -101,9 +101,9 @@ function CreateHelperPeopleModal({
   }
 
   return (
-    <Modal isOpen={isOpen} size="xl" hideCloseButton>
-      <ModalContent className="p-0">
-        <ModalBody className="p-0">
+    <Modal isOpen={isOpen} size="xl" hideCloseButton scrollBehavior="inside">
+      <ModalContent className="p-0 max-h-[90vh]">
+        <ModalBody className="p-0 max-h-[98vh] overflow-y-auto rounded-[12px]">
           <div className="popups-wrap">
             <div className="global-popup !p-0">
               <div className="form-wrap !max-w-full">

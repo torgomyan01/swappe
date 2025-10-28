@@ -19,7 +19,7 @@ import Script from "next/script";
 
 export async function generateMetadata() {
   return {
-    title: "Swappe - Обменивайтесь услугами, а не деньгами",
+    title: "Swappe - Обменивайтесь идеями, а не деньгами",
     description: "",
     keywords: [],
     alternates: {

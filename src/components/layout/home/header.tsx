@@ -30,6 +30,8 @@ const images = [
 function HomeHeader() {
   const { data: session }: any = useSession();
 
+  console.log(session);
+
   const company = useSelector((state: IUserStore) => state.userInfo.company);
 
   const menuItems = [
@@ -159,7 +161,7 @@ function HomeHeader() {
             viewport={{ once: true, amount: 0.1 }}
             variants={motionOptionText}
           >
-            Обменивайтесь услугами, а не деньгами
+            Обменивайтесь идеями, а не деньгами
           </motion.h1>
           <motion.p
             initial="init"
@@ -232,10 +234,12 @@ function HomeHeader() {
         onOpenChange={setMenuMobile}
         placement="right"
       >
-        <DrawerContent className="rounded-none">
+        <DrawerContent className="rounded-none bg-black/50 backdrop-blur-xl">
           {(onClose) => (
             <>
-              <DrawerHeader className="flex flex-col gap-1">Меню</DrawerHeader>
+              <DrawerHeader className="flex flex-col gap-1 text-white">
+                Меню
+              </DrawerHeader>
               <DrawerBody>
                 <ul className="flex flex-col gap-4 w-full">
                   {menuItems.map((item: any) => (
@@ -246,7 +250,7 @@ function HomeHeader() {
                     >
                       <Link
                         href={item.url}
-                        className="text-base w-full border-b border-gray-200 pb-2 !flex-jsb-c"
+                        className="text-base w-full border-b border-white/20 pb-2 !flex-jsb-c text-white"
                       >
                         {item.name}
                         <i className="fa-solid fa-chevron-right text-gray-300 text-[12px]"></i>
@@ -259,20 +263,23 @@ function HomeHeader() {
                 {session ? (
                   <Link
                     href={SITE_URL.ACCOUNT}
-                    className="block !shadow-inner px-5 py-2 pt-3 rounded-[20px]"
+                    className="block !shadow-inner px-5 py-2 pt-3 rounded-[20px] bg-white/20"
                   >
                     <User
-                      avatarProps={{
-                        src: `${fileHost}${session.user?.helper_role ? session.user?.image_path : company?.image_path || ""}`,
-                      }}
-                      name={
-                        session.user?.helper_role
-                          ? session.user?.name
-                          : company?.name
+                      avatarProps={
+                        session.user.helper_role ||
+                        (company && {
+                          src: `${fileHost}${session.user?.helper_role ? session.user?.image_path : company?.image_path || undefined}`,
+                        })
                       }
+                      name={session.user?.name}
                       description={
                         session.user?.helper_role ? "Менеджер" : "Администратор"
                       }
+                      classNames={{
+                        name: "text-white",
+                        description: "text-white/50",
+                      }}
                     />
                   </Link>
                 ) : (

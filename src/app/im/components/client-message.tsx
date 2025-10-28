@@ -58,7 +58,7 @@ const ClientMessage = memo(function ClientMessage({
 
   // Memoize the formatted time to prevent unnecessary recalculations
   const formattedTime = useMemo(() => {
-    return moment(message.created_at).format("hh:mm");
+    return moment(message.created_at).format("HH:MM");
   }, [message.created_at]);
 
   // Memoize the company link to prevent unnecessary re-renders

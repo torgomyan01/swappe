@@ -41,7 +41,7 @@ function Profile() {
       <div className="profile-wrap">
         <div className="wrapper">
           <div className="breadcrumbs hide-mobile">
-            <Link href={SITE_URL.HOME}>
+            <Link href={SITE_URL.SEARCH}>
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </Link>
@@ -105,7 +105,7 @@ function Profile() {
                         </AvatarGroup>
                       ) : (
                         <span className="text-gray-500">
-                          Пользователи пока нет
+                          Пока нет пользователей
                         </span>
                       )}
                     </>

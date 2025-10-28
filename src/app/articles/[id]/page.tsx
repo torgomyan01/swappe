@@ -27,7 +27,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
     <MainTemplate>
       <div className="wrapper !mb-12">
         <div className="breadcrumbs hide-mobile">
-          <Link href={SITE_URL.HOME}>
+          <Link href={SITE_URL.SEARCH}>
             Главная <img src="/img/arr-r.svg" alt="arrow" />
           </Link>
           <Link href={SITE_URL.ARTICLES}>

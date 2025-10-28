@@ -28,14 +28,14 @@ function CompanyPageReviews({ company }: IThisProps) {
       <div className="profile-wrap">
         <div className="wrapper">
           <div className="breadcrumbs hide-mobile">
-            <Link href={SITE_URL.HOME}>
+            <Link href={SITE_URL.SEARCH}>
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </Link>
             <span>{company.name}</span>
           </div>
           <div className="top-mob-line">
-            <Link href={SITE_URL.HOME} className="back">
+            <Link href={SITE_URL.SEARCH} className="back">
               <img src="/img/back-icon.svg" alt="" />
             </Link>
             <b>{company.name}</b>

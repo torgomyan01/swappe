@@ -136,6 +136,10 @@
   content: "\f0b0";
 }
 
+.fa-exchange:before {
+  content: "\f0ec";
+}
+
 /*---------------------------------*/
 
 @font-face {

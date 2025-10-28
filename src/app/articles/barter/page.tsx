@@ -55,7 +55,7 @@ function Page() {
       >
         <div className="wrapper !pt-4">
           <div className="breadcrumbs hide-mobile">
-            <a href={SITE_URL.HOME}>
+            <a href={SITE_URL.SEARCH}>
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </a>

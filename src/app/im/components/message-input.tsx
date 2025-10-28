@@ -242,7 +242,7 @@ const MessageInput = memo(function MessageInput({
             <DropdownItem key="new">
               <label
                 htmlFor="select-iamge"
-                className={clsx("w-full cursor-pointer", {
+                className={clsx("w-full cursor-pointer block", {
                   "opacity-50 !cursor-default":
                     !!selectedFiles.length || !!selectedImages.length,
                 })}
@@ -253,7 +253,7 @@ const MessageInput = memo(function MessageInput({
             <DropdownItem key="copy">
               <label
                 htmlFor="select-files"
-                className={clsx("w-full cursor-pointer", {
+                className={clsx("w-full cursor-pointer block", {
                   "opacity-50 !cursor-default":
                     !!selectedFiles.length || !!selectedImages.length,
                 })}
