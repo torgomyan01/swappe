@@ -140,6 +140,10 @@
   content: "\f0ec";
 }
 
+.fa-building:before {
+  content: "\f1ad";
+}
+
 /*---------------------------------*/
 
 @font-face {

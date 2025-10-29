@@ -238,7 +238,11 @@ function HomeHeader() {
           {(onClose) => (
             <>
               <DrawerHeader className="flex flex-col gap-1 text-white">
-                Меню
+                <img
+                  src="/img/footer-logo.svg"
+                  alt="logo mobile menu"
+                  width={150}
+                />
               </DrawerHeader>
               <DrawerBody>
                 <ul className="flex flex-col gap-4 w-full">

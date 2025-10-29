@@ -15,9 +15,39 @@ import {
   Spinner,
 } from "@heroui/react";
 import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line, Bar, Doughnut } from "react-chartjs-2";
+import {
   ActionGetUsersStats,
   ActionGetUsersLastWeek,
+  ActionGetUsersByDay,
+  ActionGetUsersByWeek,
+  ActionGetUsersByMonth,
+  ActionGetUsersByYear,
 } from "@/app/actions/admin/users";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 interface UserStats {
   totalUsers: number;
@@ -43,9 +73,33 @@ interface User {
   };
 }
 
+interface DailyData {
+  date: string;
+  count: number;
+}
+
+interface WeeklyData {
+  week: string;
+  count: number;
+}
+
+interface MonthlyData {
+  month: string;
+  count: number;
+}
+
+interface YearlyData {
+  year: string;
+  count: number;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [usersLastWeek, setUsersLastWeek] = useState<User[]>([]);
+  const [dailyData, setDailyData] = useState<DailyData[]>([]);
+  const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
+  const [yearlyData, setYearlyData] = useState<YearlyData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,10 +108,21 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
 
-        // Fetch statistics and users in parallel
-        const [statsResult, usersResult] = await Promise.all([
+        // Fetch all statistics in parallel
+        const [
+          statsResult,
+          usersResult,
+          dailyResult,
+          weeklyResult,
+          monthlyResult,
+          yearlyResult,
+        ] = await Promise.all([
           ActionGetUsersStats(),
           ActionGetUsersLastWeek(),
+          ActionGetUsersByDay(),
+          ActionGetUsersByWeek(),
+          ActionGetUsersByMonth(),
+          ActionGetUsersByYear(),
         ]);
 
         if (statsResult.status === "ok") {
@@ -68,8 +133,22 @@ export default function AdminDashboard() {
 
         if (usersResult.status === "ok") {
           setUsersLastWeek(usersResult.data as User[]);
-        } else {
-          setError(usersResult.error || "Ошибка загрузки пользователей");
+        }
+
+        if (dailyResult.status === "ok") {
+          setDailyData(dailyResult.data as DailyData[]);
+        }
+
+        if (weeklyResult.status === "ok") {
+          setWeeklyData(weeklyResult.data as WeeklyData[]);
+        }
+
+        if (monthlyResult.status === "ok") {
+          setMonthlyData(monthlyResult.data as MonthlyData[]);
+        }
+
+        if (yearlyResult.status === "ok") {
+          setYearlyData(yearlyResult.data as YearlyData[]);
         }
       } catch {
         setError("Произошла ошибка при загрузке данных");
@@ -115,6 +194,114 @@ export default function AdminDashboard() {
       default:
         return "default";
     }
+  };
+
+  // Chart data preparation
+  const formatDailyLabels = (data: DailyData[]) => {
+    return data.map((item) => {
+      const date = new Date(item.date);
+      return date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "short",
+      });
+    });
+  };
+
+  const dailyChartData = {
+    labels: formatDailyLabels(dailyData),
+    datasets: [
+      {
+        label: "Регистрации по дням (последняя неделя)",
+        data: dailyData.map((item) => item.count),
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.1)",
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const weeklyChartData = {
+    labels: weeklyData.map((item) => {
+      const weekParts = item.week.split(" ");
+      const weekNum = weekParts.length > 1 ? weekParts[1] : item.week;
+      const date = new Date(weekNum);
+      if (isNaN(date.getTime())) {
+        return item.week;
+      }
+      return date.toLocaleDateString("ru-RU", {
+        month: "short",
+        day: "numeric",
+      });
+    }),
+    datasets: [
+      {
+        label: "Регистрации по неделям (последний месяц)",
+        data: weeklyData.map((item) => item.count),
+        backgroundColor: "rgba(34, 197, 94, 0.8)",
+        borderColor: "rgb(34, 197, 94)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const monthlyChartData = {
+    labels: monthlyData.map((item) => {
+      const [year, month] = item.month.split("-");
+      const date = new Date(parseInt(year), parseInt(month) - 1);
+      return date.toLocaleDateString("ru-RU", {
+        month: "short",
+        year: "numeric",
+      });
+    }),
+    datasets: [
+      {
+        label: "Регистрации по месяцам (последний год)",
+        data: monthlyData.map((item) => item.count),
+        backgroundColor: "rgba(168, 85, 247, 0.8)",
+        borderColor: "rgb(168, 85, 247)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const yearlyChartData = {
+    labels: yearlyData.map((item) => item.year),
+    datasets: [
+      {
+        label: "Регистрации по годам",
+        data: yearlyData.map((item) => item.count),
+        backgroundColor: [
+          "rgba(239, 68, 68, 0.8)",
+          "rgba(249, 115, 22, 0.8)",
+          "rgba(234, 179, 8, 0.8)",
+          "rgba(34, 197, 94, 0.8)",
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(147, 51, 234, 0.8)",
+        ],
+        borderColor: [
+          "rgb(239, 68, 68)",
+          "rgb(249, 115, 22)",
+          "rgb(234, 179, 8)",
+          "rgb(34, 197, 94)",
+          "rgb(59, 130, 246)",
+          "rgb(147, 51, 234)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: false,
+      },
+    },
   };
 
   if (loading) {
@@ -179,6 +366,63 @@ export default function AdminDashboard() {
               {stats?.usersWithCompanies || 0}
             </div>
             <div className="text-sm text-gray-600">С компаниями</div>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Daily Chart - Last Week */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">
+              Регистрации по дням (последняя неделя)
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <div className="h-64">
+              <Line data={dailyChartData} options={chartOptions} />
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Weekly Chart - Last Month */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">
+              Регистрации по неделям (последний месяц)
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <div className="h-64">
+              <Bar data={weeklyChartData} options={chartOptions} />
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Monthly Chart - Last Year */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">
+              Регистрации по месяцам (последний год)
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <div className="h-64">
+              <Bar data={monthlyChartData} options={chartOptions} />
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Yearly Chart */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">Регистрации по годам</h2>
+          </CardHeader>
+          <CardBody>
+            <div className="h-64">
+              <Doughnut data={yearlyChartData} options={chartOptions} />
+            </div>
           </CardBody>
         </Card>
       </div>

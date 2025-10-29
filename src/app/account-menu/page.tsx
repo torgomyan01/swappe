@@ -11,7 +11,7 @@ function Profile() {
       <div className="profile-wrap">
         <div className="wrapper">
           <div className="breadcrumbs">
-            <Link href={SITE_URL.HOME}>
+            <Link href={SITE_URL.SEARCH}>
               Главная
               <img src="/img/arr-r.svg" alt="arrow" />
             </Link>

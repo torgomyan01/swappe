@@ -28,9 +28,11 @@ function ChangeCompany() {
   const [categories, setCategories] = useState<ICategory[] | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
   const [city, setCity] = useState<number>(0);
+  const [companyName, setCompanyName] = useState<string>("");
 
   useEffect(() => {
     if (company) {
+      setCompanyName(company.name || "");
       setSocialSites(company.sites);
       setSelectedCategories(company.interest_categories);
       setCity(company.city);
@@ -81,6 +83,7 @@ function ChangeCompany() {
       setLoadingSave(true);
       ActionChangeCompany(
         company.id,
+        companyName,
         city,
         +industryName.replace(/ind-/g, ""),
         selectedCategories,
@@ -110,8 +113,8 @@ function ChangeCompany() {
           <input
             type="text"
             placeholder="Название компании"
-            value={company?.name}
-            disabled
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
           />
         </div>
         <div className="label-wrap">

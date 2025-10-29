@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { CompanyStatus } from "../../../../@types/enums";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import { ActionCreatePushNotification } from "../push-notification/create";
+import { SITE_URL } from "@/utils/consts";
 
 export async function ActionCreateCompany(
   name: string,
@@ -63,13 +65,31 @@ export async function ActionCreateCompany(
         industry,
         about_us,
         interest_categories,
-        status: CompanyStatus.verify,
+        status: CompanyStatus.moderation,
         sites,
         image_path,
         plan: "free",
         is_self_employed,
       },
     });
+
+    // Send push notification about moderation
+    try {
+      await ActionCreatePushNotification(
+        session.user.id,
+        "Ваша компания отправлена на модерацию",
+        "warning",
+        `Ваша компания "${CreateCompany.name}" была отправлена на модерацию. Мы максимально быстро проверим и подтвердим её.`,
+        SITE_URL.ACCOUNT,
+        {
+          companyId: CreateCompany.id,
+          companyName: CreateCompany.name,
+        },
+      );
+    } catch (error) {
+      // Notification error shouldn't fail the whole operation
+      console.error("Failed to send push notification:", error);
+    }
 
     return {
       status: "ok",

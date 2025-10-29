@@ -1,4 +1,5 @@
 export enum CompanyStatus {
-  verify = "verify",
-  noVerify = "no-verify",
+  moderation = "moderation",
+  approved = "approved",
+  rejected = "rejected",
 }

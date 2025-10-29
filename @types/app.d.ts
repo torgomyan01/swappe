@@ -242,7 +242,7 @@ declare interface IUserCompany {
   interest_categories: IIndustry[];
   sites: string[];
   image_path: string;
-  status: "verify" | "no-verify";
+  status: "moderation" | "approved" | "rejected";
   plan: "premium" | "free";
   user: IUserProfile;
   reviews: IReview[];

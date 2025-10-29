@@ -6,6 +6,7 @@ import ChatItemLoading from "@/app/im/components/chat-item-loading";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import clsx from "clsx";
+import Image from "next/image";
 
 function ChatList() {
   const { id } = useParams();
@@ -43,7 +44,13 @@ function ChatList() {
               >
                 <div className="images">
                   <div className="big-img">
-                    <img src="/img/chat/dialogues-big-img.png" alt="" />
+                    <Image
+                      src="/img/support-swappe.png"
+                      alt=""
+                      width={200}
+                      height={200}
+                      className="object-left rounded-[8px]"
+                    />
                   </div>
                   <div className="small-img">
                     <img src="/img/support.png" alt="" />
@@ -62,7 +69,13 @@ function ChatList() {
               >
                 <div className="images">
                   <div className="big-img">
-                    <img src="/img/chat/dialogues-big-img.png" alt="" />
+                    <Image
+                      src="/img/support-swappe.png"
+                      alt=""
+                      width={200}
+                      height={200}
+                      className="object-left rounded-[8px]"
+                    />
                   </div>
                   <div className="small-img">
                     <img src="/img/news.png" alt="" />

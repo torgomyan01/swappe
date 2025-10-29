@@ -105,7 +105,8 @@ function Profile() {
                         </AvatarGroup>
                       ) : (
                         <span className="text-gray-500">
-                          Пока нет пользователей
+                          Отредактируйте карточку компании, чтобы добавить
+                          пользователей
                         </span>
                       )}
                     </>
@@ -119,7 +120,8 @@ function Profile() {
                   )}
                 </div>
               </div>
-              <div className="border"></div>
+
+              <div className="border-b border-gray-200 my-[40px]"></div>
 
               <h3>Карточка компании</h3>
               <p>

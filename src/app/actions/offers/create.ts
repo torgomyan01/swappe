@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { ActionUpdateUserBonus } from "../auth/update-user-bonus";
+import { CompanyStatus } from "../../../../@types/enums";
 
 export async function ActionCreateOffer(offer: any) {
   try {
@@ -11,6 +12,33 @@ export async function ActionCreateOffer(offer: any) {
 
     if (!session) {
       return { status: "error", data: [], error: "logout" };
+    }
+
+    // Check if user has a company and it's approved
+    const userCompany = await prisma.user_company.findFirst({
+      where: { user_id: session.user.id },
+      select: { id: true, name: true, status: true },
+    });
+
+    if (!userCompany) {
+      return {
+        status: "error",
+        data: [],
+        error: "Для создания предложения необходимо зарегистрировать компанию",
+      };
+    }
+
+    if (userCompany.status !== CompanyStatus.approved) {
+      return {
+        status: "error",
+        data: [],
+        error:
+          userCompany.status === CompanyStatus.moderation
+            ? "Ваша компания находится на модерации. Пожалуйста, дождитесь подтверждения перед созданием предложений"
+            : userCompany.status === CompanyStatus.rejected
+              ? "Ваша компания не прошла модерацию. Пожалуйста, проверьте данные компании и попробуйте снова"
+              : "Ваша компания не подтверждена. Пожалуйста, дождитесь подтверждения перед созданием предложений",
+      };
     }
 
     const getOffers = await prisma.offers.findMany({

@@ -25,7 +25,44 @@ export async function ActionAdminListSupportChats() {
     },
   });
 
-  return { status: "ok", data: chats, error: null };
+  // Calculate unread_count for each chat (messages from user that came after last admin response)
+  const chatsWithUnreadCount = await Promise.all(
+    chats.map(async (chat) => {
+      // Get the last message from admin (if any)
+      const lastAdminMessage = await prisma.support_messages.findFirst({
+        where: {
+          support_chat_id: chat.id,
+          NOT: {
+            sender_id: chat.user_id, // Messages from admin (not from user)
+          },
+        },
+        orderBy: { id: "desc" },
+      });
+
+      // Count messages from user that came after the last admin message
+      // If there's no admin message, count all user messages
+      const unreadCount = await prisma.support_messages.count({
+        where: {
+          support_chat_id: chat.id,
+          sender_id: chat.user_id, // Messages from the user
+          ...(lastAdminMessage
+            ? {
+                id: {
+                  gt: lastAdminMessage.id, // After last admin message
+                },
+              }
+            : {}),
+        },
+      });
+
+      return {
+        ...chat,
+        unread_count: unreadCount,
+      };
+    }),
+  );
+
+  return { status: "ok", data: chatsWithUnreadCount, error: null };
 }
 
 export async function ActionAdminGetSupportChat(chatId: number) {

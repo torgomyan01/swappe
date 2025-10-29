@@ -285,7 +285,9 @@ function Navbar() {
               aria-label="Только новые"
               onValueChange={handleChangeOnlyNew}
               isSelected={onlyNew}
-            />
+            >
+              Только новые
+            </Switch>
           </div>
           {push.length > 0 && (
             <div

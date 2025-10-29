@@ -102,9 +102,9 @@ function OfferCard({ offer, onlyTitle = false, onUpdate }: IThisProps) {
           <Image
             src={`${fileHost}${offer.images[0]}`}
             alt=""
-            className="rounded-[12px] transition transform group-hover:scale-[1.01] object-cover"
+            className="rounded-[12px] h-[150px] sm:h-[550px] transition transform group-hover:scale-[1.01] object-cover"
             width={400}
-            height={400}
+            height={500}
           />
         </Link>
         {checkMyOffer && offer.status !== "archive" ? (

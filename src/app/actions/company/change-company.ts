@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function ActionChangeCompany(
   id: number,
+  name: string,
   city: number,
   industry: number,
   interest_categories: object,
@@ -15,6 +16,7 @@ export async function ActionChangeCompany(
         id,
       },
       data: {
+        name,
         city,
         industry,
         interest_categories,

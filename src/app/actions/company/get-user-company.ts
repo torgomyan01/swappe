@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { calcReviews } from "@/utils/helpers";
+import { CompanyStatus } from "../../../../@types/enums";
 
 export async function ActionCGetUserCompany() {
   try {
@@ -14,7 +15,7 @@ export async function ActionCGetUserCompany() {
     }
 
     const existingCompany = await prisma.user_company.findFirst({
-      where: { user_id: session.user.id },
+      where: { user_id: session.user.id, status: CompanyStatus.approved },
       include: {
         city_data: true,
         industry_data: true,

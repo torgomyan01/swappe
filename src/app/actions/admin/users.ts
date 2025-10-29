@@ -316,3 +316,288 @@ export async function ActionGetUsersStats() {
     };
   }
 }
+
+// Get daily registrations for the last week
+export async function ActionGetUsersByDay() {
+  try {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+      return { status: "error", data: [], error: "Не авторизован" };
+    }
+
+    const userRoles = session.user?.role || session.user?.roles || [];
+    const isAdmin = Array.isArray(userRoles)
+      ? userRoles.includes("admin")
+      : userRoles === "admin";
+
+    if (!isAdmin) {
+      return { status: "error", data: [], error: "Доступ запрещен" };
+    }
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    oneWeekAgo.setHours(0, 0, 0, 0);
+
+    const users = await prisma.users.findMany({
+      where: {
+        created_at: {
+          gte: oneWeekAgo,
+        },
+      },
+      select: {
+        created_at: true,
+      },
+    });
+
+    // Group by day
+    const dailyData: { [key: string]: number } = {};
+    const today = new Date();
+
+    // Initialize all days in the last 7 days with 0
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+      const key = date.toISOString().split("T")[0];
+      dailyData[key] = 0;
+    }
+
+    // Count users per day
+    users.forEach((user) => {
+      const date = new Date(user.created_at);
+      date.setHours(0, 0, 0, 0);
+      const key = date.toISOString().split("T")[0];
+      if (dailyData[key] !== undefined) {
+        dailyData[key]++;
+      }
+    });
+
+    const result = Object.entries(dailyData).map(([date, count]) => ({
+      date,
+      count,
+    }));
+
+    return {
+      status: "ok",
+      data: result,
+      error: null,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: [],
+      error: "Ошибка при получении данных по дням",
+    };
+  }
+}
+
+// Get weekly registrations for the last month
+export async function ActionGetUsersByWeek() {
+  try {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+      return { status: "error", data: [], error: "Не авторизован" };
+    }
+
+    const userRoles = session.user?.role || session.user?.roles || [];
+    const isAdmin = Array.isArray(userRoles)
+      ? userRoles.includes("admin")
+      : userRoles === "admin";
+
+    if (!isAdmin) {
+      return { status: "error", data: [], error: "Доступ запрещен" };
+    }
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+    oneMonthAgo.setHours(0, 0, 0, 0);
+
+    const users = await prisma.users.findMany({
+      where: {
+        created_at: {
+          gte: oneMonthAgo,
+        },
+      },
+      select: {
+        created_at: true,
+      },
+    });
+
+    // Group by week
+    const weeklyData: { [key: string]: number } = {};
+    const today = new Date();
+
+    // Initialize all weeks in the last 4 weeks
+    for (let i = 3; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i * 7);
+      date.setHours(0, 0, 0, 0);
+      // Get start of week (Monday)
+      const dayOfWeek = date.getDay();
+      const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const weekStart = new Date(date.setDate(diff));
+      const key = `Week ${weekStart.toISOString().split("T")[0]}`;
+      weeklyData[key] = 0;
+    }
+
+    // Count users per week
+    users.forEach((user) => {
+      const date = new Date(user.created_at);
+      const dayOfWeek = date.getDay();
+      const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const weekStart = new Date(date.setDate(diff));
+      const key = `Week ${weekStart.toISOString().split("T")[0]}`;
+      if (weeklyData[key] !== undefined) {
+        weeklyData[key]++;
+      }
+    });
+
+    const result = Object.entries(weeklyData).map(([week, count]) => ({
+      week,
+      count,
+    }));
+
+    return {
+      status: "ok",
+      data: result,
+      error: null,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: [],
+      error: "Ошибка при получении данных по неделям",
+    };
+  }
+}
+
+// Get monthly registrations for the last year
+export async function ActionGetUsersByMonth() {
+  try {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+      return { status: "error", data: [], error: "Не авторизован" };
+    }
+
+    const userRoles = session.user?.role || session.user?.roles || [];
+    const isAdmin = Array.isArray(userRoles)
+      ? userRoles.includes("admin")
+      : userRoles === "admin";
+
+    if (!isAdmin) {
+      return { status: "error", data: [], error: "Доступ запрещен" };
+    }
+
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    oneYearAgo.setHours(0, 0, 0, 0);
+
+    const users = await prisma.users.findMany({
+      where: {
+        created_at: {
+          gte: oneYearAgo,
+        },
+      },
+      select: {
+        created_at: true,
+      },
+    });
+
+    // Group by month
+    const monthlyData: { [key: string]: number } = {};
+    const today = new Date();
+
+    // Initialize all months in the last 12 months
+    for (let i = 11; i >= 0; i--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const monthStr = String(date.getMonth() + 1).padStart(2, "0");
+      const key = `${date.getFullYear()}-${monthStr}`;
+      monthlyData[key] = 0;
+    }
+
+    // Count users per month
+    users.forEach((user) => {
+      const date = new Date(user.created_at);
+      const monthStr = String(date.getMonth() + 1).padStart(2, "0");
+      const key = `${date.getFullYear()}-${monthStr}`;
+      if (monthlyData[key] !== undefined) {
+        monthlyData[key]++;
+      }
+    });
+
+    const result = Object.entries(monthlyData).map(([month, count]) => ({
+      month,
+      count,
+    }));
+
+    return {
+      status: "ok",
+      data: result,
+      error: null,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: [],
+      error: "Ошибка при получении данных по месяцам",
+    };
+  }
+}
+
+// Get yearly registrations
+export async function ActionGetUsersByYear() {
+  try {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+      return { status: "error", data: [], error: "Не авторизован" };
+    }
+
+    const userRoles = session.user?.role || session.user?.roles || [];
+    const isAdmin = Array.isArray(userRoles)
+      ? userRoles.includes("admin")
+      : userRoles === "admin";
+
+    if (!isAdmin) {
+      return { status: "error", data: [], error: "Доступ запрещен" };
+    }
+
+    const users = await prisma.users.findMany({
+      select: {
+        created_at: true,
+      },
+    });
+
+    // Group by year
+    const yearlyData: { [key: string]: number } = {};
+
+    // Count users per year
+    users.forEach((user) => {
+      const date = new Date(user.created_at);
+      const key = String(date.getFullYear());
+      yearlyData[key] = (yearlyData[key] || 0) + 1;
+    });
+
+    const result = Object.entries(yearlyData)
+      .map(([year, count]) => ({
+        year,
+        count,
+      }))
+      .sort((a, b) => a.year.localeCompare(b.year));
+
+    return {
+      status: "ok",
+      data: result,
+      error: null,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      data: [],
+      error: "Ошибка при получении данных по годам",
+    };
+  }
+}
