@@ -66,6 +66,7 @@ export async function ActionUpdateOffer(offer: any) {
         name: offer.name,
         type: offer.type,
         vid: offer.vid,
+        activity: offer.activity,
         category: offer.category,
         price: +offer.price,
         coordinates: offer.coordinates,

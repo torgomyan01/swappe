@@ -1,11 +1,15 @@
 import { useDispatch } from "react-redux";
-import { setCompanyVid } from "@/redux/offer-page";
+import { setCompanyActivity } from "@/redux/offer-page";
 
-function SelectVid({ offer }: { offer: IUserOfferFront }) {
+function SelectActivity({ offer }: { offer: IUserOfferFront }) {
   const dispatch = useDispatch();
 
   function Select(e: any) {
-    dispatch(setCompanyVid(e.target.dataset.vid));
+    dispatch(
+      setCompanyActivity(
+        e.target.dataset.activity as "barter" | "collaboration",
+      ),
+    );
   }
 
   return (
@@ -13,39 +17,39 @@ function SelectVid({ offer }: { offer: IUserOfferFront }) {
       <div className="radio-wrap">
         <input
           type="radio"
-          id="radio3"
-          name="view"
+          id="radio5"
+          name="activity"
           onChange={Select}
-          data-vid="online"
-          defaultChecked={offer.vid === "online"}
+          data-activity="barter"
+          defaultChecked={offer.activity === "barter"}
         />
         <label
-          htmlFor="radio3"
+          htmlFor="radio5"
           className="border transition border-transparent hover:border-green cursor-pointer"
         >
           <span></span>
-          Онлайн
+          Бартер
         </label>
       </div>
       <div className="radio-wrap">
         <input
           type="radio"
-          id="radio4"
-          name="view"
+          id="radio6"
+          name="activity"
           onChange={Select}
-          data-vid="offline"
-          defaultChecked={offer.vid === "offline"}
+          data-activity="collaboration"
+          defaultChecked={offer.activity === "collaboration"}
         />
         <label
-          htmlFor="radio4"
+          htmlFor="radio6"
           className="border transition border-transparent hover:border-green cursor-pointer"
         >
           <span></span>
-          Оффлайн
+          Коллаборация
         </label>
       </div>
     </div>
   );
 }
 
-export default SelectVid;
+export default SelectActivity;

@@ -17,7 +17,7 @@ function SelectType({ offer }: { offer: IUserOfferFront }) {
           name="type"
           onChange={Select}
           data-type="product"
-          checked={offer.type === "product"}
+          defaultChecked={offer.type === "product"}
         />
         <label
           htmlFor="radio1"
@@ -34,7 +34,7 @@ function SelectType({ offer }: { offer: IUserOfferFront }) {
           name="type"
           onChange={Select}
           data-type="service"
-          checked={offer.type === "service"}
+          defaultChecked={offer.type === "service"}
         />
         <label
           htmlFor="radio2"

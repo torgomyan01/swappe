@@ -8,6 +8,7 @@ import UploadPhotos from "@/app/account/offers/change/[id]/components/upload-pho
 import ModalAddVideo from "@/app/account/offers/change/[id]/components/modal-add-video";
 import { useDispatch, useSelector } from "react-redux";
 import { addToast, Button } from "@heroui/react";
+import SelectActivity from "./select-activity";
 
 interface IThisProps {
   onNextStep: () => void;
@@ -108,6 +109,10 @@ function InfoTab({ onNextStep, offer }: IThisProps) {
         <span className="creating-title">Вид</span>
 
         <SelectVid offer={offer} />
+
+        <span className="creating-title">Вид деятельности</span>
+
+        <SelectActivity offer={offer} />
 
         <span className="creating-title">Название</span>
         <input
