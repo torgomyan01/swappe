@@ -215,6 +215,7 @@ model offers {
   images      Json
   videos      Json
   status      String
+  activity    String @db.VarChar(255) @default("barter")
 
   user           users            @relation(fields: [user_id], references: [id])
   user_favorites user_favorites[]

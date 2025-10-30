@@ -14,6 +14,7 @@ import { ActionGetAllCountries } from "@/app/actions/create-countries/get-countr
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetSearchFilter,
+  setActivity,
   setCategoryStore,
   setCountryCompanyId,
   setPrice,
@@ -83,12 +84,16 @@ function Filter({ mobileShow, onClose }: IThisProps) {
   }, []);
 
   const visibleCategories = useMemo(() => {
-    const list = category ?? [];
-    const q = categoryQuery.trim().toLowerCase();
-    const filtered = q
-      ? list.filter((c) => c.name.toLowerCase().includes(q))
-      : list;
-    return q ? filtered : filtered.slice(0, 3);
+    if (categoryQuery === "Все категории") {
+      return category ?? [];
+    } else {
+      const list = category ?? [];
+      const q = categoryQuery.trim().toLowerCase();
+      const filtered = q
+        ? list.filter((c) => c.name.toLowerCase().includes(q))
+        : list;
+      return q ? filtered : filtered.slice(0, 3);
+    }
   }, [category, categoryQuery]);
 
   const clearFilter = () => {
@@ -156,6 +161,29 @@ function Filter({ mobileShow, onClose }: IThisProps) {
           <label htmlFor="radio4">Оффлайн</label>
         </div>
       </div>
+      <span className="title">Вид деятельности</span>
+      <div className="radios">
+        <div className="radio-wrap">
+          <input
+            type="radio"
+            id="radio5"
+            name="checkbox2"
+            checked={filterParams.activity === "barter"}
+            onChange={() => dispatch(setActivity("barter"))}
+          />
+          <label htmlFor="radio5">Бартер</label>
+        </div>
+        <div className="radio-wrap">
+          <input
+            type="radio"
+            id="radio6"
+            name="checkbox2"
+            checked={filterParams.activity === "collaboration"}
+            onChange={() => dispatch(setActivity("collaboration"))}
+          />
+          <label htmlFor="radio6">Коллаборация</label>
+        </div>
+      </div>
       <span className="title">Категории</span>
       <div className="input-wrap !mb-2">
         <Input
@@ -189,6 +217,22 @@ function Filter({ mobileShow, onClose }: IThisProps) {
             {category.name}
           </button>
         ))}
+        {categoryQuery !== "Все категории" ? (
+          <button
+            className="tag cursor-pointer"
+            onClick={() => setCategoryQuery("Все категории")}
+          >
+            Ещё
+          </button>
+        ) : (
+          <Button
+            className="tag cursor-pointer w-full !text-[14px] !text-danger"
+            onPress={() => setCategoryQuery("")}
+            color="secondary"
+          >
+            Скрыть
+          </Button>
+        )}
       </div>
       <div className="slider-block">
         <Slider

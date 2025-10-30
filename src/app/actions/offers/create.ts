@@ -62,6 +62,7 @@ export async function ActionCreateOffer(offer: any) {
         vid: offer.vid,
         category: offer.category,
         price: +offer.price,
+        activity: offer.activity as "barter" | "collaboration",
         coordinates: offer.coordinates,
         description: offer.description,
         images: offer.images,

@@ -294,6 +294,7 @@ declare interface IUserOffer {
   type: string;
   vid: string;
   name: string;
+  activity: "barter" | "collaboration";
   category: ICategory[];
   price: string;
   coordinates: [number, number] | null;
@@ -309,6 +310,7 @@ declare interface IUserOfferFront {
   type: string;
   vid: string;
   name: string;
+  activity: "barter" | "collaboration";
   category: ICategory[];
   user: IUserProfile;
   price: string;
@@ -342,6 +344,7 @@ declare interface ISearchFilterStore {
 declare interface IDataSearchFilter {
   type: OfferType | "";
   vid: OfferVid | "";
+  activity: "barter" | "collaboration" | "";
   category: ICategory[] | null;
   price: [number, number] | null;
   countryCompanyId: number | null;

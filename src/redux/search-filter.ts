@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export const initialSearchFilterState: IDataSearchFilter = {
   type: "",
   vid: "",
+  activity: "",
   category: null,
   price: null,
   countryCompanyId: null,
@@ -24,6 +25,9 @@ export const searchFilter = createSlice({
     setPrice: (state, action: PayloadAction<[number, number] | null>) => {
       state.price = action.payload;
     },
+    setActivity: (state, action: PayloadAction<"barter" | "collaboration" | "">) => {
+      state.activity = action.payload;
+    },
     setCountryCompanyId: (state, action: PayloadAction<number | null>) => {
       state.countryCompanyId = action.payload;
     },
@@ -41,6 +45,7 @@ export const searchFilter = createSlice({
 export const {
   setType,
   setVid,
+  setActivity,
   setCategoryStore,
   setPrice,
   setCountryCompanyId,

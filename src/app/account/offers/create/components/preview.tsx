@@ -52,6 +52,7 @@ function Preview({ onGoBack }: IThisProps) {
         name: offerData.name,
         type: offerData.type,
         vid: offerData.vid,
+        activity: offerData.activity,
         category: offerData.category,
         price: offerData.price,
         coordinates: offerData.coordinates,
@@ -109,7 +110,12 @@ function Preview({ onGoBack }: IThisProps) {
           </div>
         </div>
         <div className="right-info">
-          <h3>{offerData.name}</h3>
+          <h3>
+            {offerData.name}{" "}
+            <span className="text-sm text-gray-500">
+              ({offerData.activity === "barter" ? "Бартер" : "Коллаборация"})
+            </span>
+          </h3>
           <div className="rate">
             <b>{company?.name}</b>
             <div className="rate-text">

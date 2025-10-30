@@ -17,7 +17,6 @@ import { ActionChangeCompany } from "@/app/actions/company/change-company";
 
 function ChangeCompany() {
   const company = useSelector((state: IUserStore) => state.userInfo.company);
-
   const [countries, setCountries] = useState<{ id: number; name: string }[]>(
     [],
   );
@@ -94,6 +93,7 @@ function ChangeCompany() {
             description: "Спасибо, изменение успешно сохранено.",
             color: "success",
           });
+          window.location.reload();
         })
         .finally(() => setLoadingSave(false));
     }

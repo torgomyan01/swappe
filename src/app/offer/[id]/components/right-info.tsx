@@ -9,6 +9,7 @@ import { SITE_URL } from "@/utils/consts";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import { Tooltip } from "@heroui/react";
 
 interface IThisProps {
   offer: IUserOfferFront;
@@ -88,6 +89,17 @@ function OfferRightInfo({ offer }: IThisProps) {
             })}
           />
         </Button>
+
+        <Tooltip content="Вид деятельности" color="secondary" placement="top">
+          <Button
+            className="cursor-default ml-4"
+            disabled
+            variant="bordered"
+            color="default"
+          >
+            {offer.activity === "barter" ? "Бартер" : "Коллаборация"}
+          </Button>
+        </Tooltip>
       </div>
 
       <ul className="list">

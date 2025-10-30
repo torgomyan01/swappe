@@ -15,6 +15,7 @@ export async function ActionSearchOffer(
       ...(params.type && { type: params.type }),
       ...(params.vid && { vid: params.vid }),
       status: "active",
+      ...(params.activity && { activity: params.activity }),
       OR: [
         {
           name: {

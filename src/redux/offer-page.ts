@@ -8,6 +8,7 @@ const initialState: IInterface = {
   offer: {
     type: "",
     vid: "",
+    activity: "barter",
     name: "",
     category: [],
     price: "",
@@ -27,6 +28,12 @@ export const userOffer = createSlice({
     },
     setCompanyVid: (state, action: PayloadAction<string>) => {
       state.offer.vid = action.payload;
+    },
+    setCompanyActivity: (
+      state,
+      action: PayloadAction<"barter" | "collaboration">,
+    ) => {
+      state.offer.activity = action.payload;
     },
     setCompanyName: (state, action: PayloadAction<string>) => {
       state.offer.name = action.payload;
@@ -57,6 +64,7 @@ export const userOffer = createSlice({
       state.offer = {
         type: offer.type,
         vid: offer.vid,
+        activity: offer.activity,
         name: offer.name,
         category: offer.category,
         price: offer.price,
@@ -75,6 +83,7 @@ export const userOffer = createSlice({
         type: "",
         vid: "",
         name: "",
+        activity: "barter",
         category: [],
         price: "",
         coordinates: null,
@@ -90,6 +99,7 @@ export const userOffer = createSlice({
 export const {
   setCompanyType,
   setCompanyVid,
+  setCompanyActivity,
   setCompanyName,
   setCompanyCategory,
   setCompanyPrice,
