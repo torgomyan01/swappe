@@ -1,20 +1,45 @@
+"use client";
+
 import {
+  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Radio,
+  RadioGroup,
+  Textarea,
 } from "@heroui/react";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { RandomKey } from "@/utils/helpers";
+import React from "react";
+import { ActionReportCompanyReview } from "@/app/actions/company_reviews/report";
 
 interface IThisProps {
   review: IReview;
 }
 
 function ReviewItem({ review }: IThisProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [reason, setReason] = React.useState<string>("spam");
+  const [details, setDetails] = React.useState<string>("");
+  const [loading, setLoading] = React.useState(false);
+
+  async function submitReport() {
+    setLoading(true);
+    await ActionReportCompanyReview(review.id, reason, details || undefined);
+    setLoading(false);
+    setIsOpen(false);
+  }
+
   return (
     <div className="review-item">
       <div className="top">
@@ -33,6 +58,7 @@ function ReviewItem({ review }: IThisProps) {
         </div>
         <div className="dots-wrap">
           <Dropdown
+            className="min-w-0 w-fit"
             classNames={{
               content: "w-[60px]",
             }}
@@ -43,7 +69,7 @@ function ReviewItem({ review }: IThisProps) {
               </div>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="new">
+              {/* <DropdownItem key="new">
                 <svg
                   width="14"
                   height="13"
@@ -59,14 +85,15 @@ function ReviewItem({ review }: IThisProps) {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </DropdownItem>
-              <DropdownItem key="copy">
+              </DropdownItem> */}
+              <DropdownItem key="report" onPress={() => setIsOpen(true)}>
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="relative right-[-5px]"
                 >
                   <path
                     d="M3.33337 14.6663V7.25893M3.33337 7.25893V1.7244C3.33337 1.50824 3.51362 1.33301 3.73595 1.33301H5.74981C7.12963 1.33301 8.45293 1.86591 9.42861 2.81449C10.4043 3.76307 11.7276 4.29597 13.1074 4.29597H13.7317C13.8799 4.29597 14 4.41279 14 4.5569V9.78241C14 10.0251 13.7977 10.2219 13.548 10.2219H11.5836C10.2038 10.2219 8.88048 9.68899 7.9048 8.74041C6.92912 7.79184 5.60582 7.25893 4.226 7.25893H3.33337Z"
@@ -83,9 +110,12 @@ function ReviewItem({ review }: IThisProps) {
       <p className="text">{review.review}</p>
       <div className="name-wrap">
         <div className="img">
-          <img
+          <Image
             src={`${fileHost}${review.creater_company.image_path}`}
             alt="company image"
+            width={40}
+            height={40}
+            className="object-cover"
           />
         </div>
         <b>{review.creater_company.name}</b>
@@ -113,6 +143,50 @@ function ReviewItem({ review }: IThisProps) {
           </Link>
         </div>
       </div>
+
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Пожаловаться на отзыв</ModalHeader>
+              <ModalBody>
+                <RadioGroup
+                  label="Причина"
+                  value={reason}
+                  color="secondary"
+                  onValueChange={(val) => setReason(val)}
+                >
+                  <Radio value="Спам/нерелевантный">Спам/нерелевантный</Radio>
+                  <Radio value="Оскорбления/ненависть">
+                    Оскорбления/ненависть
+                  </Radio>
+                  <Radio value="Сексуальный контент">Сексуальный контент</Radio>
+                  <Radio value="Ложная информация">Ложная информация</Radio>
+                  <Radio value="Другое">Другое</Radio>
+                </RadioGroup>
+                <Textarea
+                  label="Комментарий (необязательно)"
+                  placeholder="Уточните подробности"
+                  value={details}
+                  onValueChange={setDetails}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="light" onPress={onClose} isDisabled={loading}>
+                  Отмена
+                </Button>
+                <Button
+                  color="danger"
+                  onPress={submitReport}
+                  isLoading={loading}
+                >
+                  Отправить жалобу
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

@@ -23,8 +23,6 @@ function Profile() {
 
   const [results, setResults] = useState<IDeal[] | null>(null);
 
-  console.log(results);
-
   const activeStatuses: [DealStatusClient[], DealStatusOwner[]] = [
     ["wait-confirm", "wait-doc-confirm", "doc-confirmed", "send-review"],
     ["canceled", "completed"],

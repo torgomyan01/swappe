@@ -45,6 +45,7 @@ model users {
   support_chats support_chats[]
 
   helper_people helper_people[]
+  review_reports review_reports[]
 }
 
 model helper_people {
@@ -141,9 +142,26 @@ model company_reviews {
   count              Int
   review             String   @db.Text
   created_at         DateTime
+  status             String   @db.VarChar(50) @default("approved")
   offers             offers?  @relation(fields: [offer_id], references: [id])
 
   creater_company user_company? @relation(fields: [creater_company_id], references: [id])
+  reports         review_reports[]
+}
+
+model review_reports {
+  id           Int      @id @default(autoincrement())
+  review_id    Int
+  reporter_id  Int
+  reason       String   @db.VarChar(255)
+  details      String?  @db.VarChar(2000)
+  status       String   @db.VarChar(50) @default("pending")
+  decision     String?  @db.VarChar(50)
+  created_at   DateTime @default(now())
+  resolved_at  DateTime?
+
+  review   company_reviews @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  reporter users           @relation(fields: [reporter_id], references: [id])
 }
 
 model countries_tb {

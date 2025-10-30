@@ -2,10 +2,11 @@ import { calcReviews, formatPrice, sliceText } from "@/utils/helpers";
 import Link from "next/link";
 import { fileHost, SITE_URL } from "@/utils/consts";
 import Image from "next/image";
-import { Button } from "@heroui/react";
+import { Button, Chip } from "@heroui/react";
 import { ActionGetDealChat } from "@/app/actions/deals/get-chat-id";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 
 interface IThisProps {
   item: IDeal;
@@ -27,16 +28,29 @@ function DealItem({ item }: IThisProps) {
       })
       .finally(() => setLoadingChat(false));
   }
-  const checkImage = ["canceled", "completed"].some(
-    (_s) => item.statue_owner !== _s,
-  );
+
+  function CheckStatus(status: DealStatusClient | DealStatusOwner): boolean {
+    return item.status_client === status;
+  }
 
   return (
     <div className="transactions-item">
       <div className="info-items">
-        {checkImage && (
-          <img src="/img/transactions-icon1.svg" alt="" className="style-img" />
+        {["wait-confirm", "wait-doc-confirm", "doc-confirmed", "completed"].map(
+          (status) => (
+            <img
+              key={status}
+              src={`/img/status-${status}.svg`}
+              alt=""
+              className={clsx("style-img", {
+                hidden: !CheckStatus(
+                  status as DealStatusClient | DealStatusOwner,
+                ),
+              })}
+            />
+          ),
         )}
+
         <div className="info-item">
           <div className="img-wrap">
             <Image
@@ -91,18 +105,40 @@ function DealItem({ item }: IThisProps) {
         </div>
       </div>
       <div className="bottom-line">
-        <div className="new">
-          <img src="/img/new-style.svg" alt="" />
-          <span>Новая</span>
-        </div>
+        {CheckStatus("wait-confirm") && (
+          <Chip color="primary" className="rounded-full cursor-default">
+            Новая
+          </Chip>
+        )}
+        {CheckStatus("wait-doc-confirm") && (
+          <Chip color="warning" className="rounded-full cursor-default">
+            Ожидает подтверждения
+          </Chip>
+        )}
+        {CheckStatus("doc-confirmed") && (
+          <Chip color="success" className="rounded-full cursor-default">
+            Документы подтверждены
+          </Chip>
+        )}
+        {CheckStatus("completed") && (
+          <Chip color="success" className="rounded-full cursor-default">
+            Сделка завершена
+          </Chip>
+        )}
+        {CheckStatus("send-review") && (
+          <Chip color="warning" className="rounded-full cursor-default">
+            Ожидает отзыва
+          </Chip>
+        )}
+        {CheckStatus("canceled") && (
+          <Chip color="danger" className="rounded-full cursor-default">
+            Сделка отменена
+          </Chip>
+        )}
         <Button className="chat" onPress={OpenChat} isLoading={loadingChat}>
           <img src="/img/chat-icon.svg" alt="" />
           Чат
         </Button>
-        {/*<a href="#" className="green-btn">*/}
-        {/*  <img src="/img/check-white.svg" alt="" />*/}
-        {/*  Подтвердить сделку*/}
-        {/*</a>*/}
       </div>
     </div>
   );

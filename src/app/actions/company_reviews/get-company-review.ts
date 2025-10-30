@@ -7,13 +7,14 @@ export async function ActionGetCompanyReview(company_id: number) {
     const getCompany = await prisma.company_reviews.findMany({
       where: {
         company_id,
+        status: "approved",
       },
     });
 
     return {
-      status: "error",
+      status: "ok",
       data: getCompany,
-      error: "Your not created company",
+      error: "",
     };
   } catch (error: any) {
     return {

@@ -20,7 +20,7 @@ export async function ActionGetUserCompanyReviews() {
     });
 
     const reviews = await prisma.company_reviews.findMany({
-      where: { company_id: existingCompany?.id },
+      where: { company_id: existingCompany?.id, status: "approved" },
     });
 
     return {

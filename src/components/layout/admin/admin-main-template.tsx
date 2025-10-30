@@ -63,6 +63,11 @@ const NAVIGATION = [
     title: "Компании",
     icon: <i className="fa-solid fa-building"></i>,
   },
+  {
+    segment: SITE_URL.ADMIN_REVIEW_REPORTS,
+    title: "Жалобы на отзывы",
+    icon: <i className="fa-solid fa-flag"></i>,
+  },
   // {
   //   segment: SITE_URL.ADMIN_PAGES,
   //   title: "Страницы ",
