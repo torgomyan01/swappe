@@ -77,7 +77,12 @@ const ClientMessage = memo(function ClientMessage({
             height={100}
           />
         ) : (
-          <Image src="/img/support.png" alt="" width={100} height={100} />
+          <Image
+            src="/img/icons/icon-support.svg"
+            alt=""
+            width={100}
+            height={100}
+          />
         )}
       </Link>
       <div className="left-sms">

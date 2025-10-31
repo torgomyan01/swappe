@@ -59,6 +59,8 @@ function OfferRightInfo({ offer }: IThisProps) {
 
   const getCalcRev = calcReviews(offer.user.company.reviews);
 
+  console.log(offer);
+
   return (
     <div className="right-info">
       <h1>{offer.name}</h1>
@@ -110,11 +112,11 @@ function OfferRightInfo({ offer }: IThisProps) {
 
         <li>
           <b>Вид:</b>
-          <span>{offer.vid === "service" ? "Услуга" : "Товар"}</span>
+          <span>{offer.vid === "online" ? "Онлайн" : "Оффлайн"}</span>
         </li>
         <li>
           <b>Тип:</b>
-          <span>{offer.type === "online" ? "Онлайн" : "Оффлайн"}</span>
+          <span>{offer.type === "product" ? "Товар" : "Услуга"}</span>
         </li>
       </ul>
       <h4>Регион покрытия:</h4>

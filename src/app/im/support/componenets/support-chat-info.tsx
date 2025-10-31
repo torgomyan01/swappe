@@ -161,7 +161,7 @@ function SupportChatInfo() {
                 <div className="images">
                   <div className="img-b">
                     <Image
-                      src="/img/support.png"
+                      src="/img/icons/icon-support.svg"
                       alt="swappe support"
                       width={100}
                       height={100}

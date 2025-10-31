@@ -43,7 +43,7 @@ function ChatNewsInfo() {
                 <div className="images">
                   <div className="img-b">
                     <Image
-                      src="/img/news.png"
+                      src="/img/icons/icon-news.svg"
                       alt="swappe support"
                       width={100}
                       height={100}

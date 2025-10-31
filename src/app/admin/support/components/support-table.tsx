@@ -217,7 +217,7 @@ export default function SupportTable({ chats }: { chats: SupportChat[] }) {
           <div className="py-10">
             <div className="flex flex-col items-center justify-center text-center gap-3">
               <img
-                src="/img/support.png"
+                src="/img/icons/icon-support.svg"
                 alt="Support"
                 className="h-20 w-20 object-contain opacity-80"
               />

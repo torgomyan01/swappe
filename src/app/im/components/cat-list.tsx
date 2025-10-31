@@ -52,8 +52,8 @@ function ChatList() {
                       className="object-left rounded-[8px]"
                     />
                   </div>
-                  <div className="small-img">
-                    <img src="/img/support.png" alt="" />
+                  <div className="small-img bg-green border-[2px] border-white p-2">
+                    <img src="/img/icons/icon-support.svg" alt="" />
                   </div>
                 </div>
                 <span className="texts">
@@ -77,8 +77,8 @@ function ChatList() {
                       className="object-left rounded-[8px]"
                     />
                   </div>
-                  <div className="small-img">
-                    <img src="/img/news.png" alt="" />
+                  <div className="small-img bg-green border-[2px] border-white p-2">
+                    <img src="/img/icons/icon-news.svg" alt="" />
                   </div>
                 </div>
                 <div className="texts">
